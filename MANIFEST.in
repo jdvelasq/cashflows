@@ -1,0 +1,4 @@
+include setup.py
+include pavement.py
+include README.md
+include LICENSE

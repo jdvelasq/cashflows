@@ -13,9 +13,12 @@ Contents:
 
    basics
    gtimeseries
+   gcashcomp
+   gcashana
    bond
    depreciation
    savings
+   loan
 
 
 Indices and tables

@@ -906,6 +906,82 @@ def nominal_rate(const_value=0, start=None, end=None, nper=None, pyr=1, spec=Non
 
 
 
+def repr_table(cols, header=None):
+    """
+    """
+
+    if header is None and isinstance(cols, TimeSeries):
+        print(cols.__repr__())
+        return
+
+    if header is not None and isinstance(cols, TimeSeries):
+        print(header.__repr__())
+        print(cols.__repr__())
+        return
+
+    if len(cols) > 1:
+        for xcol in cols[1:]:
+            verify_eq_time_range(cols[0], xcol)
+
+    len_timeid = len(cols[0].end.__repr__())
+    fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
+
+    if header is None:
+        len_number = 0
+    else:
+        len_number = 0
+        for row in header:
+            for element in row:
+                len_number = max(len_number, len(element))
+
+    for xcol in cols:
+        for element in xcol:
+            len_number = max(len('{:1.2f}'.format(element)), len_number)
+
+    fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
+    fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
+
+    if cols[0].pyr == 1:
+        xmajor, = cols[0].start
+        xminor = 0
+    else:
+        xmajor, xminor = cols[0].start
+
+    txt = []
+    isfirst = True
+    for row in header:
+        if isfirst is True:
+            header = fmt_timeid.format('t')
+            isfirst = False
+        else:
+            header = fmt_timeid.format(' ')
+        for element in row:
+            header += fmt_header.format(element)
+        txt.append(header)
+
+    txt.append('-' * len_timeid + '------' + '-' * len_number * len(cols))
+
+    for time, _ in enumerate(cols[0]):
+        if cols[0].pyr == 1:
+            timeid = (xmajor,)
+        else:
+            timeid = (xmajor, xminor)
+        txtrow = fmt_timeid.format(timeid.__repr__())
+        for xcol in cols:
+            txtrow += fmt_number.format(xcol[time])
+        txt.append(txtrow)
+        if cols[0].pyr == 1:
+            xmajor += 1
+        else:
+            xminor += 1
+            if xminor == cols[0].pyr:
+                xminor = 0
+                xmajor += 1
+
+    return '\n'.join(txt)
+
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

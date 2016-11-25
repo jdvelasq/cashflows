@@ -9,157 +9,97 @@ in the cashflow. Negative values are reemplazed by a zero value. `Cashflow`
 and `Rate` must have the same length.
 
 
-
+>>> cflo = cashflow(const_value=[100] * 5, spec=(0, -100))
+>>> tax_rate = nominal_rate(const_value=[10] * 5)
+>>> after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)           0.00
+       (1,)-(4,) [4] 10.00
 
 Constant and current dollars transformations
 ===============================================================================
 
 **Constant to current.**
 
-# >>> const2curr(cashflow=TimeSeries(data=[100]*5),
-# ... inflation_rate=TimeSeries(data=[10]*5)) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   100.00
-#        (2,)   110.00
-#        (3,)   121.00
-#        (4,)   133.10
-#        (5,)   146.41
-#
-# >>> const2curr([100] * 5, 10) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   100.00
-#        (2,)   110.00
-#        (3,)   121.00
-#        (4,)   133.10
-#        (5,)   146.41
-#
-# >>> const2curr([100] * 5, 10, base_date=4) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)    68.30
-#        (2,)    75.13
-#        (3,)    82.64
-#        (4,)    90.91
-#        (5,)   100.00
-#
-# >>> const2curr([100] * 5, TimeSeries([10]*3 + [20]*2)) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   100.00
-#        (2,)   110.00
-#        (3,)   121.00
-#        (4,)   145.20
-#        (5,)   174.24
-#
-# **Current dollars to constant dollars.**
-#
-# >>> curr2const(TimeSeries(data=[100]*5), 10) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   100.00
-#        (2,)    90.91
-#        (3,)    82.64
-#        (4,)    75.13
-#        (5,)    68.30
-#
-# >>> curr2const([100] * 5, 10) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   100.00
-#        (2,)    90.91
-#        (3,)    82.64
-#        (4,)    75.13
-#        (5,)    68.30
-#
-# >>> curr2const([100] * 5, 10, 4) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   146.41
-#        (2,)   133.10
-#        (3,)   121.00
-#        (4,)   110.00
-#        (5,)   100.00
-#
-# >>> curr2const([100] * 5, TimeSeries([10]*3 + [20]*2)) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   100.00
-#        (2,)    90.91
-#        (3,)    82.64
-#        (4,)    68.87
-#        (5,)    57.39
-#
-# Currency conversion
-# ===============================================================================
-#
-# >>> currency_conversion(TimeSeries(data=[100]*5), exchange_rate = 2) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)-(5,) [5] 200.00
-#
-# >>> currency_conversion([100] * 5, exchange_rate = 2) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)-(5,) [5] 200.00
-#
-#
-# >>> currency_conversion([100]*5, exchange_rate = 2,
-# ... devaluation = 5) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   200.00
-#        (2,)   210.00
-#        (3,)   220.50
-#        (4,)   231.53
-#        (5,)   243.10
-#
-# >>> currency_conversion([100]*5, exchange_rate = 2,
-# ... devaluation = 5, base_date = 4) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   164.54
-#        (2,)   172.77
-#        (3,)   181.41
-#        (4,)   190.48
-#        (5,)   200.00
-#
-# >>> currency_conversion([100]*5, exchange_rate = 2,
-# ... devaluation = [5] * 5, base_date = 4) # doctest: +NORMALIZE_WHITESPACE
-# Time Series:
-# Start = (1,)
-# End = (5,)
-# Frequency = 1
-# Data = (1,)   164.54
-#        (2,)   172.77
-#        (3,)   181.41
-#        (4,)   190.48
-#        (5,)   200.00
+>>> const2curr(cflo=cashflow(const_value=[100] * 5),
+... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)   100.00
+       (1,)   110.00
+       (2,)   132.00
+       (3,)   158.40
+       (4,)   190.08
+
+
+>>> const2curr(cflo=cashflow(const_value=[100] * 5),
+... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)    52.61
+       (1,)    57.87
+       (2,)    69.44
+       (3,)    83.33
+       (4,)   100.00
+
+
+**Current dollars to constant dollars.**
+
+>>> curr2const(cflo=cashflow(const_value=[100] * 5),
+... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)   100.00
+       (1,)    90.91
+       (2,)    75.76
+       (3,)    63.13
+       (4,)    52.61
+
+>>> curr2const(cflo=cashflow(const_value=[100] * 5),
+... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)   190.08
+       (1,)   172.80
+       (2,)   144.00
+       (3,)   120.00
+       (4,)   100.00
+
+
+
+Currency conversion
+===============================================================================
+
+>>> currency_conversion(cflo=cashflow(const_value=[100] * 5), exchange_rate = 2) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)-(4,) [5] 200.00
+
+>>> currency_conversion(cflo=cashflow(const_value=[100] * 5), exchange_rate = 2,
+... devaluation=nominal_rate(const_value=[5]*5), base_date=(2,)) # doctest: +NORMALIZE_WHITESPACE
+Time Series:
+Start = (0,)
+End = (4,)
+pyr = 1
+Data = (0,)   181.41
+       (1,)   190.48
+       (2,)   200.00
+       (3,)   210.00
+       (4,)   220.50
+
 
 
 Description of the functions in this module
@@ -168,7 +108,7 @@ Description of the functions in this module
 
 """
 
-from cashflows.gtimeseries import TimeSeries, generic_cashflow, generic_rate, verify_eq_time_range, _timeid2index
+from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range, _timeid2index
 
 def vars2list(params):
     """ Converts the variables on lists of the same length
@@ -202,8 +142,8 @@ def after_tax_cashflow(cflo, tax_rate):
         TimeSeries objects with taxed values
 
 
-    >>> cflo = generic_cashflow(const_value=[100] * 5, spec=(0, -100))
-    >>> tax_rate = generic_rate(const_value=[10] * 5)
+    >>> cflo = cashflow(const_value=[100] * 5, spec=(0, -100))
+    >>> tax_rate = nominal_rate(const_value=[10] * 5)
     >>> after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
@@ -236,27 +176,27 @@ def after_tax_cashflow(cflo, tax_rate):
 
 
 
-def to_discount_factor(rate, base_date=0):
+def to_discount_factor(nrate, base_date=0):
     """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
 
     Args:
-        rate (TimeSeries): interest rate.
+        nrate (TimeSeries): nominal interest rate.
         base_date (int, tuple): basis time.
 
     Returns:
         Discount factor (list)
 
 
-    >>> to_discount_factor(generic_rate(const_value=4,nper=12, pyr=4), base_date=2) # doctest: +ELLIPSIS
+    >>> to_discount_factor(nominal_rate(const_value=4,nper=12, pyr=4), base_date=2) # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
 
-    >>> to_discount_factor(generic_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
+    >>> to_discount_factor(nominal_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
     """
 
-    prate = [x/rate.pyr/100 for x in rate.data]  # periodic rate
+    prate = [x/nrate.pyr/100 for x in nrate.data]  # periodic rate
     factor = prate.copy()
     for index, _ in enumerate(factor):
         if index == 0:
@@ -264,48 +204,48 @@ def to_discount_factor(rate, base_date=0):
         else:
             factor[index] = factor[index-1] / (1 + factor[index])
     if isinstance(base_date, tuple):
-        base_date = _timeid2index(base_date, basis=rate.start, pyr=rate.pyr)
+        base_date = _timeid2index(base_date, basis=nrate.start, pyr=nrate.pyr)
     div = factor[base_date]
     for index, _ in enumerate(factor):
         factor[index] = factor[index] / div
     return factor
 
 
-def to_compound_factor(rate, base_date=0):
+def to_compound_factor(nrate, base_date=0):
     """Returns a list of compounding factors calculated as (1 + r)^(t - t0).
 
     Args:
-        rate (TimeSeries): interest rate.
+        nrate (TimeSeries): nominal interest rate.
         base_date (int, tuple): basis time.
 
     Returns:
         Compound factor (list)
 
-    >>> to_compound_factor(generic_rate(const_value=4,nper=10, pyr=4), base_date=2) # doctest: +ELLIPSIS
+    >>> to_compound_factor(nominal_rate(const_value=4,nper=10, pyr=4), base_date=2) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
 
-    >>> to_compound_factor(generic_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
+    >>> to_compound_factor(nominal_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
 
     """
-    factor = to_discount_factor(rate, base_date)
+    factor = to_discount_factor(nrate, base_date)
     for time, _ in enumerate(factor):
         factor[time] = 1 / factor[time]
     return factor
 
 
 
-def equivalent_rate(rate):
+def equivalent_nrate(nrate):
     """Returns the equivalent interest rate over a time period.
 
-    # >>> equivalent_rate(TimeSeries([10]*5)) # doctest: +ELLIPSIS
+    # >>> equivalent_nrate(TimeSeries([10]*5)) # doctest: +ELLIPSIS
     # 10.0...
     """
-    value = rate.tolist()
+    value = nrate.tolist()
     factor = 1
     for element in value[1:]:
-        factor *= (1 + element / 100 / rate.pyr)
-    return 100 * rate.pyr * (factor**(1/(len(value) - 1)) - 1)
+        factor *= (1 + element / 100 / nrate.pyr)
+    return 100 * nrate.pyr * (factor**(1/(len(value) - 1)) - 1)
 
 
 
@@ -322,8 +262,8 @@ def const2curr(cflo, inflation, base_date=0):
     Returns:
         A cashflow in current money (TimeSeries)
 
-    >>> const2curr(cflo=generic_cashflow(const_value=[100] * 5),
-    ... inflation=generic_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+    >>> const2curr(cflo=cashflow(const_value=[100] * 5),
+    ... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
     End = (4,)
@@ -370,8 +310,8 @@ def curr2const(cflo, inflation, base_date=0):
     Returns:
         A cashflow in constant dollars
 
-    >>> curr2const(cflo=generic_cashflow(const_value=[100] * 5),
-    ... inflation=generic_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+    >>> curr2const(cflo=cashflow(const_value=[100] * 5),
+    ... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
     End = (4,)
@@ -416,24 +356,6 @@ def currency_conversion(cflo, exchange_rate=1, devaluation=None, base_date=0):
     Returns:
         A cashflow in other currency.
 
-    >>> currency_conversion(cflo=generic_cashflow(const_value=[100] * 5), exchange_rate = 2) # doctest: +NORMALIZE_WHITESPACE
-    Time Series:
-    Start = (0,)
-    End = (4,)
-    pyr = 1
-    Data = (0,)-(4,) [5] 200.00
-
-    >>> currency_conversion(cflo=generic_cashflow(const_value=[100] * 5), exchange_rate = 2,
-    ... devaluation=generic_rate(const_value=[5]*5), base_date=(2,)) # doctest: +NORMALIZE_WHITESPACE
-    Time Series:
-    Start = (0,)
-    End = (4,)
-    pyr = 1
-    Data = (0,)   181.41
-           (1,)   190.48
-           (2,)   200.00
-           (3,)   210.00
-           (4,)   220.50
 
 
 

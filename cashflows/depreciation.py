@@ -5,12 +5,12 @@ Tutorial
 Depreciation using the Straight Line Method
 -------------------------------------------------------------------------------
 
->>> costs1 = generic_cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
->>> costs2 = generic_cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
->>> life1 = generic_cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
->>> life2 = generic_cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
->>> delay12 = generic_cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
->>> delay22 = generic_cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
+>>> costs1 = cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
+>>> costs2 = cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
+>>> life1 = cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
+>>> life2 = cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
+>>> delay12 = cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
+>>> delay22 = cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
 
 >>> depreciation_sl(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
     Qtr0   Qtr1   Qtr2   Qtr3
@@ -207,7 +207,7 @@ Description of the functions in this module
 """
 
 
-from cashflows.gtimeseries import TimeSeries, generic_cashflow, generic_rate, verify_eq_time_range
+from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range
 
 def print_depr(depr, adepr, costs, begbook, endbook):
     """Prints a depreciation table

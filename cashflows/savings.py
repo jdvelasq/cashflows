@@ -4,8 +4,8 @@ Tutorial
 
 Modeling of savings accounts.
 
->>> cflo = generic_cashflow(const_value=[100] * 12, pyr=4)
->>> nrate = generic_rate([10] * 12, pyr=4)
+>>> cflo = cashflow(const_value=[100] * 12, pyr=4)
+>>> nrate = nominal_rate([10] * 12, pyr=4)
 >>> savings(deposits=cflo, rate=nrate, initbal=0, noprint=False) # doctest: +NORMALIZE_WHITESPACE
 t      Beginning   Deposit    Earned    Ending
          Balance            Interest   Balance
@@ -24,8 +24,8 @@ t      Beginning   Deposit    Earned    Ending
 (2, 3)   1248.35    100.00     31.21   1379.56
 
 
->>> cflo = generic_cashflow(const_value=[100] * 5, spec=[(0, 0), (2, 0)])
->>> nrate = generic_rate([0, 1, 2, 3, 4])
+>>> cflo = cashflow(const_value=[100] * 5, spec=[(0, 0), (2, 0)])
+>>> nrate = nominal_rate([0, 1, 2, 3, 4])
 >>> savings(deposits=cflo, rate=nrate, initbal=1000, noprint=False) # doctest: +NORMALIZE_WHITESPACE
 t    Beginning   Deposit    Earned    Ending
        Balance            Interest   Balance
@@ -49,7 +49,7 @@ Description of the functions and objects in this module
 
 # sys.path.insert(0, os.path.abspath('..'))
 
-from cashflows.gtimeseries import TimeSeries, generic_cashflow, generic_rate, verify_eq_time_range
+from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range
 
 
 

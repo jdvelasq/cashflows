@@ -4,8 +4,8 @@ Net present value
 ===============================================================================
 
 
->>> marr = generic_rate([12]*5)
->>> cflo = generic_cashflow([100]*5, spec=(0, -200))
+>>> marr = nominal_rate([12]*5)
+>>> cflo = cashflow([100]*5, spec=(0, -200))
 >>> timevalue(cflo=cflo, marr=marr) # doctest: +ELLIPSIS
 103.73...
 
@@ -27,8 +27,8 @@ Net present value
 Net uniform series
 ===============================================================================
 
->>> marr = generic_rate([12]*5)
->>> cflo = generic_cashflow([100]*5, spec=(0, -200))
+>>> marr = nominal_rate([12]*5)
+>>> cflo = cashflow([100]*5, spec=(0, -200))
 >>> net_uniform_series(cflo, marr) # doctest: +ELLIPSIS
 116.18...
 
@@ -54,8 +54,8 @@ Net uniform series
 Benefit-Cost ratio
 ===============================================================================
 
->>> marr = generic_rate([12]*5)
->>> cflo = generic_cashflow([100]*5, spec=(0, -200))
+>>> marr = nominal_rate([12]*5)
+>>> cflo = cashflow([100]*5, spec=(0, -200))
 >>> benefit_cost_ratio(cflo, marr) # doctest: +ELLIPSIS
 1.518...
 
@@ -77,14 +77,14 @@ Benefit-Cost ratio
 Internal Rate of Return
 ===============================================================================
 
->>> cflo = generic_cashflow([100]*5, spec=(0, -200))
+>>> cflo = cashflow([100]*5, spec=(0, -200))
 >>> irr(cflo) # doctest: +ELLIPSIS
 34.90...
 
 Modified Internal Rate of Return
 ===============================================================================
 
->>> cflo = generic_cashflow([100]*5, spec=(0, -200))
+>>> cflo = cashflow([100]*5, spec=(0, -200))
 >>> mirr(cflo) # doctest: +ELLIPSIS
 18.92...
 
@@ -96,8 +96,8 @@ Description of the functions in this module
 """
 
 import numpy as np
-from cashflows.gtimeseries import TimeSeries, generic_cashflow, generic_rate, verify_eq_time_range
-from cashflows.gcashcomp import to_discount_factor, equivalent_rate, vars2list
+from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range
+from cashflows.gcashcomp import to_discount_factor, equivalent_nrate, vars2list
 from cashflows.basics import tvmm
 # from cashflows.basics import amort
 
@@ -115,8 +115,8 @@ def timevalue(cflo, marr, base_date=0):
     Returns:
         net value (float, list of floats)
 
-    >>> marr = generic_rate([12]*5)
-    >>> cflo = generic_cashflow([100]*5, spec = (0, -200))
+    >>> marr = nominal_rate([12]*5)
+    >>> cflo = cashflow([100]*5, spec = (0, -200))
     >>> timevalue(cflo, marr) # doctest: +ELLIPSIS
     103.73...
 
@@ -165,7 +165,7 @@ def net_uniform_series(cflo, marr, nper=1):
     retval = []
     for xcflo, xmarr, xnper in zip(cflo, marr, nper):
         netval = timevalue(cflo=xcflo, marr=xmarr, base_date=0)
-        erate = equivalent_rate(xmarr)
+        erate = equivalent_nrate(xmarr)
         retval.append(-tvmm(nrate=erate, nper=xnper, pval=netval, fval=0, pmt=None))
     if len(retval) == 1:
         return retval[0]

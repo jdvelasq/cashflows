@@ -455,7 +455,7 @@ class TimeSeries():
         """Returns a new time series computed by applying the `abs` funtion
         to the elements of the original time series.
 
-        >>> abs(generic_cashflow(const_value=[-10]*4, pyr=4)) # doctest: +NORMALIZE_WHITESPACE
+        >>> abs(cashflow(const_value=[-10]*4, pyr=4)) # doctest: +NORMALIZE_WHITESPACE
            Qtr0  Qtr1  Qtr2  Qtr3
         0 10.00 10.00 10.00 10.00
 
@@ -468,7 +468,7 @@ class TimeSeries():
     def __add__(self, other):
         """Addition
 
-        >>> generic_cashflow(const_value=[1]*4, pyr=4) + generic_cashflow(const_value=[2]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+        >>> cashflow(const_value=[1]*4, pyr=4) + cashflow(const_value=[2]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 3.00 3.00 3.00 3.00
 
@@ -486,7 +486,7 @@ class TimeSeries():
     def __floordiv__(self, other):
         """floordiv
 
-        >>> generic_cashflow(const_value=[6]*4, pyr=4) // generic_cashflow(const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+        >>> cashflow(const_value=[6]*4, pyr=4) // cashflow(const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 1.00 1.00 1.00 1.00
 
@@ -504,7 +504,7 @@ class TimeSeries():
     def __mod__(self, other):
         """
 
-        >>> generic_cashflow( const_value=[6]*4, pyr=4) % generic_cashflow( const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+        >>> cashflow( const_value=[6]*4, pyr=4) % cashflow( const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 2.00 2.00 2.00 2.00
 
@@ -523,7 +523,7 @@ class TimeSeries():
     def __mul__(self, other):
         """multiplication
 
-        >>> generic_cashflow( const_value=[2]*4, pyr=4) * generic_cashflow( const_value=[3]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+        >>> cashflow( const_value=[2]*4, pyr=4) * cashflow( const_value=[3]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 6.00 6.00 6.00 6.00
 
@@ -541,7 +541,7 @@ class TimeSeries():
     def __sub__(self, other):
         """Substraction
 
-        >>> generic_cashflow( const_value=[6]*4, pyr=4) - generic_cashflow( const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+        >>> cashflow( const_value=[6]*4, pyr=4) - cashflow( const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 2.00 2.00 2.00 2.00
 
@@ -559,7 +559,7 @@ class TimeSeries():
     def __truediv__(self, other):
         """
 
-        >>> generic_cashflow(const_value=[6]*4, pyr=4) / generic_cashflow(const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+        >>> cashflow(const_value=[6]*4, pyr=4) / cashflow(const_value=[4]*4, pyr=4) # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 1.50 1.50 1.50 1.50
 
@@ -617,8 +617,8 @@ class TimeSeries():
         """
 
 
-        >>> x = generic_cashflow( const_value=[2]*4, pyr=4)
-        >>> x += generic_cashflow( const_value=[3]*4, pyr=4)
+        >>> x = cashflow( const_value=[2]*4, pyr=4)
+        >>> x += cashflow( const_value=[3]*4, pyr=4)
         >>> x # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 5.00 5.00 5.00 5.00
@@ -646,8 +646,8 @@ class TimeSeries():
     def __ifloordiv__(self, other):
         """
 
-        >>> x = generic_cashflow( const_value=[6]*4, pyr=4)
-        >>> x //= generic_cashflow( const_value=[4]*4, pyr=4)
+        >>> x = cashflow( const_value=[6]*4, pyr=4)
+        >>> x //= cashflow( const_value=[4]*4, pyr=4)
         >>> x # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 1.00 1.00 1.00 1.00
@@ -666,8 +666,8 @@ class TimeSeries():
     def __imod__(self, other):
         """
 
-        >>> x = generic_cashflow( const_value=[6]*4, pyr=4)
-        >>> x %= generic_cashflow( const_value=[4]*4, pyr=4)
+        >>> x = cashflow( const_value=[6]*4, pyr=4)
+        >>> x %= cashflow( const_value=[4]*4, pyr=4)
         >>> x # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 2.00 2.00 2.00 2.00
@@ -685,8 +685,8 @@ class TimeSeries():
 
     def __imul__(self, other):
         """
-        >>> x = generic_cashflow( const_value=[2]*4, pyr=4)
-        >>> x *= generic_cashflow( const_value=[3]*4, pyr=4)
+        >>> x = cashflow( const_value=[2]*4, pyr=4)
+        >>> x *= cashflow( const_value=[3]*4, pyr=4)
         >>> x # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 6.00 6.00 6.00 6.00
@@ -704,8 +704,8 @@ class TimeSeries():
     def __isub__(self, other):
         """
 
-        >>> x = generic_cashflow( const_value=[6]*4, pyr=4)
-        >>> x -= generic_cashflow( const_value=[4]*4, pyr=4)
+        >>> x = cashflow( const_value=[6]*4, pyr=4)
+        >>> x -= cashflow( const_value=[4]*4, pyr=4)
         >>> x # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 2.00 2.00 2.00 2.00
@@ -723,8 +723,8 @@ class TimeSeries():
     def __itruediv__(self, other):
         """
 
-        >>> x = generic_cashflow( const_value=[6]*4, pyr=4)
-        >>> x /= generic_cashflow( const_value=[4]*4, pyr=4)
+        >>> x = cashflow( const_value=[6]*4, pyr=4)
+        >>> x /= cashflow( const_value=[4]*4, pyr=4)
         >>> x # doctest: +NORMALIZE_WHITESPACE
           Qtr0 Qtr1 Qtr2 Qtr3
         0 1.50 1.50 1.50 1.50
@@ -756,47 +756,47 @@ class TimeSeries():
 
 
 
-def generic_cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
+def cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
     """Returns a time series as a generic cashflow.
 
     >>> spec = ((2000, 3), 10)
-    >>> generic_cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001  1.00  1.00  1.00  1.00
 
     >>> spec = [((2000, 3), 10), ((2001, 3), 10)]
-    >>> generic_cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001  1.00  1.00  1.00 10.00
 
     >>> spec = (3, 10)
-    >>> generic_cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001  1.00  1.00  1.00  1.00
 
     >>> spec = [(3, 10), (7, 10)]
-    >>> generic_cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> cashflow(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001  1.00  1.00  1.00 10.00
 
-    >>> generic_cashflow(const_value=[10]*10, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+    >>> cashflow(const_value=[10]*10, pyr=4) # doctest: +NORMALIZE_WHITESPACE
        Qtr0  Qtr1  Qtr2  Qtr3
     0 10.00 10.00 10.00 10.00
     1 10.00 10.00 10.00 10.00
     2 10.00 10.00
 
-    >>> generic_cashflow(const_value=[-10]*4) # doctest: +NORMALIZE_WHITESPACE
+    >>> cashflow(const_value=[-10]*4) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
     End = (3,)
     pyr = 1
     Data = (0,)-(3,) [4] -10.00
 
-    >>> x = generic_cashflow(const_value=[0, 1, 2, 3], pyr=4)
+    >>> x = cashflow(const_value=[0, 1, 2, 3], pyr=4)
     >>> x[3] = 10
     >>> x  # doctest: +NORMALIZE_WHITESPACE
        Qtr0  Qtr1  Qtr2  Qtr3
@@ -836,34 +836,34 @@ def generic_cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec
         time_series[time] = value
     return time_series
 
-def generic_rate(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
+def nominal_rate(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
     """Returns a time series as a interest rate.
 
     >>> spec = ((2000, 3), 10)
-    >>> generic_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 10.00 10.00 10.00
 
     >>> spec = [((2000, 3), 10), ((2001, 1), 20)]
-    >>> generic_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 20.00 20.00 20.00
 
     >>> spec = (3, 10)
-    >>> generic_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 10.00 10.00 10.00
 
     >>> spec = [(3, 10), (6, 20)]
-    >>> generic_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 10.00 20.00 20.00
 
-    >>> generic_rate(const_value=[10]*10, pyr=4)  # doctest: +NORMALIZE_WHITESPACE
+    >>> nominal_rate(const_value=[10]*10, pyr=4)  # doctest: +NORMALIZE_WHITESPACE
        Qtr0  Qtr1  Qtr2  Qtr3
     0 10.00 10.00 10.00 10.00
     1 10.00 10.00 10.00 10.00

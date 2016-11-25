@@ -5,45 +5,63 @@ Tutorial
 Depreciation using the Straight Line Method
 -------------------------------------------------------------------------------
 
->>> costs = generic_cashflow(const_value=0, nper=12, spec=(0, 1000), pyr=4)
->>> life = generic_cashflow(const_value=0, nper=12, spec=(0, 4), pyr=4)
->>> delay2 = generic_cashflow(const_value=0, nper=12, spec=(0, 2), pyr=4)
+>>> costs1 = generic_cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
+>>> costs2 = generic_cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
+>>> life1 = generic_cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
+>>> life2 = generic_cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
+>>> delay12 = generic_cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
+>>> delay22 = generic_cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
 
->>> depreciation_sl(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE
+>>> depreciation_sl(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
     Qtr0   Qtr1   Qtr2   Qtr3
 0   0.00 250.00 250.00 250.00
 1 250.00   0.00   0.00   0.00
 2   0.00   0.00   0.00   0.00
+3   0.00   0.00   0.00   0.00
 
->>> depreciation_sl(costs=costs, life=life, delay=delay2) # doctest: +NORMALIZE_WHITESPACE
+>>> depreciation_sl(costs=costs1, life=life1, delay=delay12) # doctest: +NORMALIZE_WHITESPACE
     Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00 250.00 250.00
-1 250.00 250.00   0.00   0.00
+0   0.00   0.00   0.00 250.00
+1 250.00 250.00 250.00   0.00
 2   0.00   0.00   0.00   0.00
+3   0.00   0.00   0.00   0.00
 
->>> depreciation_soyd(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE
+>>> depreciation_sl(costs=costs2, life=life2) # doctest: +NORMALIZE_WHITESPACE
     Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 396.00 297.00 198.00
-1  99.00   0.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
+0   0.00 250.00 250.00 250.00
+1 250.00   0.00   0.00   0.00
+2   0.00 250.00 250.00 250.00
+3 250.00   0.00   0.00   0.00
 
->>> depreciation_soyd(costs=costs, life=life, delay=delay2) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00 396.00 297.00
-1 198.00  99.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
 
->>> depreciation_db(costs=costs, life=life, factor=1.5) # doctest: +NORMALIZE_WHITESPACE
+>>> depreciation_sl(costs=costs2, life=life2, delay=delay22) # doctest: +NORMALIZE_WHITESPACE
     Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 375.00 250.00 250.00
-1 125.00   0.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
+0   0.00   0.00   0.00 250.00
+1 250.00 250.00 250.00   0.00
+2   0.00   0.00   0.00 250.00
+3 250.00 250.00 250.00   0.00
 
->>> depreciation_db(costs=costs, life=life, factor=1.5, delay=delay2) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00 375.00 250.00
-1 250.00 125.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
+>>> depreciation_sl(costs=costs2, life=life2, delay=delay22, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+t         Beg.    Cost  Depre.  Accum.    End.
+          Book                  Depre.    Book
+         Value                           Value
+----------------------------------------------
+(0, 0)    0.00 1000.00    0.00    0.00 1000.00
+(0, 1) 1000.00    0.00    0.00    0.00 1000.00
+(0, 2) 1000.00    0.00    0.00    0.00 1000.00
+(0, 3) 1000.00    0.00  250.00  250.00  750.00
+(1, 0)  750.00    0.00  250.00  500.00  500.00
+(1, 1)  500.00    0.00  250.00  750.00  250.00
+(1, 2)  250.00    0.00  250.00 1000.00    0.00
+(1, 3)    0.00    0.00    0.00 1000.00    0.00
+(2, 0)    0.00 1000.00    0.00 1000.00 1000.00
+(2, 1) 1000.00    0.00    0.00 1000.00 1000.00
+(2, 2) 1000.00    0.00    0.00 1000.00 1000.00
+(2, 3) 1000.00    0.00  250.00 1250.00  750.00
+(3, 0)  750.00    0.00  250.00 1500.00  500.00
+(3, 1)  500.00    0.00  250.00 1750.00  250.00
+(3, 2)  250.00    0.00  250.00 2000.00    0.00
+(3, 3)    0.00    0.00    0.00 2000.00    0.00
 
 
 
@@ -51,6 +69,56 @@ Depreciation using the Straight Line Method
 Depreciation using the Sum-of-years Digits Method
 -------------------------------------------------------------------------------
 
+>>> depreciation_soyd(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00 400.00 300.00 200.00
+1 100.00   0.00   0.00   0.00
+2   0.00   0.00   0.00   0.00
+3   0.00   0.00   0.00   0.00
+
+>>> depreciation_soyd(costs=costs1, life=life1, delay=delay12) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00   0.00   0.00 400.00
+1 300.00 200.00 100.00   0.00
+2   0.00   0.00   0.00   0.00
+3   0.00   0.00   0.00   0.00
+
+>>> depreciation_soyd(costs=costs2, life=life2) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00 400.00 300.00 200.00
+1 100.00   0.00   0.00   0.00
+2   0.00 400.00 300.00 200.00
+3 100.00   0.00   0.00   0.00
+
+
+>>> depreciation_soyd(costs=costs2, life=life2, delay=delay22) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00   0.00   0.00 400.00
+1 300.00 200.00 100.00   0.00
+2   0.00   0.00   0.00 400.00
+3 300.00 200.00 100.00   0.00
+
+>>> depreciation_soyd(costs=costs2, life=life2, delay=delay22, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+t         Beg.    Cost  Depre.  Accum.    End.
+          Book                  Depre.    Book
+         Value                           Value
+----------------------------------------------
+(0, 0)    0.00 1000.00    0.00    0.00 1000.00
+(0, 1) 1000.00    0.00    0.00    0.00 1000.00
+(0, 2) 1000.00    0.00    0.00    0.00 1000.00
+(0, 3) 1000.00    0.00  400.00  400.00  600.00
+(1, 0)  600.00    0.00  300.00  700.00  300.00
+(1, 1)  300.00    0.00  200.00  900.00  100.00
+(1, 2)  100.00    0.00  100.00 1000.00    0.00
+(1, 3)    0.00    0.00    0.00 1000.00    0.00
+(2, 0)    0.00 1000.00    0.00 1000.00 1000.00
+(2, 1) 1000.00    0.00    0.00 1000.00 1000.00
+(2, 2) 1000.00    0.00    0.00 1000.00 1000.00
+(2, 3) 1000.00    0.00  400.00 1400.00  600.00
+(3, 0)  600.00    0.00  300.00 1700.00  300.00
+(3, 1)  300.00    0.00  200.00 1900.00  100.00
+(3, 2)  100.00    0.00  100.00 2000.00    0.00
+(3, 3)    0.00    0.00    0.00 2000.00    0.00
 
 
 
@@ -59,23 +127,77 @@ Depreciation using the Sum-of-years Digits Method
 Depreciation using the Declining Balance Method
 -------------------------------------------------------------------------------
 
+>>> depreciation_db(costs=costs1, life=life1, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00 375.00 234.38 146.48
+1  91.55   0.00   0.00   0.00
+2   0.00   0.00   0.00   0.00
+3   0.00   0.00   0.00   0.00
 
+>>> depreciation_db(costs=costs1, life=life1, factor=1.5, convert_to_sl=False, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+t         Beg.    Cost  Depre.  Accum.    End.
+          Book                  Depre.    Book
+         Value                           Value
+----------------------------------------------
+(0, 0)    0.00 1000.00    0.00    0.00 1000.00
+(0, 1) 1000.00    0.00  375.00  375.00  625.00
+(0, 2)  625.00    0.00  234.38  609.38  390.62
+(0, 3)  390.62    0.00  146.48  755.86  244.14
+(1, 0)  244.14    0.00   91.55  847.41  152.59
+(1, 1)  152.59    0.00    0.00  847.41  152.59
+(1, 2)  152.59    0.00    0.00  847.41  152.59
+(1, 3)  152.59    0.00    0.00  847.41  152.59
+(2, 0)  152.59    0.00    0.00  847.41  152.59
+(2, 1)  152.59    0.00    0.00  847.41  152.59
+(2, 2)  152.59    0.00    0.00  847.41  152.59
+(2, 3)  152.59    0.00    0.00  847.41  152.59
+(3, 0)  152.59    0.00    0.00  847.41  152.59
+(3, 1)  152.59    0.00    0.00  847.41  152.59
+(3, 2)  152.59    0.00    0.00  847.41  152.59
+(3, 3)  152.59    0.00    0.00  847.41  152.59
 
+>>> depreciation_db(costs=costs1, life=life1, delay=delay12, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00   0.00   0.00 375.00
+1 234.38 146.48  91.55   0.00
+2   0.00   0.00   0.00   0.00
+3   0.00   0.00   0.00   0.00
 
+>>> depreciation_db(costs=costs2, life=life2, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00 375.00 234.38 146.48
+1  91.55   0.00   0.00   0.00
+2   0.00 375.00 234.38 146.48
+3  91.55   0.00   0.00   0.00
 
+>>> depreciation_db(costs=costs2, life=life2, delay=delay22, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+    Qtr0   Qtr1   Qtr2   Qtr3
+0   0.00   0.00   0.00 375.00
+1 234.38 146.48  91.55   0.00
+2   0.00   0.00   0.00 375.00
+3 234.38 146.48  91.55   0.00
 
-
-
-
-
-
-
-
-
-
-
-
-
+>>> depreciation_db(costs=costs2, life=life2, delay=delay22, factor=1.5, convert_to_sl=False, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+t         Beg.    Cost  Depre.  Accum.    End.
+          Book                  Depre.    Book
+         Value                           Value
+----------------------------------------------
+(0, 0)    0.00 1000.00    0.00    0.00 1000.00
+(0, 1) 1000.00    0.00    0.00    0.00 1000.00
+(0, 2) 1000.00    0.00    0.00    0.00 1000.00
+(0, 3) 1000.00    0.00  375.00  375.00  625.00
+(1, 0)  625.00    0.00  234.38  609.38  390.62
+(1, 1)  390.62    0.00  146.48  755.86  244.14
+(1, 2)  244.14    0.00   91.55  847.41  152.59
+(1, 3)  152.59    0.00    0.00  847.41  152.59
+(2, 0)  152.59 1000.00    0.00  847.41 1152.59
+(2, 1) 1152.59    0.00    0.00  847.41 1152.59
+(2, 2) 1152.59    0.00    0.00  847.41 1152.59
+(2, 3) 1152.59    0.00  375.00 1222.41  777.59
+(3, 0)  777.59    0.00  234.38 1456.79  543.21
+(3, 1)  543.21    0.00  146.48 1603.27  396.73
+(3, 2)  396.73    0.00   91.55 1694.82  305.18
+(3, 3)  305.18    0.00    0.00 1694.82  305.18
 
 
 Description of the functions in this module
@@ -118,18 +240,18 @@ def print_depr(depr, adepr, costs, begbook, endbook):
 
     txt = []
     header = fmt_timeid.format('t')
-    header += fmt_header.format('Begin')
+    header += fmt_header.format('Beg.')
     header += fmt_header.format('Cost')
-    header += fmt_header.format('Deprec')
-    header += fmt_header.format('Accum')
-    header += fmt_header.format('Ending')
+    header += fmt_header.format('Depre.')
+    header += fmt_header.format('Accum.')
+    header += fmt_header.format('End.')
     txt.append(header)
 
     header = fmt_timeid.format('')
     header += fmt_header.format('Book')
     header += fmt_header.format('')
     header += fmt_header.format('')
-    header += fmt_header.format('Deprec')
+    header += fmt_header.format('Depre.')
     header += fmt_header.format('Book')
     txt.append(header)
 
@@ -190,7 +312,7 @@ def depreciation_sl(costs, life, salvalue=None, delay=None, noprint=True):
     if delay is not None:
         verify_eq_time_range(costs, delay)
     else:
-        delay = [1] * len(costs)
+        delay = [0] * len(costs)
 
     depr = [0] * len(costs)
     adepr = [0] * len(costs)
@@ -204,8 +326,8 @@ def depreciation_sl(costs, life, salvalue=None, delay=None, noprint=True):
             ValueError('Depreciation with delay 0')
         xdepr = [(costs[index] * (100 - salvalue[index]) / 100) / life[index]] * life[index]
         for time in range(life[index]):
-            if index + time + delay[index] < len(costs):
-                depr[index + time + delay[index]] += xdepr[time]
+            if index + time + delay[index] + 1 < len(costs):
+                depr[index + time + delay[index] + 1] += xdepr[time]
             else:
                 break
 
@@ -218,9 +340,7 @@ def depreciation_sl(costs, life, salvalue=None, delay=None, noprint=True):
     for time, _ in enumerate(depr):
         if time > 0:
             begbook[time] = endbook[time - 1]
-        if time < len(costs):
-            begbook[time] += costs[time]
-        endbook[time] = begbook[time] - depr[time]
+        endbook[time] = begbook[time] - depr[time] + costs[time]
 
     if noprint is True:
         retval = costs.copy()
@@ -249,11 +369,11 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None, noprint=True):
     if salvalue is not None:
         verify_eq_time_range(costs, salvalue)
     else:
-        salvalue = [1] * len(costs)
+        salvalue = [0] * len(costs)
     if delay is not None:
         verify_eq_time_range(costs, delay)
     else:
-        delay = [1] * len(costs)
+        delay = [0] * len(costs)
 
     depr = [0] * len(costs)
     adepr = [0] * len(costs)
@@ -264,8 +384,8 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None, noprint=True):
         sumdig = life[index] * (life[index] + 1) / 2
         xdepr = [(costs[index] * (100 - salvalue[index]) / 100) * (life[index] - time) / sumdig for time in range(life[index])]
         for time in range(life[index]):
-            if index + time + delay[index] < len(costs):
-                depr[index + time + delay[index]] += xdepr[time]
+            if index + time + delay[index] + 1 < len(costs):
+                depr[index + time + delay[index] + 1] += xdepr[time]
             else:
                 break
 
@@ -278,9 +398,7 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None, noprint=True):
     for time, _ in enumerate(depr):
         if time > 0:
             begbook[time] = endbook[time - 1]
-        if time < len(costs):
-            begbook[time] += costs[time]
-        endbook[time] = begbook[time] - depr[time]
+        endbook[time] = begbook[time] - depr[time] + costs[time]
 
     if noprint is True:
         retval = costs.copy()
@@ -318,7 +436,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     if delay is not None:
         verify_eq_time_range(costs, delay)
     else:
-        delay = [1] * len(costs)
+        delay = [0] * len(costs)
     if not isinstance(factor, (int, float)):
         raise TypeError('Invalid type for `factor`')
     if not isinstance(convert_to_sl, bool):
@@ -352,8 +470,8 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
                 rem_cost = salvalue[index]
 
         for time in range(life[index]):
-            if index + time + delay[index] < len(costs):
-                depr[index + time + delay[index]] += xdepr[time]
+            if index + time + delay[index] + 1 < len(costs):
+                depr[index + time + delay[index] + 1] += xdepr[time]
             else:
                 break
 
@@ -366,9 +484,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     for time, _ in enumerate(depr):
         if time > 0:
             begbook[time] = endbook[time - 1]
-        if time < len(costs):
-            begbook[time] += costs[time]
-        endbook[time] = begbook[time] - depr[time]
+        endbook[time] = begbook[time] - depr[time] + costs[time]
 
     if noprint is True:
         retval = costs.copy()

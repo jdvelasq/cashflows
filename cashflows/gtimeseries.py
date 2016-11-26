@@ -982,6 +982,85 @@ def repr_table(cols, header=None):
 
 
 
+def cfloplot(cflo):
+    """Text plot of a cashflow.
+
+    >>> cflo = cashflow(const_value=[-10, 5, 0, 20] * 3, pyr=4)
+    >>> cfloplot(cflo)# doctest: +NORMALIZE_WHITESPACE
+    time    value +------------------+------------------+
+    (0, 0) -10.00           **********
+    (0, 1)   5.00                    *****
+    (0, 2)   0.00                    *
+    (0, 3)  20.00                    ********************
+    (1, 0) -10.00           **********
+    (1, 1)   5.00                    *****
+    (1, 2)   0.00                    *
+    (1, 3)  20.00                    ********************
+    (2, 0) -10.00           **********
+    (2, 1)   5.00                    *****
+    (2, 2)   0.00                    *
+    (2, 3)  20.00                    ********************
+
+    """
+
+    len_timeid = len(cflo.end.__repr__())
+    fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
+
+    len_number = 0
+    for value in cflo:
+        len_number = max(len_number, len('{:1.2f}'.format(value)))
+
+    fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
+    fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
+
+    if cflo.pyr == 1:
+        xmajor, = cflo.start
+        xminor = 0
+    else:
+        xmajor, xminor = cflo.start
+
+    maxval = max(abs(cflo))
+
+
+    width = 20
+
+    txt = []
+    txtrow = fmt_timeid.format("time") + fmt_header.format('value')
+    txtrow += " +" + "-" * (width - 2) + "+" + "-" * (width - 2) + "+"
+    txt.append(txtrow)
+
+    for value in cflo:
+
+        if cflo.pyr == 1:
+            timeid = (xmajor,)
+        else:
+            timeid = (xmajor, xminor)
+
+        txtrow = fmt_timeid.format(timeid.__repr__())
+        txtrow += fmt_number.format(value)
+
+        fmt_row = "                    *                    "
+        xlim = int(width * abs(value / maxval))
+        if value < 0:
+            txtrow += " " + " " * (width - xlim) + '*' * (xlim)
+        elif value > 0:
+            txtrow += " " + " " * (width - 1) + "*" * (xlim)
+        else:
+            txtrow += " " + " " * (width - 1) + '*'
+
+        txt.append(txtrow)
+
+        if cflo.pyr == 1:
+            xmajor += 1
+        else:
+            xminor += 1
+            if xminor == cflo.pyr:
+                xminor = 0
+                xmajor += 1
+
+    print('\n'.join(txt))
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

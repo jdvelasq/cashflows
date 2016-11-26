@@ -99,11 +99,12 @@ import numpy as np
 from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range
 from cashflows.gcashcomp import to_discount_factor, equivalent_nrate, vars2list
 from cashflows.basics import tvmm
+from cashflows.utilityfun import exp_utility_fun, log_utility_fun, sqrt_utility_fun
 # from cashflows.basics import amort
 
 
 
-def timevalue(cflo, marr, base_date=0):
+def timevalue(cflo, marr, base_date=0, utility=None):
     """
     Computes the net value of a cashflow at time `base_date`.
 
@@ -111,6 +112,7 @@ def timevalue(cflo, marr, base_date=0):
         cflo (TimeSeries, list of TimeSeries): cashflow.
         marr (TimeSeries): Minimum atractive interest rate.
         base_date (int, tuple): Time.
+        utility (function): utility function
 
     Returns:
         net value (float, list of floats)
@@ -123,6 +125,14 @@ def timevalue(cflo, marr, base_date=0):
     >>> timevalue(cflo, marr, 4) # doctest: +ELLIPSIS
     163.22...
 
+    >>> timevalue(cflo, marr, base_date=0, utility=exp_utility_fun(200)) # doctest: +ELLIPSIS
+    -84.15...
+
+    >>> timevalue(cflo, marr, base_date=0, utility=log_utility_fun(210)) # doctest: +ELLIPSIS
+    369092793...
+
+    >>> timevalue(cflo, marr, base_date=0, utility=sqrt_utility_fun(210)) # doctest: +ELLIPSIS
+    2998.12...
 
     """
     params = vars2list([cflo, marr, base_date])
@@ -139,7 +149,13 @@ def timevalue(cflo, marr, base_date=0):
         netval = 0
         factor = to_discount_factor(xmarr, xbase_date)
         for time, _ in enumerate(xcflo):
-            netval += xcflo[time] * factor[time]
+            if utility is None:
+                xcflo_aux = xcflo[time]
+            else:
+                xcflo_aux = utility(xcflo[time])
+            netval += xcflo_aux * factor[time]
+        if utility is not None:
+            netval = utility(netval, inverse=True)
         retval.append(netval)
     if len(retval) == 1:
         return retval[0]

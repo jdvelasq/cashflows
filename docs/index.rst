@@ -19,6 +19,7 @@ Contents:
    depreciation
    savings
    loan
+   utility
 
 
 Indices and tables

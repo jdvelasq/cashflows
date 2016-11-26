@@ -1039,7 +1039,7 @@ def cfloplot(cflo):
         txtrow = fmt_timeid.format(timeid.__repr__())
         txtrow += fmt_number.format(value)
 
-        fmt_row = "                    *                    "
+        # fmt_row = "                    *                    "
         xlim = int(width * abs(value / maxval))
         if value < 0:
             txtrow += " " + " " * (width - xlim) + '*' * (xlim)

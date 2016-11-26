@@ -232,29 +232,11 @@ Description of the functions in this module
 """
 
 import numpy
-
-# def _tvmmprint(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
-#     """Enhanced output for equivalence computations. """
-#
-#     erate, prate = iconv(nrate=nrate, pyr=pyr)
-#
-#     if pval is not None:
-#         print('Present Value: ....... {:8.2f}'.format(pval))
-#     if fval is not None:
-#         print('Future Value: ........ {:8.2f}'.format(fval))
-#     if pmt is not None:
-#         print('Payment: ............. {:8.2f}'.format(pmt))
-#     if due is not None:
-#         print('Due: .................      {:s}'.format('END' if due == 0 else 'BEG'))
-#     print('No. of Periods: ...... {:8.2f}'.format(nper))
-#     print('Compoundings per Year: {:8.2f}'.format(pyr))
-#     print('Nominal Rate: .......  {:8.2f}'.format(nrate))
-#     print('Effective Rate: .....  {:8.2f}'.format(erate))
-#     print('Periodic Rate: ......  {:8.2f}'.format(prate))
+from cashflows.gcashcomp import vars2list
 
 
 
-def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
+def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):
     """Computes present and future values, interest rate and number
     of periods.
 
@@ -266,6 +248,7 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
         nper (int, list): Number of compounding periods.
         due (int): When payments are due.
         pyr (int, list): number of periods per year.
+        noprint (bool): prints enhanced output
 
 
     Returns:
@@ -274,6 +257,23 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
 
+    >>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
+    Present Value: .......  5000.00
+    Future Value: ........     0.00
+    Payment: .............  -130.01
+    Due: .................      END
+    No. of Periods: ......    48.00
+    Compoundings per Year:    12
+    Nominal Rate: .......     11.32
+    Effective Rate: .....     11.93
+    Periodic Rate: ......      0.94
+
+    >>> tvmm(pval=[5, 500, 5], nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
+    #   pval   fval    pmt   nper  nrate  erate  prate due
+    ------------------------------------------------------
+    0   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
+    1 500.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
+    2   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
     """
 
     #pylint: disable=too-many-arguments
@@ -308,12 +308,96 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
     else:
         result = numpy.rate(pv=pval, nper=nper, fv=fval, pmt=pmt, when=due) * 100 * pyr
 
-    if isinstance(result, numpy.ndarray):
-        return result.tolist()
-    return result
+    if noprint is True:
+        if isinstance(result, numpy.ndarray):
+            return result.tolist()
+        return result
 
 
-def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1):
+    nrate = nrate.tolist()
+
+    if pval is None:
+        pval = result
+    elif fval is None:
+        fval = result
+    elif nper is None:
+        nper = result
+    elif pmt is None:
+        pmt = result
+    else:
+        nrate = result
+
+    params = vars2list([pval, fval, nper, pmt, nrate])
+    pval = params[0]
+    fval = params[1]
+    nper = params[2]
+    pmt = params[3]
+    nrate = params[4]
+
+    # raise ValueError(nrate.__repr__())
+
+    erate, prate = iconv(nrate=nrate, pyr=pyr)
+
+    if len(pval) == 1:
+        if pval is not None:
+            print('Present Value: ....... {:8.2f}'.format(pval[0]))
+        if fval is not None:
+            print('Future Value: ........ {:8.2f}'.format(fval[0]))
+        if pmt is not None:
+            print('Payment: ............. {:8.2f}'.format(pmt[0]))
+        if due is not None:
+            print('Due: .................      {:s}'.format('END' if due == 0 else 'BEG'))
+        print('No. of Periods: ...... {:8.2f}'.format(nper[0]))
+        print('Compoundings per Year: {:>5d}'.format(pyr))
+        print('Nominal Rate: .......  {:8.2f}'.format(nrate[0]))
+        print('Effective Rate: .....  {:8.2f}'.format(erate))
+        print('Periodic Rate: ......  {:8.2f}'.format(prate))
+
+    else:
+        if due == 0:
+            sdue = 'END'
+            txtpmt = []
+            for item, _ in enumerate(pval):
+                txtpmt.append(pmt[item][-1])
+        else:
+            sdue = 'BEG'
+            txtpmt = []
+            for item, _ in enumerate(pval):
+                txtpmt.append(pmt[item][0])
+
+
+        maxlen = 5
+        for value1, value2, value3, value4 in zip(pval, fval, txtpmt, nper):
+            maxlen = max(maxlen, len('{:1.2f}'.format(value1)))
+            maxlen = max(maxlen, len('{:1.2f}'.format(value2)))
+            maxlen = max(maxlen, len('{:1.2f}'.format(value3)))
+            maxlen = max(maxlen, len('{:1.2f}'.format(value4)))
+
+        len_aux = len('{:d}'.format(len(pval)))
+
+        fmt_num = ' {:' + '{:d}'.format(maxlen) + '.2f}'
+        fmt_num = '{:<' + '{:d}'.format(len_aux) +  'd}' + fmt_num * 7 + ' {:3s}'
+        # fmt_shr = '{:' + '{:d}'.format(len_aux) + 's}'
+        fmt_hdr = ' {:>' + '{:d}'.format(maxlen) + 's}'
+        fmt_hdr = '{:' + '{:d}'.format(len_aux) + 's}' + fmt_hdr * 7 + ' due'
+
+
+        txt = fmt_hdr.format('#', 'pval', 'fval', 'pmt', 'nper', 'nrate', 'erate', 'prate')
+        print(txt)
+        print('-' * len_aux + '-' * maxlen * 7 + '-' * 7 + '----')
+        for item, _ in enumerate(pval):
+            print(fmt_num.format(item,
+                                 pval[item],
+                                 fval[item],
+                                 txtpmt[item],
+                                 nper[item],
+                                 nrate[item],
+                                 erate[item],
+                                 prate[item],
+                                 sdue))
+
+
+def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     """Computes interest rate parameters.
 
     Args:
@@ -329,10 +413,10 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1):
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
     """
-    return tvmm(pval=pval, fval=fval, pmt=0, nrate=nrate, nper=nper, due=0, pyr=pyr)
+    return tvmm(pval=pval, fval=fval, pmt=0, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)
 
 
-def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1):
+def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     """Computes interest rate parameters for periodic payments.
 
     Args:
@@ -348,10 +432,10 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1):
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
     """
-    return tvmm(pval=0, fval=fval, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr)
+    return tvmm(pval=0, fval=fval, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)
 
 
-def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1):
+def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
     """Computes interest rate parameters for periodic payments.
 
     Args:
@@ -367,7 +451,7 @@ def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1):
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
     """
-    return tvmm(pval=pval, fval=0, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr)
+    return tvmm(pval=pval, fval=0, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)
 
 
 def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):

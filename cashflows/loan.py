@@ -219,11 +219,11 @@ class Loan():
     def __repr__(self):
 
         return repr_table(cols=[self.begppalbal,
-                             self.nrate,
-                             self.totpmt,
-                             self.intpmt,
-                             self.ppalpmt,
-                             self.endppalbal],
+                                self.nrate,
+                                self.totpmt,
+                                self.intpmt,
+                                self.ppalpmt,
+                                self.endppalbal],
                        header=[['Beg.', 'Per.', 'Total', 'Int.', 'Ppal', 'Ending'],
                                ['Ppal', 'Rate', 'Pmt', 'Pmt', 'Pmt', 'Ppal']])
 

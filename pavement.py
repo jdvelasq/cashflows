@@ -19,7 +19,8 @@ def pylint():
 @task
 def pypi():
     """Instalation on PyPi"""
-    sh('python setup.py register')
+    sh('python setup.py sdist')
+    sh('twine upload dist/*')
 
 
 @task

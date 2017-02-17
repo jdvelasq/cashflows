@@ -181,19 +181,19 @@ class Loan():
 
 
         if isinstance(tax_rate, (int, float)):
-            tax_rate = Rate(nper=self.life + self.grace, constValue=tax_rate)
+            tax_rate = nominal_rate(const_value = [tax_rate] * (self.life + self.grace + 1))
 
-        cashflow = Cashflow(nper=self.grace + self.life)
+        cflo = cashflow(const_value= [0] * (self.grace + self.life + 1))
 
         ##
         ## payments per period
         ##
         for time in range(self.grace + self.life + 1):
             if time == 0:
-                cashflow[0] = self.amount
-            cashflow[time] += -self.totpmt[time] + self.intpmt[time] * tax_rate[time]
+                cflo[0] = self.amount
+            cflo[time] += -self.totpmt[time] + self.intpmt[time] * tax_rate[time] / 100
 
-        return cashflow
+        return cflo
 
     def true_rate(self, tax_rate=0):
         """Computes the true interest rate for the loan.

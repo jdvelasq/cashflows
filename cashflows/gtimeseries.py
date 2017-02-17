@@ -311,6 +311,8 @@ class TimeSeries():
                 txt_freq += ['[{:d}]'.format(freq)]
                 txt_val += ['{:1.2f}'.format(self.data[period])]
 
+
+
             period += freq
 
         max_date = max_freq = max_val = 0

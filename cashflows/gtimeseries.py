@@ -295,12 +295,17 @@ class TimeSeries():
                 else:
                     end_date = (imajor, iminor)
 
+            iminor += 1
+            if iminor >= self.pyr:
+                iminor = 0
+                imajor += 1
+
             if freq == 1:
 
-                iminor += 1
-                if iminor >= self.pyr:
-                    iminor = 0
-                    imajor += 1
+#                iminor += 1
+#                if iminor >= self.pyr:
+#                    iminor = 0
+#                    imajor += 1
 
                 txt_date += ['{:s}'.format(beg_date.__str__())]
                 txt_freq += [' ']
@@ -814,6 +819,30 @@ def cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
 
     >>> x[(0,2)]  # doctest: +NORMALIZE_WHITESPACE
     2
+
+    >>> cashflow(const_value=[0, 1, 2, 2, 4, 5, 6, 7, 8])  # doctest: +NORMALIZE_WHITESPACE
+    Time Series:
+    Start = (0,)
+    End = (8,)
+    pyr = 1
+    Data = (0,)          0.00
+           (1,)          1.00
+           (2,)-(3,) [2] 2.00
+           (4,)          4.00
+           (5,)          5.00
+           (6,)          6.00
+           (7,)          7.00
+           (8,)          8.00
+
+
+    >>> cashflow(const_value=0, nper=15, pyr=1, spec=[(t,100) for t in range(5,10)]) # doctest: +NORMALIZE_WHITESPACE
+    Time Series:
+    Start = (0,)
+    End = (14,)
+    pyr = 1
+    Data = (0,)-(4,)   [5]   0.00
+           (5,)-(9,)   [5] 100.00
+           (10,)-(14,) [5]   0.00
 
     """
     if isinstance(const_value, list) and nper is None:

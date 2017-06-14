@@ -432,7 +432,7 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
     """
-    return tvmm(pval=0, fval=fval, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)
+    return tvmm(pval=0, fval=fval, pmt=pmt, nrate=nrate, nper=nper, due=1, pyr=pyr, noprint=noprint)
 
 
 def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):

@@ -867,34 +867,34 @@ def cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
         time_series[time] = value
     return time_series
 
-def nominal_rate(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
+def interest_rate(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
     """Returns a time series as a interest rate.
 
     >>> spec = ((2000, 3), 10)
-    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> interest_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 10.00 10.00 10.00
 
     >>> spec = [((2000, 3), 10), ((2001, 1), 20)]
-    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> interest_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 20.00 20.00 20.00
 
     >>> spec = (3, 10)
-    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> interest_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 10.00 10.00 10.00
 
     >>> spec = [(3, 10), (6, 20)]
-    >>> nominal_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
+    >>> interest_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE
           Qtr0  Qtr1  Qtr2  Qtr3
     2000  1.00  1.00  1.00 10.00
     2001 10.00 10.00 20.00 20.00
 
-    >>> nominal_rate(const_value=[10]*10, pyr=4)  # doctest: +NORMALIZE_WHITESPACE
+    >>> interest_rate(const_value=[10]*10, pyr=4)  # doctest: +NORMALIZE_WHITESPACE
        Qtr0  Qtr1  Qtr2  Qtr3
     0 10.00 10.00 10.00 10.00
     1 10.00 10.00 10.00 10.00

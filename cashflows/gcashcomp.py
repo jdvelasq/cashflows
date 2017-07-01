@@ -10,7 +10,7 @@ and `Rate` must have the same length.
 
 
 >>> cflo = cashflow(const_value=[100] * 5, spec=(0, -100))
->>> tax_rate = nominal_rate(const_value=[10] * 5)
+>>> tax_rate = interest_rate(const_value=[10] * 5)
 >>> after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE
 Time Series:
 Start = (0,)
@@ -25,7 +25,7 @@ Constant and current dollars transformations
 **Constant to current.**
 
 >>> const2curr(cflo=cashflow(const_value=[100] * 5),
-... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
 Time Series:
 Start = (0,)
 End = (4,)
@@ -38,7 +38,7 @@ Data = (0,)   100.00
 
 
 >>> const2curr(cflo=cashflow(const_value=[100] * 5),
-... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE
+... inflation=interest_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE
 Time Series:
 Start = (0,)
 End = (4,)
@@ -53,7 +53,7 @@ Data = (0,)    52.61
 **Current dollars to constant dollars.**
 
 >>> curr2const(cflo=cashflow(const_value=[100] * 5),
-... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
 Time Series:
 Start = (0,)
 End = (4,)
@@ -65,7 +65,7 @@ Data = (0,)   100.00
        (4,)    52.61
 
 >>> curr2const(cflo=cashflow(const_value=[100] * 5),
-... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE
+... inflation=interest_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE
 Time Series:
 Start = (0,)
 End = (4,)
@@ -89,7 +89,7 @@ pyr = 1
 Data = (0,)-(4,) [5] 200.00
 
 >>> currency_conversion(cflo=cashflow(const_value=[100] * 5), exchange_rate = 2,
-... devaluation=nominal_rate(const_value=[5]*5), base_date=(2,)) # doctest: +NORMALIZE_WHITESPACE
+... devaluation=interest_rate(const_value=[5]*5), base_date=(2,)) # doctest: +NORMALIZE_WHITESPACE
 Time Series:
 Start = (0,)
 End = (4,)
@@ -108,7 +108,7 @@ Description of the functions in this module
 
 """
 
-from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range, _timeid2index
+from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range, _timeid2index
 
 def vars2list(params):
     """ Converts the variables on lists of the same length
@@ -143,7 +143,7 @@ def after_tax_cashflow(cflo, tax_rate):
 
 
     >>> cflo = cashflow(const_value=[100] * 5, spec=(0, -100))
-    >>> tax_rate = nominal_rate(const_value=[10] * 5)
+    >>> tax_rate = interest_rate(const_value=[10] * 5)
     >>> after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
@@ -187,11 +187,11 @@ def to_discount_factor(nrate, base_date=0):
         Discount factor (list)
 
 
-    >>> to_discount_factor(nominal_rate(const_value=4,nper=12, pyr=4), base_date=2) # doctest: +ELLIPSIS
+    >>> to_discount_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=2) # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
 
-    >>> to_discount_factor(nominal_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
+    >>> to_discount_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
     """
@@ -221,10 +221,10 @@ def to_compound_factor(nrate, base_date=0):
     Returns:
         Compound factor (list)
 
-    >>> to_compound_factor(nominal_rate(const_value=4,nper=10, pyr=4), base_date=2) # doctest: +ELLIPSIS
+    >>> to_compound_factor(interest_rate(const_value=4,nper=10, pyr=4), base_date=2) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
 
-    >>> to_compound_factor(nominal_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
+    >>> to_compound_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
 
     """
@@ -263,7 +263,7 @@ def const2curr(cflo, inflation, base_date=0):
         A cashflow in current money (TimeSeries)
 
     >>> const2curr(cflo=cashflow(const_value=[100] * 5),
-    ... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+    ... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
     End = (4,)
@@ -311,7 +311,7 @@ def curr2const(cflo, inflation, base_date=0):
         A cashflow in constant dollars
 
     >>> curr2const(cflo=cashflow(const_value=[100] * 5),
-    ... inflation=nominal_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
+    ... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE
     Time Series:
     Start = (0,)
     End = (4,)

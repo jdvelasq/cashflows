@@ -2,7 +2,7 @@
 Module for modeling diferent types of loans
 
 
->>> nrate = nominal_rate(const_value=10, nper=11, pyr=4)
+>>> nrate = interest_rate(const_value=10, nper=11, pyr=4)
 >>> pmt = cashflow(const_value=0, nper = 11, pyr=4, spec=((1, 3), 200))
 
 >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=0, dispoints=0, orgpoints=0,
@@ -108,7 +108,7 @@ t         Beg.    Per.   Total    Int.    Ppal  Ending
 (2, 1)   15.23   10.00   15.61    0.38   15.23    0.00
 (2, 2)    0.00   10.00    0.00    0.00    0.00    0.00
 
->>> nrate = nominal_rate(const_value=10, nper=11, pyr=4, spec=(5, 20))
+>>> nrate = interest_rate(const_value=10, nper=11, pyr=4, spec=(5, 20))
 >>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
 t         Beg.    Per.   Total    Int.    Ppal  Ending
           Ppal    Rate     Pmt     Pmt     Pmt    Ppal
@@ -146,7 +146,7 @@ t         Beg.    Per.   Total    Int.    Ppal  Ending
 
 
 from cashflows.gcashana import timevalue
-from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range
+from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
 from cashflows.gtimeseries import repr_table
 from cashflows.gcashana import irr
 from cashflows.basics import pvpmt
@@ -181,7 +181,7 @@ class Loan():
 
 
         if isinstance(tax_rate, (int, float)):
-            tax_rate = nominal_rate(const_value = [tax_rate] * (self.life + self.grace + 1))
+            tax_rate = interest_rate(const_value = [tax_rate] * (self.life + self.grace + 1))
 
         cflo = cashflow(const_value= [0] * (self.grace + self.life + 1))
 
@@ -272,7 +272,7 @@ def fixed_rate_loan(amount, nrate, life, start, pyr=1, grace=0, dispoints=0,
     if not isinstance(float(nrate), float):
         TypeError('nrate must be a float.')
 
-    nrate = nominal_rate(const_value=nrate, start=start, nper=life+grace+1, pyr=pyr)
+    nrate = interest_rate(const_value=nrate, start=start, nper=life+grace+1, pyr=pyr)
 
     if prepmt is None:
         prepmt = cashflow(start=nrate.start, end=nrate.end, pyr=nrate.pyr)

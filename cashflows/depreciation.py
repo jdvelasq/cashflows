@@ -207,7 +207,7 @@ Description of the functions in this module
 """
 
 
-from cashflows.gtimeseries import TimeSeries, cashflow, nominal_rate, verify_eq_time_range
+from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
 
 def print_depr(depr, adepr, costs, begbook, endbook):
     """Prints a depreciation table

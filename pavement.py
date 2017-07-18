@@ -22,6 +22,12 @@ def pypi():
     sh('python setup.py sdist')
     sh('twine upload dist/*')
 
+@task
+def local():
+    """local install"""
+    sh("pip uninstall cashflows")
+    sh("python setup.py install develop")
+
 
 @task
 def sphinx():

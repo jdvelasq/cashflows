@@ -6,7 +6,7 @@ Modeling of savings accounts.
 
 >>> cflo = cashflow(const_value=[100] * 12, pyr=4)
 >>> nrate = interest_rate([10] * 12, pyr=4)
->>> savings(deposits=cflo, rate=nrate, initbal=0, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+>>> savings(deposits=cflo, nrate=nrate, initbal=0, noprint=False) # doctest: +NORMALIZE_WHITESPACE
 t      Beginning   Deposit    Earned    Ending
          Balance            Interest   Balance
 -----------------------------------------------
@@ -26,7 +26,7 @@ t      Beginning   Deposit    Earned    Ending
 
 >>> cflo = cashflow(const_value=[100] * 5, spec=[(0, 0), (2, 0)])
 >>> nrate = interest_rate([0, 1, 2, 3, 4])
->>> savings(deposits=cflo, rate=nrate, initbal=1000, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+>>> savings(deposits=cflo, nrate=nrate, initbal=1000, noprint=False) # doctest: +NORMALIZE_WHITESPACE
 t    Beginning   Deposit    Earned    Ending
        Balance            Interest   Balance
 ---------------------------------------------
@@ -53,14 +53,14 @@ from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq
 
 
 
-def savings(deposits, rate, initbal=0, noprint=True):
+def savings(deposits, nrate, initbal=0, noprint=True):
     """
     Computes the final balance for a savings account with arbitrary deposits and
     withdrawls and variable interset rate.
 
     Args:
         deposits (TimeSeries): deposits to the account.
-        rate (TimeSeries): interest rate paid by the account.
+        nrate (TimeSeries): nominal interest rate paid by the account.
         initbal (float): initial balance of the account.
         noprint (bool): prints summary report?
 
@@ -68,7 +68,7 @@ def savings(deposits, rate, initbal=0, noprint=True):
         interest, end_balance (TimeSeries, TimeSeries)
 
     """
-    verify_eq_time_range(deposits, rate)
+    verify_eq_time_range(deposits, nrate)
 
     begbal = deposits.copy()
     interest = deposits.copy()
@@ -77,11 +77,11 @@ def savings(deposits, rate, initbal=0, noprint=True):
     for time, _ in enumerate(deposits):
         if time == 0:
             begbal[0] = initbal
-            interest[0] = begbal[0] * rate[0] / 100 / rate.pyr
+            interest[0] = begbal[0] * nrate[0] / 100 / nrate.pyr
             endbal[0] = begbal[0] + deposits[0] + interest[0]
         else:
             begbal[time] = endbal[time - 1]
-            interest[time] = begbal[time] * rate[time] / 100 / rate.pyr
+            interest[time] = begbal[time] * nrate[time] / 100 / nrate.pyr
             if deposits[time] < 0 and -deposits[time] > begbal[time] + interest[time]:
                 deposits[time] = -(begbal[time] + interest[time])
             endbal[time] = begbal[time] + deposits[time] + interest[time]

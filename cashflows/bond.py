@@ -5,9 +5,6 @@ Examples:
 >>> bond(face_value=1000, coupon_value=56, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS
 1000.0...
 
->>> bond(face_value=1000, coupon_rate=5.6, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS
-1000.0...
-
 >>> bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=1000) # doctest: +ELLIPSIS
 5.6...
 
@@ -100,7 +97,7 @@ def bond(face_value=None, coupon_rate=None, coupon_value=None, num_coupons=None,
             value = [-x for x in value]
         else:
             value = -value
-        return tvmm(pmt=coupon_value, fval=face_value, pval=value, nper=num_coupons)
+        return tvmm(pmt=coupon_value, fval=face_value, pval=value, nper=num_coupons, pyr=1)
 
     #
     # value and ytm are not None

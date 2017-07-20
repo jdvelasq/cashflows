@@ -454,6 +454,15 @@ class TimeSeries():
         result.data = [value for value in self.data]
         return result
 
+
+    def cumsum(self):
+        """returns the cumulative sum of the time series"""
+        result = TimeSeries(start=self.start, end=self.end, nper=len(self.data), pyr=self.pyr)
+        result.data = [value for value in self.data]
+        for index in range(1, len(self.data)):
+            result.data[index] += result.data[index - 1]
+        return result
+
     #
     # mathematical operations
     #
@@ -843,6 +852,19 @@ def cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
     Data = (0,)-(4,)   [5]   0.00
            (5,)-(9,)   [5] 100.00
            (10,)-(14,) [5]   0.00
+
+
+    >>> cashflow(const_value=[0, 1, 2, 3, 4, 5]).cumsum() # doctest: +NORMALIZE_WHITESPACE
+    Time Series:
+    Start = (0,)
+    End = (5,)
+    pyr = 1
+    Data = (0,)          0.00
+           (1,)          1.00
+           (2,)          3.00
+           (3,)          6.00
+           (4,)         10.00
+           (5,)         15.00
 
     """
     if isinstance(const_value, list) and nper is None:

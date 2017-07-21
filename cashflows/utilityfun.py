@@ -27,6 +27,7 @@ def log_utility_fun(r_param):
         return exp(x) - r_param
     return utility_fun
 
+
 def sqrt_utility_fun(r_param):
     """Exponential utility function.
 

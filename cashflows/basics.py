@@ -171,57 +171,6 @@ t      Beginning     Periodic     Interest    Principal        Final
 
 
 
-Interest rate transformations (Function `iconv`).
-==============================================================================
-
-The function `rate` computes the transformation between nominal, effective and
-periodic interest rates. `erate` is the effective rate per year,  `nrate` is the
-nominal interest rate per year, and `prate` is the interest rate per period.
-`pyr` is the number of compunding periods per year.
-
-
-**Effective to nominal and periodic rates**.
-
->>> iconv(erate=10, pyr=12) # doctest: +ELLIPSIS
-(9.56..., 0.79...)
-
->>> iconv(erate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-([9.68..., 9.60..., 9.56...], [3.22..., 1.60..., 0.79...])
-
->>> iconv(erate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
-([9.56..., 11.38..., 13.17...], [0.79..., 0.94..., 1.09...])
-
->>> iconv(erate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-([9.68..., 11.44..., 13.17...], [3.22..., 1.90..., 1.09...])
-
-
-**Nominal to effective and periodic rates.**
-
->>> iconv(nrate=10, pyr=12) # doctest: +ELLIPSIS
-(10.47..., 0.83...)
-
->>> iconv(nrate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-([10.33..., 10.42..., 10.47...], [3.33..., 1.66..., 0.83...])
-
->>> iconv(nrate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
-([10.47..., 12.68..., 14.93...], [0.83..., 1.0, 1.16...])
-
->>> iconv(nrate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-([10.33..., 12.61..., 14.93...], [3.33..., 2.0, 1.16...])
-
-**Periodic to effective and nominal rates.**
-
->>> iconv(prate=1, pyr=12) # doctest: +ELLIPSIS
-(12, 12.68...)
-
->>> iconv(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-([3, 6, 12], [3.03..., 6.15..., 12.68...])
-
->>> iconv(prate=[1, 2, 3], pyr=12) # doctest: +ELLIPSIS
-([12, 24, 36], [12.68..., 26.82..., 42.57...])
-
->>> iconv(prate=[1, 2, 3], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-([3, 12, 36], [3.03..., 12.61..., 42.57...])
 
 
 
@@ -560,18 +509,65 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     return None
 
 def iconv(nrate=None, erate=None, prate=None, pyr=1):
-    """Transformations between nominal and effective annual interest rate.
+    """The function `iconv` computes the missing rates when only one of the
+    rates is specified.
 
     Args:
         nrate (float, list): nominal interest rate per year.
         erate (float, list): effective interest rate per year.
         prate (float, list): periodic rate
-        pyr (int, list): number of periods per year
+        pyr (int, list): number of compounding periods per year
 
     Returns:
         `(nrate, prate)`: when `erate` is specified
         `(erate, prate)`: when `nrate` is specified
         `(nrate, erate)`: when `prate` is specified
+
+    **Examples**
+
+    Efective interest rate to periodic and nominal interest rates.
+
+    >>> iconv(erate=10, pyr=12) # doctest: +ELLIPSIS
+    (9.56..., 0.79...)
+
+    >>> iconv(erate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    ([9.68..., 9.60..., 9.56...], [3.22..., 1.60..., 0.79...])
+
+    >>> iconv(erate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
+    ([9.56..., 11.38..., 13.17...], [0.79..., 0.94..., 1.09...])
+
+    >>> iconv(erate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    ([9.68..., 11.44..., 13.17...], [3.22..., 1.90..., 1.09...])
+
+
+    Nominal to effective and periodic rates.
+
+    >>> iconv(nrate=10, pyr=12) # doctest: +ELLIPSIS
+    (10.47..., 0.83...)
+
+    >>> iconv(nrate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    ([10.33..., 10.42..., 10.47...], [3.33..., 1.66..., 0.83...])
+
+    >>> iconv(nrate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
+    ([10.47..., 12.68..., 14.93...], [0.83..., 1.0, 1.16...])
+
+    >>> iconv(nrate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    ([10.33..., 12.61..., 14.93...], [3.33..., 2.0, 1.16...])
+
+    Periodic to effective and nominal rates.
+
+    >>> iconv(prate=1, pyr=12) # doctest: +ELLIPSIS
+    (12, 12.68...)
+
+    >>> iconv(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    ([3, 6, 12], [3.03..., 6.15..., 12.68...])
+
+    >>> iconv(prate=[1, 2, 3], pyr=12) # doctest: +ELLIPSIS
+    ([12, 24, 36], [12.68..., 26.82..., 42.57...])
+
+    >>> iconv(prate=[1, 2, 3], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    ([3, 12, 36], [3.03..., 12.61..., 42.57...])
+    
     """
 
     numnone = 0

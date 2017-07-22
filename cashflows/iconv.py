@@ -25,8 +25,9 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 
     **Examples**
 
-    Efective interest rate to periodic and nominal interest rates.
+    Effective interest rate to periodic and nominal interest rates.
 
+    # example in code
     >>> iconv(erate=10, pyr=12) # doctest: +ELLIPSIS
     (9.56..., 0.79...)
 

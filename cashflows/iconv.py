@@ -2,8 +2,13 @@
 import numpy
 
 def iconv(nrate=None, erate=None, prate=None, pyr=1):
-    """The function `iconv` computes the missing rates when only one of the
-    rates is specified as a parameter.
+    """The function `iconv` computes the conversion among periodic, nominal
+    and effective interest rates. Only an interest rate (periodic, nominal or
+    effective) must be specified and the other two are computed. The periodic
+    rate is the rate used in each compounding period. The effective rate is
+    the equivalent rate that produces the same interest earnings that a periodic
+    rate when there is P compounding periods in a year. The nominal rate is
+    defined as the annual rate computed as P times the periodic rate.
 
     Args:
         nrate (float, list): nominal interest rate per year.
@@ -13,9 +18,9 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 
     Returns:
         A tuple:
-        * `(nrate**, prate)`: when **erate** is specified.
-        * `(erate, prate)`: when `nrate` is specified.
-        * `(nrate, erate)`: when `prate` is specified.
+        * (**nrate**, **prate**): when **erate** is specified.
+        * (**erate**, **prate**): when **nrate** is specified.
+        * (**nrate**, **erate**): when **prate** is specified.
 
 
     **Examples**

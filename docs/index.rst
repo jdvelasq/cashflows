@@ -11,18 +11,18 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
+
+   tvmm
+   rate
+   gtimeseries
+   taxing
+   currency
+   inflation
    analysis
    bond
-   common
-   currency
    depreciation
-   gtimeseries
-   rate
-   inflation
    loan
    savings
-   taxing
-   tvmm
    utilityfun
 
 

@@ -317,9 +317,10 @@ def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
 def equivalent_rate(nrate=None, erate=None, prate=None):
     """Returns the equivalent interest rate over a time period.
 
-    nrate (TimeSeries): Nominal interest rate per year.
-    nrate (TimeSeries): Effective interest rate per year.
-    prate (TimeSeries): Periodic interest rate.
+    Args:
+        nrate (TimeSeries): Nominal interest rate per year.
+        nrate (TimeSeries): Effective interest rate per year.
+        prate (TimeSeries): Periodic interest rate.
 
     Returns:
         float value.

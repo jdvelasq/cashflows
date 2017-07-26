@@ -2,146 +2,20 @@
 Loan analysis
 ==============================================================================
 
+Computes the amorization schedule for the followint types of loans:
 
->>> nrate = interest_rate(const_value=10, nper=11, pyr=4)
->>> pmt = cashflow(const_value=0, nper = 11, pyr=4, spec=((1, 3), 200))
+* ``fixed_rate_loan``: In this loan, the interest rate is fixed and the total
+  payments are equal during the life of the loan.
 
->>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=0, dispoints=0, orgpoints=0,
-...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00  125.00   25.00  100.00  900.00
-(0, 2)  900.00   10.00  122.50   22.50  100.00  800.00
-(0, 3)  800.00   10.00  120.00   20.00  100.00  700.00
-(1, 0)  700.00   10.00  117.50   17.50  100.00  600.00
-(1, 1)  600.00   10.00  115.00   15.00  100.00  500.00
-(1, 2)  500.00   10.00  112.50   12.50  100.00  400.00
-(1, 3)  400.00   10.00  110.00   10.00  100.00  300.00
-(2, 0)  300.00   10.00  107.50    7.50  100.00  200.00
-(2, 1)  200.00   10.00  105.00    5.00  100.00  100.00
-(2, 2)  100.00   10.00  102.50    2.50  100.00    0.00
+* ``buydown_loan``: the interest rate changes during the life of the loan;
+  the value of the payments are calculated using the current value of the
+  interest rate. When the interest rate is constant during the life of the loan,
+  the results are equals to the function ``fixed_rate_loan``.
 
+* ``fixed_ppal_loan``: the payments to the principal are constant during the life
+  of loan.
 
->>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
-...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 3) 1000.00   10.00  150.00   25.00  125.00  875.00
-(1, 0)  875.00   10.00  146.88   21.88  125.00  750.00
-(1, 1)  750.00   10.00  143.75   18.75  125.00  625.00
-(1, 2)  625.00   10.00  140.62   15.62  125.00  500.00
-(1, 3)  500.00   10.00  137.50   12.50  125.00  375.00
-(2, 0)  375.00   10.00  134.38    9.38  125.00  250.00
-(2, 1)  250.00   10.00  131.25    6.25  125.00  125.00
-(2, 2)  125.00   10.00  128.12    3.12  125.00    0.00
-
->>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
-...                prepmt=pmt, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 3) 1000.00   10.00  150.00   25.00  125.00  875.00
-(1, 0)  875.00   10.00  146.88   21.88  125.00  750.00
-(1, 1)  750.00   10.00  143.75   18.75  125.00  625.00
-(1, 2)  625.00   10.00  140.62   15.62  125.00  500.00
-(1, 3)  500.00   10.00  337.50   12.50  325.00  175.00
-(2, 0)  175.00   10.00  129.38    4.38  125.00   50.00
-(2, 1)   50.00   10.00   51.25    1.25   50.00    0.00
-(2, 2)    0.00   10.00    0.00    0.00    0.00    0.00
-
->>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
-...                prepmt=None, balloonpmt=pmt)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 3) 1000.00   10.00  125.00   25.00  100.00  900.00
-(1, 0)  900.00   10.00  122.50   22.50  100.00  800.00
-(1, 1)  800.00   10.00  120.00   20.00  100.00  700.00
-(1, 2)  700.00   10.00  117.50   17.50  100.00  600.00
-(1, 3)  600.00   10.00  315.00   15.00  300.00  300.00
-(2, 0)  300.00   10.00  107.50    7.50  100.00  200.00
-(2, 1)  200.00   10.00  105.00    5.00  100.00  100.00
-(2, 2)  100.00   10.00  102.50    2.50  100.00    0.00
-
-
->>> bullet_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(0, 3) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(1, 0) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(1, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(1, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(1, 3) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(2, 0) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(2, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
-(2, 2) 1000.00   10.00 1025.00   25.00 1000.00    0.00
-
->>> fixed_rate_loan(amount=1000, nrate=10, life=10, start=None, pyr=4, grace=0, dispoints=0,
-...                 orgpoints=0, prepmt=pmt, balloonpmt=None)
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0) 1000.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00  114.26   25.00   89.26  910.74
-(0, 2)  910.74   10.00  114.26   22.77   91.49  819.25
-(0, 3)  819.25   10.00  114.26   20.48   93.78  725.47
-(1, 0)  725.47   10.00  114.26   18.14   96.12  629.35
-(1, 1)  629.35   10.00  114.26   15.73   98.52  530.83
-(1, 2)  530.83   10.00  114.26   13.27  100.99  429.84
-(1, 3)  429.84   10.00  314.26   10.75  303.51  126.33
-(2, 0)  126.33   10.00  114.26    3.16  111.10   15.23
-(2, 1)   15.23   10.00   15.61    0.38   15.23    0.00
-(2, 2)    0.00   10.00    0.00    0.00    0.00    0.00
-
->>> nrate = interest_rate(const_value=10, nper=11, pyr=4, spec=(5, 20))
->>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0) 1000.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00  114.26   25.00   89.26  910.74
-(0, 2)  910.74   10.00  114.26   22.77   91.49  819.25
-(0, 3)  819.25   10.00  114.26   20.48   93.78  725.47
-(1, 0)  725.47   10.00  114.26   18.14   96.12  629.35
-(1, 1)  629.35   20.00  123.99   31.47   92.53  536.83
-(1, 2)  536.83   20.00  123.99   26.84   97.15  439.67
-(1, 3)  439.67   20.00  123.99   21.98  102.01  337.66
-(2, 0)  337.66   20.00  123.99   16.88  107.11  230.55
-(2, 1)  230.55   20.00  123.99   11.53  112.47  118.09
-(2, 2)  118.09   20.00  123.99    5.90  118.09    0.00
-
-
->>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=pmt)  # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Per.   Total    Int.    Ppal  Ending
-          Ppal    Rate     Pmt     Pmt     Pmt    Ppal
-------------------------------------------------------
-(0, 0) 1000.00   10.00    0.00    0.00    0.00 1000.00
-(0, 1) 1000.00   10.00  114.26   25.00   89.26  910.74
-(0, 2)  910.74   10.00  114.26   22.77   91.49  819.25
-(0, 3)  819.25   10.00  114.26   20.48   93.78  725.47
-(1, 0)  725.47   10.00  114.26   18.14   96.12  629.35
-(1, 1)  629.35   20.00  123.99   31.47   92.53  536.83
-(1, 2)  536.83   20.00  123.99   26.84   97.15  439.67
-(1, 3)  439.67   20.00  323.99   21.98  302.01  137.66
-(2, 0)  137.66   20.00   50.55    6.88   43.67   94.00
-(2, 1)   94.00   20.00   50.55    4.70   45.85   48.14
-(2, 2)   48.14   20.00   50.55    2.41   48.14    0.00
+* ``bullet_loan``: the principal is payed at the end of the life of the loan.
 
 """
 
@@ -227,21 +101,21 @@ class Loan():
                        header=[['Beg.', 'Per.', 'Total', 'Int.', 'Ppal', 'Ending'],
                                ['Ppal', 'Rate', 'Pmt', 'Pmt', 'Pmt', 'Ppal']])
 
-    def x__repr__(self):
-        txt = ['']
-        txt.append('  t          Beginning  Periodic      Total     Interest    Principal       Ending')
-        txt.append('             Principal  Rate     Payment      Payment      Payment    Principal')
-        txt.append('--------------------------------------------------------------------------')
-
-        for time in range(self.grace + self.life + 1):
-            fmt = ' {:3d}       {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
-            txt.append(fmt.format(time,
-                                  self.begppalbal[time],
-                                  self.totpmt[time],
-                                  self.intpmt[time],
-                                  self.ppalpmt[time],
-                                  self.endppalbal[time]))
-        return '\n'.join(txt)
+#    def x__repr__(self):
+#        txt = ['']
+#        txt.append('  t          Beginning  Periodic      Total     Interest    Principal       Ending')
+#        txt.append('             Principal  Rate     Payment      Payment      Payment    Principal')
+#        txt.append('--------------------------------------------------------------------------')
+#
+#        for time in range(self.grace + self.life + 1):
+#            fmt = ' {:3d}       {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
+#            txt.append(fmt.format(time,
+#                                  self.begppalbal[time],
+#                                  self.totpmt[time],
+#                                  self.intpmt[time],
+#                                  self.ppalpmt[time],
+#                                  self.endppalbal[time]))
+#        return '\n'.join(txt)
 
     def interest(self):
         """Returns the interest paid as a Cashflow object."""
@@ -266,7 +140,40 @@ class Loan():
 
 def fixed_rate_loan(amount, nrate, life, start, pyr=1, grace=0, dispoints=0,
                     orgpoints=0, prepmt=None, balloonpmt=None):
-    """Fixed rate loan
+    """Fixed rate loan.
+
+    Args:
+        amount (float): Loan amount.
+        nrate (float): nominal interest rate per year.
+        life (float): life of the loan.
+        start (int, tuple): init period for the loan.
+        pyr (int): number of compounding periods per year.
+        grace (int): number of periods of grace (without payment of the principal)
+        dispoints (float): Discount points of the loan.
+        orgpoints (float): Origination points of the loan.
+        prepmt (TimeSeries): generic cashflow representing prepayments.
+        balloonpmt (TimeSeries): generic cashflow representing balloon payments.
+
+    Returns:
+       A object of the class ``Loan``.
+
+    >>> pmt = cashflow(const_value=0, nper = 11, pyr=4, spec=((1, 3), 200))
+    >>> fixed_rate_loan(amount=1000, nrate=10, life=10, start=None, pyr=4, grace=0, dispoints=0,
+    ...                 orgpoints=0, prepmt=pmt, balloonpmt=None)
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0) 1000.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00  114.26   25.00   89.26  910.74
+    (0, 2)  910.74   10.00  114.26   22.77   91.49  819.25
+    (0, 3)  819.25   10.00  114.26   20.48   93.78  725.47
+    (1, 0)  725.47   10.00  114.26   18.14   96.12  629.35
+    (1, 1)  629.35   10.00  114.26   15.73   98.52  530.83
+    (1, 2)  530.83   10.00  114.26   13.27  100.99  429.84
+    (1, 3)  429.84   10.00  314.26   10.75  303.51  126.33
+    (2, 0)  126.33   10.00  114.26    3.16  111.10   15.23
+    (2, 1)   15.23   10.00   15.61    0.38   15.23    0.00
+    (2, 2)    0.00   10.00    0.00    0.00    0.00    0.00
 
     """
     if not isinstance(float(nrate), float):
@@ -352,7 +259,55 @@ def fixed_rate_loan(amount, nrate, life, start, pyr=1, grace=0, dispoints=0,
 
 def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
     """
-    Buydown loan
+    In this loan, the periodic payments are recalculated when there are changes
+    in the value of the interest rate.
+
+    Args:
+        amount (float): Loan amount.
+        nrate (float, TimeSeries): nominal interest rate per year.
+        grace (int): numner of grace periods without paying the principal.
+        dispoints (float): Discount points of the loan.
+        orgpoints (float): Origination points of the loan.
+        prepmt (TimeSeries): generic cashflow representing prepayments.
+
+
+    Returns:
+       A object of the class ``Loan``.
+
+    >>> nrate = interest_rate(const_value=10, nper=11, pyr=4, spec=(5, 20))
+    >>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0) 1000.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00  114.26   25.00   89.26  910.74
+    (0, 2)  910.74   10.00  114.26   22.77   91.49  819.25
+    (0, 3)  819.25   10.00  114.26   20.48   93.78  725.47
+    (1, 0)  725.47   10.00  114.26   18.14   96.12  629.35
+    (1, 1)  629.35   20.00  123.99   31.47   92.53  536.83
+    (1, 2)  536.83   20.00  123.99   26.84   97.15  439.67
+    (1, 3)  439.67   20.00  123.99   21.98  102.01  337.66
+    (2, 0)  337.66   20.00  123.99   16.88  107.11  230.55
+    (2, 1)  230.55   20.00  123.99   11.53  112.47  118.09
+    (2, 2)  118.09   20.00  123.99    5.90  118.09    0.00
+
+
+    >>> pmt = cashflow(const_value=0, nper = 11, pyr=4, spec=((1, 3), 200))
+    >>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=pmt)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0) 1000.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00  114.26   25.00   89.26  910.74
+    (0, 2)  910.74   10.00  114.26   22.77   91.49  819.25
+    (0, 3)  819.25   10.00  114.26   20.48   93.78  725.47
+    (1, 0)  725.47   10.00  114.26   18.14   96.12  629.35
+    (1, 1)  629.35   20.00  123.99   31.47   92.53  536.83
+    (1, 2)  536.83   20.00  123.99   26.84   97.15  439.67
+    (1, 3)  439.67   20.00  323.99   21.98  302.01  137.66
+    (2, 0)  137.66   20.00   50.55    6.88   43.67   94.00
+    (2, 1)   94.00   20.00   50.55    4.70   45.85   48.14
+    (2, 2)   48.14   20.00   50.55    2.41   48.14    0.00
 
 
     """
@@ -435,6 +390,91 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
                prepmt=None, balloonpmt=None):
     """Loan with fixed principal payment.
 
+    Args:
+        amount (float): Loan amount.
+        nrate (float, TimeSeries): nominal interest rate per year.
+        grace (int): number of grace periiods without paying principal.
+        dispoints (float): Discount points of the loan.
+        orgpoints (float): Origination points of the loan.
+        prepmt (TimeSeries): generic cashflow representing prepayments.
+        balloonpmt (TimeSeries): generic cashflow representing balloon payments.
+
+
+    Returns:
+       A object of the class ``Loan``.
+
+    >>> nrate = interest_rate(const_value=10, nper=11, pyr=4)
+    >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=0, dispoints=0, orgpoints=0,
+    ...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00  125.00   25.00  100.00  900.00
+    (0, 2)  900.00   10.00  122.50   22.50  100.00  800.00
+    (0, 3)  800.00   10.00  120.00   20.00  100.00  700.00
+    (1, 0)  700.00   10.00  117.50   17.50  100.00  600.00
+    (1, 1)  600.00   10.00  115.00   15.00  100.00  500.00
+    (1, 2)  500.00   10.00  112.50   12.50  100.00  400.00
+    (1, 3)  400.00   10.00  110.00   10.00  100.00  300.00
+    (2, 0)  300.00   10.00  107.50    7.50  100.00  200.00
+    (2, 1)  200.00   10.00  105.00    5.00  100.00  100.00
+    (2, 2)  100.00   10.00  102.50    2.50  100.00    0.00
+
+
+    >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
+    ...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 3) 1000.00   10.00  150.00   25.00  125.00  875.00
+    (1, 0)  875.00   10.00  146.88   21.88  125.00  750.00
+    (1, 1)  750.00   10.00  143.75   18.75  125.00  625.00
+    (1, 2)  625.00   10.00  140.62   15.62  125.00  500.00
+    (1, 3)  500.00   10.00  137.50   12.50  125.00  375.00
+    (2, 0)  375.00   10.00  134.38    9.38  125.00  250.00
+    (2, 1)  250.00   10.00  131.25    6.25  125.00  125.00
+    (2, 2)  125.00   10.00  128.12    3.12  125.00    0.00
+
+    >>> pmt = cashflow(const_value=0, nper = 11, pyr=4, spec=((1, 3), 200))
+    >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
+    ...                prepmt=pmt, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 3) 1000.00   10.00  150.00   25.00  125.00  875.00
+    (1, 0)  875.00   10.00  146.88   21.88  125.00  750.00
+    (1, 1)  750.00   10.00  143.75   18.75  125.00  625.00
+    (1, 2)  625.00   10.00  140.62   15.62  125.00  500.00
+    (1, 3)  500.00   10.00  337.50   12.50  325.00  175.00
+    (2, 0)  175.00   10.00  129.38    4.38  125.00   50.00
+    (2, 1)   50.00   10.00   51.25    1.25   50.00    0.00
+    (2, 2)    0.00   10.00    0.00    0.00    0.00    0.00
+
+    >>> pmt = cashflow(const_value=0, nper = 11, pyr=4, spec=((1, 3), 200))
+    >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
+    ...                prepmt=None, balloonpmt=pmt)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 3) 1000.00   10.00  125.00   25.00  100.00  900.00
+    (1, 0)  900.00   10.00  122.50   22.50  100.00  800.00
+    (1, 1)  800.00   10.00  120.00   20.00  100.00  700.00
+    (1, 2)  700.00   10.00  117.50   17.50  100.00  600.00
+    (1, 3)  600.00   10.00  315.00   15.00  300.00  300.00
+    (2, 0)  300.00   10.00  107.50    7.50  100.00  200.00
+    (2, 1)  200.00   10.00  105.00    5.00  100.00  100.00
+    (2, 2)  100.00   10.00  102.50    2.50  100.00    0.00
+
     """
     #pylint: disable-msg=too-many-arguments
 
@@ -507,6 +547,39 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
 
 
 def bullet_loan(amount, nrate, dispoints=0, orgpoints=0, prepmt=None):
+    """
+    In this type of loan, the principal is payed at the end for the life of the
+    loan. Periodic payments correspond only to interests.
+
+    Args:
+        amount (float): Loan amount.
+        nrate (float, TimeSeries): nominal interest rate per year.
+        dispoints (float): Discount points of the loan.
+        orgpoints (float): Origination points of the loan.
+        prepmt (TimeSeries): generic cashflow representing prepayments.
+
+    Returns:
+       A object of the class ``Loan``.
+
+    >>> nrate = interest_rate(const_value=10, nper=11, pyr=4)
+    >>> bullet_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Per.   Total    Int.    Ppal  Ending
+              Ppal    Rate     Pmt     Pmt     Pmt    Ppal
+    ------------------------------------------------------
+    (0, 0)    0.00   10.00    0.00    0.00    0.00 1000.00
+    (0, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (0, 3) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (1, 0) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (1, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (1, 2) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (1, 3) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (2, 0) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (2, 1) 1000.00   10.00   25.00   25.00    0.00 1000.00
+    (2, 2) 1000.00   10.00 1025.00   25.00 1000.00    0.00
+
+
+    """
     balloonpmt = cashflow(const_value=0, start=nrate.start, end=nrate.end, pyr=nrate.pyr)
     balloonpmt[-1] = amount
     return fixed_ppal_loan(amount=amount, nrate=nrate, grace=0, dispoints=dispoints,

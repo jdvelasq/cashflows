@@ -5,13 +5,39 @@ Time value of money models
 This module contains functions for computing the time value of the money.
 
 * ``pvfv``: computes the missing value in the equation
-  ``fval = pval * (1 + rate) ** nper``
+  ``fval = pval * (1 + rate) ** nper``, that represents the following
+  cashflow.
 
 .. image:: ./images/pvfv.png
-    :width: 400px
+    :width: 350px
     :align: center
 
-* ``pvpmt``: computes the missing value in
+* ``pvpmt``: computes the missing value (`pmt`, `pval`, `nper`, `nrate`) in a
+  model relating a present value and
+  a finite sequence of payments made at the end of the period (payments
+  in arrears, or ordinary annuities), as indicated in the following cashflow
+  diagram:
+
+.. image:: ./images/pvpmt.png
+    :width: 350px
+    :align: center
+
+* ``pmtfv``: computes the missing value (`pmt`, `fval`, `nper`, `nrate`) in a
+  model relating a finite sequence  of payments in advance (annuities due)
+  and a future value, as indicated in the following diagram:
+
+.. image:: ./images/pmtfv.png
+    :width: 350px
+    :align: center
+
+* ``tvmm``: computes the missing value (`pmt`, `fval`, `pval, `nper`, `nrate`)
+  in a model relating a finite sequence  of payments made at the beginning or at
+  the end of the period, a present value, a future value, and an interest rate,
+  as indicated in the following diagram:
+
+.. image:: ./images/tvmm.png
+    :width: 650px
+    :align: center
 
 
 """
@@ -22,8 +48,8 @@ from cashflows.rate import iconv
 
 
 def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):
-    """Computes present and future values, interest rate and number
-    of periods.
+    """Computes present and future values, periodic payments, nominal interest
+    rate or number of periods.
 
     Args:
         pval (float, list): Present value.
@@ -225,7 +251,7 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
 
 def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """Computes interest rate parameters.
+    """Computes the missing argument (set to None) in the function call.
 
     Args:
         pval (float, list): Present value.
@@ -233,6 +259,7 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
         nrate (float, list): Nominal interest rate per year.
         nper (int, list): Number of compounding periods.
         pyr (int, list): number of periods per year.
+        noprint (bool): prints enhanced output
 
     Returns:
         The value of the parameter set to None in the function call.
@@ -244,7 +271,7 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
 
 
 def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """Computes interest rate parameters for periodic payments.
+    """CComputes the missing argument (set to None) in the function call.
 
     Args:
         pmt (float, list): Periodic payment.
@@ -252,6 +279,7 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
         nrate (float, list): Nominal rate per year.
         nper (int, list): Number of compounding periods.
         pyr (int, list): number of periods per year.
+        noprint (bool): prints enhanced output
 
     Returns:
         The value of the parameter set to None in the function call.
@@ -263,7 +291,7 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
 
 
 def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """Computes interest rate parameters for periodic payments.
+    """Computes the missing argument (set to None) in the function call.
 
     Args:
         pmt (float, list): Periodic payment.
@@ -271,6 +299,7 @@ def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
         nrate (float, list): Nominal interest rate per year.
         nper (int, list): Number of compounding periods.
         pyr (int, list): number of periods per year.
+        noprint (bool): prints enhanced output
 
     Returns:
         The value of the parameter set to None in the function call.
@@ -292,6 +321,7 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
         nper (int): total number of compounding periods.
         due (int): When payments are due.
         pyr (int, list): number of periods per year.
+        noprint (bool): prints enhanced output
 
     Returns:
         A tuple: (principal, interest, payment, balance)

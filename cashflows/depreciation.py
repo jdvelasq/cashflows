@@ -2,206 +2,6 @@
 Asset depreciation
 ===============================================================================
 
-Depreciation using the Straight Line Method
--------------------------------------------------------------------------------
-
->>> costs1 = cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
->>> costs2 = cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
->>> life1 = cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
->>> life2 = cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
->>> delay12 = cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
->>> delay22 = cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
-
->>> depreciation_sl(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 250.00 250.00 250.00
-1 250.00   0.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
-3   0.00   0.00   0.00   0.00
-
->>> depreciation_sl(costs=costs1, life=life1, delay=delay12) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00   0.00 250.00
-1 250.00 250.00 250.00   0.00
-2   0.00   0.00   0.00   0.00
-3   0.00   0.00   0.00   0.00
-
->>> depreciation_sl(costs=costs2, life=life2) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 250.00 250.00 250.00
-1 250.00   0.00   0.00   0.00
-2   0.00 250.00 250.00 250.00
-3 250.00   0.00   0.00   0.00
-
-
->>> depreciation_sl(costs=costs2, life=life2, delay=delay22) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00   0.00 250.00
-1 250.00 250.00 250.00   0.00
-2   0.00   0.00   0.00 250.00
-3 250.00 250.00 250.00   0.00
-
->>> depreciation_sl(costs=costs2, life=life2, delay=delay22, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Cost  Depre.  Accum.    End.
-          Book                  Depre.    Book
-         Value                           Value
-----------------------------------------------
-(0, 0)    0.00 1000.00    0.00    0.00 1000.00
-(0, 1) 1000.00    0.00    0.00    0.00 1000.00
-(0, 2) 1000.00    0.00    0.00    0.00 1000.00
-(0, 3) 1000.00    0.00  250.00  250.00  750.00
-(1, 0)  750.00    0.00  250.00  500.00  500.00
-(1, 1)  500.00    0.00  250.00  750.00  250.00
-(1, 2)  250.00    0.00  250.00 1000.00    0.00
-(1, 3)    0.00    0.00    0.00 1000.00    0.00
-(2, 0)    0.00 1000.00    0.00 1000.00 1000.00
-(2, 1) 1000.00    0.00    0.00 1000.00 1000.00
-(2, 2) 1000.00    0.00    0.00 1000.00 1000.00
-(2, 3) 1000.00    0.00  250.00 1250.00  750.00
-(3, 0)  750.00    0.00  250.00 1500.00  500.00
-(3, 1)  500.00    0.00  250.00 1750.00  250.00
-(3, 2)  250.00    0.00  250.00 2000.00    0.00
-(3, 3)    0.00    0.00    0.00 2000.00    0.00
-
-
-
-
-Depreciation using the Sum-of-years Digits Method
--------------------------------------------------------------------------------
-
->>> depreciation_soyd(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 400.00 300.00 200.00
-1 100.00   0.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
-3   0.00   0.00   0.00   0.00
-
->>> depreciation_soyd(costs=costs1, life=life1, delay=delay12) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00   0.00 400.00
-1 300.00 200.00 100.00   0.00
-2   0.00   0.00   0.00   0.00
-3   0.00   0.00   0.00   0.00
-
->>> depreciation_soyd(costs=costs2, life=life2) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 400.00 300.00 200.00
-1 100.00   0.00   0.00   0.00
-2   0.00 400.00 300.00 200.00
-3 100.00   0.00   0.00   0.00
-
-
->>> depreciation_soyd(costs=costs2, life=life2, delay=delay22) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00   0.00 400.00
-1 300.00 200.00 100.00   0.00
-2   0.00   0.00   0.00 400.00
-3 300.00 200.00 100.00   0.00
-
->>> depreciation_soyd(costs=costs2, life=life2, delay=delay22, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Cost  Depre.  Accum.    End.
-          Book                  Depre.    Book
-         Value                           Value
-----------------------------------------------
-(0, 0)    0.00 1000.00    0.00    0.00 1000.00
-(0, 1) 1000.00    0.00    0.00    0.00 1000.00
-(0, 2) 1000.00    0.00    0.00    0.00 1000.00
-(0, 3) 1000.00    0.00  400.00  400.00  600.00
-(1, 0)  600.00    0.00  300.00  700.00  300.00
-(1, 1)  300.00    0.00  200.00  900.00  100.00
-(1, 2)  100.00    0.00  100.00 1000.00    0.00
-(1, 3)    0.00    0.00    0.00 1000.00    0.00
-(2, 0)    0.00 1000.00    0.00 1000.00 1000.00
-(2, 1) 1000.00    0.00    0.00 1000.00 1000.00
-(2, 2) 1000.00    0.00    0.00 1000.00 1000.00
-(2, 3) 1000.00    0.00  400.00 1400.00  600.00
-(3, 0)  600.00    0.00  300.00 1700.00  300.00
-(3, 1)  300.00    0.00  200.00 1900.00  100.00
-(3, 2)  100.00    0.00  100.00 2000.00    0.00
-(3, 3)    0.00    0.00    0.00 2000.00    0.00
-
-
-
-
-
-Depreciation using the Declining Balance Method
--------------------------------------------------------------------------------
-
->>> depreciation_db(costs=costs1, life=life1, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 375.00 234.38 146.48
-1  91.55   0.00   0.00   0.00
-2   0.00   0.00   0.00   0.00
-3   0.00   0.00   0.00   0.00
-
->>> depreciation_db(costs=costs1, life=life1, factor=1.5, convert_to_sl=False, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Cost  Depre.  Accum.    End.
-          Book                  Depre.    Book
-         Value                           Value
-----------------------------------------------
-(0, 0)    0.00 1000.00    0.00    0.00 1000.00
-(0, 1) 1000.00    0.00  375.00  375.00  625.00
-(0, 2)  625.00    0.00  234.38  609.38  390.62
-(0, 3)  390.62    0.00  146.48  755.86  244.14
-(1, 0)  244.14    0.00   91.55  847.41  152.59
-(1, 1)  152.59    0.00    0.00  847.41  152.59
-(1, 2)  152.59    0.00    0.00  847.41  152.59
-(1, 3)  152.59    0.00    0.00  847.41  152.59
-(2, 0)  152.59    0.00    0.00  847.41  152.59
-(2, 1)  152.59    0.00    0.00  847.41  152.59
-(2, 2)  152.59    0.00    0.00  847.41  152.59
-(2, 3)  152.59    0.00    0.00  847.41  152.59
-(3, 0)  152.59    0.00    0.00  847.41  152.59
-(3, 1)  152.59    0.00    0.00  847.41  152.59
-(3, 2)  152.59    0.00    0.00  847.41  152.59
-(3, 3)  152.59    0.00    0.00  847.41  152.59
-
->>> depreciation_db(costs=costs1, life=life1, delay=delay12, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00   0.00 375.00
-1 234.38 146.48  91.55   0.00
-2   0.00   0.00   0.00   0.00
-3   0.00   0.00   0.00   0.00
-
->>> depreciation_db(costs=costs2, life=life2, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00 375.00 234.38 146.48
-1  91.55   0.00   0.00   0.00
-2   0.00 375.00 234.38 146.48
-3  91.55   0.00   0.00   0.00
-
->>> depreciation_db(costs=costs2, life=life2, delay=delay22, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-    Qtr0   Qtr1   Qtr2   Qtr3
-0   0.00   0.00   0.00 375.00
-1 234.38 146.48  91.55   0.00
-2   0.00   0.00   0.00 375.00
-3 234.38 146.48  91.55   0.00
-
->>> depreciation_db(costs=costs2, life=life2, delay=delay22, factor=1.5, convert_to_sl=False, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-t         Beg.    Cost  Depre.  Accum.    End.
-          Book                  Depre.    Book
-         Value                           Value
-----------------------------------------------
-(0, 0)    0.00 1000.00    0.00    0.00 1000.00
-(0, 1) 1000.00    0.00    0.00    0.00 1000.00
-(0, 2) 1000.00    0.00    0.00    0.00 1000.00
-(0, 3) 1000.00    0.00  375.00  375.00  625.00
-(1, 0)  625.00    0.00  234.38  609.38  390.62
-(1, 1)  390.62    0.00  146.48  755.86  244.14
-(1, 2)  244.14    0.00   91.55  847.41  152.59
-(1, 3)  152.59    0.00    0.00  847.41  152.59
-(2, 0)  152.59 1000.00    0.00  847.41 1152.59
-(2, 1) 1152.59    0.00    0.00  847.41 1152.59
-(2, 2) 1152.59    0.00    0.00  847.41 1152.59
-(2, 3) 1152.59    0.00  375.00 1222.41  777.59
-(3, 0)  777.59    0.00  234.38 1456.79  543.21
-(3, 1)  543.21    0.00  146.48 1603.27  396.73
-(3, 2)  396.73    0.00   91.55 1694.82  305.18
-(3, 3)  305.18    0.00    0.00 1694.82  305.18
-
-
-
-
 """
 
 
@@ -301,6 +101,67 @@ def depreciation_sl(costs, life, salvalue=None, delay=None, noprint=True):
     Returns:
         depreciation, accum_depreciation (TimeSeries, TimeSeries).
 
+
+    **Examples.**
+
+    >>> costs1 = cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
+    >>> costs2 = cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
+    >>> life1 = cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
+    >>> life2 = cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
+    >>> delay12 = cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
+    >>> delay22 = cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
+    >>> depreciation_sl(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00 250.00 250.00 250.00
+    1 250.00   0.00   0.00   0.00
+    2   0.00   0.00   0.00   0.00
+    3   0.00   0.00   0.00   0.00
+
+    >>> depreciation_sl(costs=costs1, life=life1, delay=delay12) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00   0.00   0.00 250.00
+    1 250.00 250.00 250.00   0.00
+    2   0.00   0.00   0.00   0.00
+    3   0.00   0.00   0.00   0.00
+
+    >>> depreciation_sl(costs=costs2, life=life2) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00 250.00 250.00 250.00
+    1 250.00   0.00   0.00   0.00
+    2   0.00 250.00 250.00 250.00
+    3 250.00   0.00   0.00   0.00
+
+
+    >>> depreciation_sl(costs=costs2, life=life2, delay=delay22) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00   0.00   0.00 250.00
+    1 250.00 250.00 250.00   0.00
+    2   0.00   0.00   0.00 250.00
+    3 250.00 250.00 250.00   0.00
+
+    >>> depreciation_sl(costs=costs2, life=life2, delay=delay22, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Cost  Depre.  Accum.    End.
+              Book                  Depre.    Book
+             Value                           Value
+    ----------------------------------------------
+    (0, 0)    0.00 1000.00    0.00    0.00 1000.00
+    (0, 1) 1000.00    0.00    0.00    0.00 1000.00
+    (0, 2) 1000.00    0.00    0.00    0.00 1000.00
+    (0, 3) 1000.00    0.00  250.00  250.00  750.00
+    (1, 0)  750.00    0.00  250.00  500.00  500.00
+    (1, 1)  500.00    0.00  250.00  750.00  250.00
+    (1, 2)  250.00    0.00  250.00 1000.00    0.00
+    (1, 3)    0.00    0.00    0.00 1000.00    0.00
+    (2, 0)    0.00 1000.00    0.00 1000.00 1000.00
+    (2, 1) 1000.00    0.00    0.00 1000.00 1000.00
+    (2, 2) 1000.00    0.00    0.00 1000.00 1000.00
+    (2, 3) 1000.00    0.00  250.00 1250.00  750.00
+    (3, 0)  750.00    0.00  250.00 1500.00  500.00
+    (3, 1)  500.00    0.00  250.00 1750.00  250.00
+    (3, 2)  250.00    0.00  250.00 2000.00    0.00
+    (3, 3)    0.00    0.00    0.00 2000.00    0.00
+
+
     """
     verify_eq_time_range(costs, life)
     if salvalue is not None:
@@ -362,6 +223,68 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None, noprint=True):
     Returns:
         A tuple (dep, accum) of lists (tuple): depreciation per period and accumulated depreciation per period
 
+
+    **Examples.**
+
+
+    >>> costs1 = cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
+    >>> costs2 = cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
+    >>> life1 = cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
+    >>> life2 = cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
+    >>> delay12 = cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
+    >>> delay22 = cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
+    >>> depreciation_soyd(costs=costs1, life=life1) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00 400.00 300.00 200.00
+    1 100.00   0.00   0.00   0.00
+    2   0.00   0.00   0.00   0.00
+    3   0.00   0.00   0.00   0.00
+
+    >>> depreciation_soyd(costs=costs1, life=life1, delay=delay12) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00   0.00   0.00 400.00
+    1 300.00 200.00 100.00   0.00
+    2   0.00   0.00   0.00   0.00
+    3   0.00   0.00   0.00   0.00
+
+    >>> depreciation_soyd(costs=costs2, life=life2) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00 400.00 300.00 200.00
+    1 100.00   0.00   0.00   0.00
+    2   0.00 400.00 300.00 200.00
+    3 100.00   0.00   0.00   0.00
+
+
+    >>> depreciation_soyd(costs=costs2, life=life2, delay=delay22) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00   0.00   0.00 400.00
+    1 300.00 200.00 100.00   0.00
+    2   0.00   0.00   0.00 400.00
+    3 300.00 200.00 100.00   0.00
+
+    >>> depreciation_soyd(costs=costs2, life=life2, delay=delay22, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Cost  Depre.  Accum.    End.
+              Book                  Depre.    Book
+             Value                           Value
+    ----------------------------------------------
+    (0, 0)    0.00 1000.00    0.00    0.00 1000.00
+    (0, 1) 1000.00    0.00    0.00    0.00 1000.00
+    (0, 2) 1000.00    0.00    0.00    0.00 1000.00
+    (0, 3) 1000.00    0.00  400.00  400.00  600.00
+    (1, 0)  600.00    0.00  300.00  700.00  300.00
+    (1, 1)  300.00    0.00  200.00  900.00  100.00
+    (1, 2)  100.00    0.00  100.00 1000.00    0.00
+    (1, 3)    0.00    0.00    0.00 1000.00    0.00
+    (2, 0)    0.00 1000.00    0.00 1000.00 1000.00
+    (2, 1) 1000.00    0.00    0.00 1000.00 1000.00
+    (2, 2) 1000.00    0.00    0.00 1000.00 1000.00
+    (2, 3) 1000.00    0.00  400.00 1400.00  600.00
+    (3, 0)  600.00    0.00  300.00 1700.00  300.00
+    (3, 1)  300.00    0.00  200.00 1900.00  100.00
+    (3, 2)  100.00    0.00  100.00 2000.00    0.00
+    (3, 3)    0.00    0.00    0.00 2000.00    0.00
+
+
     """
     verify_eq_time_range(costs, life)
     if salvalue is not None:
@@ -422,6 +345,88 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
 
     Returns:
         A tuple (dep, accum) of lists (tuple): depreciation per period and accumulated depreciation per period
+
+
+    **Examples.**
+
+
+    >>> costs1 = cashflow(const_value=0, nper=16, spec=(0, 1000), pyr=4)
+    >>> costs2 = cashflow(const_value=0, nper=16, spec=[(0, 1000), (8, 1000)], pyr=4)
+    >>> life1 = cashflow(const_value=0, nper=16, spec=(0, 4), pyr=4)
+    >>> life2 = cashflow(const_value=0, nper=16, spec=[(0, 4), (8, 4)], pyr=4)
+    >>> delay12 = cashflow(const_value=0, nper=16, spec=(0, 2), pyr=4)
+    >>> delay22 = cashflow(const_value=0, nper=16, spec=[(0, 2), (8, 2)], pyr=4)
+    >>> depreciation_db(costs=costs1, life=life1, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00 375.00 234.38 146.48
+    1  91.55   0.00   0.00   0.00
+    2   0.00   0.00   0.00   0.00
+    3   0.00   0.00   0.00   0.00
+
+    >>> depreciation_db(costs=costs1, life=life1, factor=1.5, convert_to_sl=False, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Cost  Depre.  Accum.    End.
+              Book                  Depre.    Book
+             Value                           Value
+    ----------------------------------------------
+    (0, 0)    0.00 1000.00    0.00    0.00 1000.00
+    (0, 1) 1000.00    0.00  375.00  375.00  625.00
+    (0, 2)  625.00    0.00  234.38  609.38  390.62
+    (0, 3)  390.62    0.00  146.48  755.86  244.14
+    (1, 0)  244.14    0.00   91.55  847.41  152.59
+    (1, 1)  152.59    0.00    0.00  847.41  152.59
+    (1, 2)  152.59    0.00    0.00  847.41  152.59
+    (1, 3)  152.59    0.00    0.00  847.41  152.59
+    (2, 0)  152.59    0.00    0.00  847.41  152.59
+    (2, 1)  152.59    0.00    0.00  847.41  152.59
+    (2, 2)  152.59    0.00    0.00  847.41  152.59
+    (2, 3)  152.59    0.00    0.00  847.41  152.59
+    (3, 0)  152.59    0.00    0.00  847.41  152.59
+    (3, 1)  152.59    0.00    0.00  847.41  152.59
+    (3, 2)  152.59    0.00    0.00  847.41  152.59
+    (3, 3)  152.59    0.00    0.00  847.41  152.59
+
+    >>> depreciation_db(costs=costs1, life=life1, delay=delay12, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00   0.00   0.00 375.00
+    1 234.38 146.48  91.55   0.00
+    2   0.00   0.00   0.00   0.00
+    3   0.00   0.00   0.00   0.00
+
+    >>> depreciation_db(costs=costs2, life=life2, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00 375.00 234.38 146.48
+    1  91.55   0.00   0.00   0.00
+    2   0.00 375.00 234.38 146.48
+    3  91.55   0.00   0.00   0.00
+
+    >>> depreciation_db(costs=costs2, life=life2, delay=delay22, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0   0.00   0.00   0.00 375.00
+    1 234.38 146.48  91.55   0.00
+    2   0.00   0.00   0.00 375.00
+    3 234.38 146.48  91.55   0.00
+
+    >>> depreciation_db(costs=costs2, life=life2, delay=delay22, factor=1.5, convert_to_sl=False, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+    t         Beg.    Cost  Depre.  Accum.    End.
+              Book                  Depre.    Book
+             Value                           Value
+    ----------------------------------------------
+    (0, 0)    0.00 1000.00    0.00    0.00 1000.00
+    (0, 1) 1000.00    0.00    0.00    0.00 1000.00
+    (0, 2) 1000.00    0.00    0.00    0.00 1000.00
+    (0, 3) 1000.00    0.00  375.00  375.00  625.00
+    (1, 0)  625.00    0.00  234.38  609.38  390.62
+    (1, 1)  390.62    0.00  146.48  755.86  244.14
+    (1, 2)  244.14    0.00   91.55  847.41  152.59
+    (1, 3)  152.59    0.00    0.00  847.41  152.59
+    (2, 0)  152.59 1000.00    0.00  847.41 1152.59
+    (2, 1) 1152.59    0.00    0.00  847.41 1152.59
+    (2, 2) 1152.59    0.00    0.00  847.41 1152.59
+    (2, 3) 1152.59    0.00  375.00 1222.41  777.59
+    (3, 0)  777.59    0.00  234.38 1456.79  543.21
+    (3, 1)  543.21    0.00  146.48 1603.27  396.73
+    (3, 2)  396.73    0.00   91.55 1694.82  305.18
+    (3, 3)  305.18    0.00    0.00 1694.82  305.18
 
 
     """

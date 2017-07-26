@@ -1,31 +1,13 @@
 """
-Creation of TimeSeries objects
-===============================================================================
+Time series objects
+==============================================================================
 
-Time series object for representing generic cashflows and interest rates.
-
->>> TimeSeries(start=(2000, 0), end=(2002, 3), nper=12, pyr=4) # doctest: +NORMALIZE_WHITESPACE
-     Qtr0 Qtr1 Qtr2 Qtr3
-2000 0.00 0.00 0.00 0.00
-2001 0.00 0.00 0.00 0.00
-2002 0.00 0.00 0.00 0.00
-
->>> TimeSeries(start=(2000, 0), end=(2002, 3), pyr=4) # doctest: +NORMALIZE_WHITESPACE
-     Qtr0 Qtr1 Qtr2 Qtr3
-2000 0.00 0.00 0.00 0.00
-2001 0.00 0.00 0.00 0.00
-2002 0.00 0.00 0.00 0.00
-
-
-
-
-
-
-
-Description of the functions in this module
-===============================================================================
+This module implements a `TimeSeries` object that is used to represent generic
+cashflows and interest rate.
 
 """
+
+
 
 import calendar
 # import numpy
@@ -135,7 +117,23 @@ def verify_eq_time_range(series1, series2):
 
 
 class TimeSeries():
-    """ Class for representing time series.
+    """
+    Time series object for representing generic cashflows and interest rates.
+
+    **Examples.**
+
+    >>> TimeSeries(start=(2000, 0), end=(2002, 3), nper=12, pyr=4) # doctest: +NORMALIZE_WHITESPACE
+         Qtr0 Qtr1 Qtr2 Qtr3
+    2000 0.00 0.00 0.00 0.00
+    2001 0.00 0.00 0.00 0.00
+    2002 0.00 0.00 0.00 0.00
+
+    >>> TimeSeries(start=(2000, 0), end=(2002, 3), pyr=4) # doctest: +NORMALIZE_WHITESPACE
+         Qtr0 Qtr1 Qtr2 Qtr3
+    2000 0.00 0.00 0.00 0.00
+    2001 0.00 0.00 0.00 0.00
+    2002 0.00 0.00 0.00 0.00
+
     """
 
     def __init__(self, start=None, end=None, nper=None, pyr=1):
@@ -889,8 +887,11 @@ def cashflow(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
         time_series[time] = value
     return time_series
 
+
+
+
 def interest_rate(const_value=0, start=None, end=None, nper=None, pyr=1, spec=None):
-    """Returns a time series as a interest rate.
+    """Creates a time series object specified as a interest rate.
 
     >>> spec = ((2000, 3), 10)
     >>> interest_rate(const_value=1, start=(2000, 0), nper=8, pyr=4, spec=spec) # doctest: +NORMALIZE_WHITESPACE

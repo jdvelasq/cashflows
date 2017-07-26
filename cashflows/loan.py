@@ -1,5 +1,6 @@
 """
-Module for modeling diferent types of loans
+Loan analysis
+==============================================================================
 
 
 >>> nrate = interest_rate(const_value=10, nper=11, pyr=4)
@@ -145,11 +146,10 @@ t         Beg.    Per.   Total    Int.    Ppal  Ending
 """
 
 
-from cashflows.gcashana import timevalue
+from cashflows.analysis import timevalue, irr
 from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
 from cashflows.gtimeseries import repr_table
-from cashflows.gcashana import irr
-from cashflows.basics import pvpmt
+from cashflows.tvmm import pvpmt
 
 ##
 ## base class for computations
@@ -286,7 +286,7 @@ def fixed_rate_loan(amount, nrate, life, start, pyr=1, grace=0, dispoints=0,
 
     # present value of the balloon payments
     if balloonpmt is not None:
-        balloonpv = timevalue(cflo=balloonpmt, marr=nrate, base_date=grace)
+        balloonpv = timevalue(cflo=balloonpmt, prate=nrate, base_date=grace)
     else:
         balloonpv = 0
 

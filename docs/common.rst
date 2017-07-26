@@ -1,7 +1,7 @@
-Analysis of cashflows
+Common functions
 ===============================================================================
 
-.. automodule:: cashflows.gcashana
+.. automodule:: cashflows.common
     :members:
     :undoc-members:
     :show-inheritance:

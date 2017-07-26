@@ -1,4 +1,4 @@
-.. automodule:: cashflows.gtimeseries
+.. automodule:: cashflows.utilityfun
     :members:
     :undoc-members:
     :show-inheritance:

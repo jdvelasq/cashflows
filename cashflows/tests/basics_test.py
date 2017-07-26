@@ -7,7 +7,7 @@
 import unittest
 import numpy as np
 
-from cashflows.basics import iconv
+from cashflows.rate import iconv
 
 # from cashflows.basics import compound
 

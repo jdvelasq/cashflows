@@ -1,188 +1,24 @@
 """
-This module implements basic functions to compute financial equivalences.
-
-`tvmm` function
+Time value of money models
 ===============================================================================
 
+This module contains functions for computing the time value of the money.
 
-In this example shows how to find different values for a loan of 5000, with a
-monthly payment of 130 at the end of the month, a life of 48 periods, and a
-interest rate of 0.94 per month (equivalent to 11.32% nominal)
+* ``pvfv``: computes the missing value in the equation
+  ``fval = pval * (1 + rate) ** nper``
 
-* Periodic payment:
+.. image:: ./images/pvfv.png
+    :width: 400px
+    :align: center
 
->>> pmt = tvmm(pval=5000, nrate=11.32/12, nper=48, fval=0)
->>> pmt # doctest: +ELLIPSIS
--130.00...
-
-* Future value:
-
->>> tvmm(pval=5000, nrate=11.32/12, nper=48, pmt=pmt) # doctest: +ELLIPSIS
--0.0...
-
-* Present value:
-
->>> tvmm(nrate=11.32/12, nper=48, pmt=pmt, fval = 0.0) # doctest: +ELLIPSIS
-5000...
-
-* Rate:
-
->>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0) # doctest: +ELLIPSIS
-0.94...
-
-* Number of periods:
-
->>> tvmm(pval=5000, nrate=11.32/12, pmt=pmt, fval=0.0) # doctest: +ELLIPSIS
-48.0...
-
-* Periodic paymnts:
-
->>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12) # doctest: +ELLIPSIS
--130.00...
-
-* Nominal rate:
-
->>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0, pyr=12) # doctest: +ELLIPSIS
-11.32...
-
-
-
-
-Loan amortization schedule (funtion `amortize`).
-==============================================================================
-
-
-
->>> pmt = tvmm(pval=100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
->>> amortize(pval=100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-t      Beginning     Periodic     Interest    Principal        Final
-       Principal      Payment      Payment    Repayment    Principal
-          Amount       Amount                                 Amount
---------------------------------------------------------------------
-0         100.00         0.00         0.00         0.00       100.00
-1         100.00       -26.38        10.00       -16.38        83.62
-2          83.62       -26.38         8.36       -18.02        65.60
-3          65.60       -26.38         6.56       -19.82        45.78
-4          45.78       -26.38         4.58       -21.80        23.98
-5          23.98       -26.38         2.40       -23.98         0.00
-
-
-
->>> amortize(pval=-100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-t      Beginning     Periodic     Interest    Principal        Final
-       Principal      Payment      Payment    Repayment    Principal
-          Amount       Amount                                 Amount
---------------------------------------------------------------------
-0        -100.00         0.00         0.00         0.00      -100.00
-1        -100.00        26.38       -10.00        16.38       -83.62
-2         -83.62        26.38        -8.36        18.02       -65.60
-3         -65.60        26.38        -6.56        19.82       -45.78
-4         -45.78        26.38        -4.58        21.80       -23.98
-5         -23.98        26.38        -2.40        23.98        -0.00
-
->>> amortize(pval=100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-t      Beginning     Periodic     Interest    Principal        Final
-       Principal      Payment      Payment    Repayment    Principal
-          Amount       Amount                                 Amount
---------------------------------------------------------------------
-0         100.00       -23.98         0.00       -23.98        76.02
-1          76.02       -23.98         7.60       -16.38        59.64
-2          59.64       -23.98         5.96       -18.02        41.62
-3          41.62       -23.98         4.16       -19.82        21.80
-4          21.80       -23.98         2.18       -21.80         0.00
-5           0.00         0.00         0.00         0.00         0.00
-
->>> amortize(pval=-100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-t      Beginning     Periodic     Interest    Principal        Final
-       Principal      Payment      Payment    Repayment    Principal
-          Amount       Amount                                 Amount
---------------------------------------------------------------------
-0        -100.00        23.98         0.00        23.98       -76.02
-1         -76.02        23.98        -7.60        16.38       -59.64
-2         -59.64        23.98        -5.96        18.02       -41.62
-3         -41.62        23.98        -4.16        19.82       -21.80
-4         -21.80        23.98        -2.18        21.80        -0.00
-5          -0.00         0.00        -0.00        -0.00        -0.00
-
-
->>> principal, interest, payment, balance = amortize(pval=100,
-... nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
-
->>> principal  # doctest: +ELLIPSIS
-[0, -16.37..., -18.01..., -19.81..., -21.80..., -23.98...]
-
->>> interest  # doctest: +ELLIPSIS
-[0, 10.0, 8.36..., 6.56..., 4.57..., 2.39...]
-
->>> payment  # doctest: +ELLIPSIS
-[0, -26.37..., -26.37..., -26.37..., -26.37..., -26.37...]
-
->>> balance  # doctest: +ELLIPSIS
-[100, 83.62..., 65.60..., 45.78..., 23.98..., 1...]
-
->>> principal, interest, payment, balance = amortize(pval=100,
-... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS
-
->>> sum(interest)  # doctest: +ELLIPSIS
-31.89...
-
->>> sum(principal)  # doctest: +ELLIPSIS
--99.99...
-
->>> principal, interest, payment, balance = amortize(fval=0,
-... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS
-
->>> sum(interest)  # doctest: +ELLIPSIS
-31.89...
-
->>> sum(principal)  # doctest: +ELLIPSIS
--99.99...
-
->>> principal, interest, payment, balance = amortize(pval=100,
-... fval=0, nper=5, pmt=pmt) # doctest: +ELLIPSIS
-
->>> sum(interest)  # doctest: +ELLIPSIS
-31.89...
-
->>> sum(principal)  # doctest: +ELLIPSIS
--99.99...
-
-
->>> amortize(pval=100, fval=0, nrate=10, pmt=pmt, noprint=False) # doctest: +ELLIPSIS
-t      Beginning     Periodic     Interest    Principal        Final
-       Principal      Payment      Payment    Repayment    Principal
-          Amount       Amount                                 Amount
---------------------------------------------------------------------
-0         100.00         0.00         0.00         0.00       100.00
-1         100.00       -26.38        10.00       -16.38        83.62
-2          83.62       -26.38         8.36       -18.02        65.60
-3          65.60       -26.38         6.56       -19.82        45.78
-4          45.78       -26.38         4.58       -21.80        23.98
-5          23.98       -26.38         2.40       -23.98         0.00
-
->>> principal, interest, payment, balance = amortize(pval=100,
-... fval=0, nrate=10, pmt=pmt) # doctest: +ELLIPSIS
-
->>> sum(interest)  # doctest: +ELLIPSIS
-31.89...
-
->>> sum(principal)  # doctest: +ELLIPSIS
--99.99...
-
-
-
-
-
-
-Description of the functions in this module
-==============================================================================
+* ``pvpmt``: computes the missing value in
 
 
 """
 
 import numpy
-from cashflows.gcashcomp import vars2list
-from cashflows.iconv import iconv
+from cashflows.common import _vars2list
+from cashflows.rate import iconv
 
 
 def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):
@@ -193,7 +29,7 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
         pval (float, list): Present value.
         fval (float, list): Future value.
         pmt (float, list): Periodic payment.
-        nrate (float, list): Nominal rate per year.
+        nrate (float, list): Nominal interest rate per year.
         nper (int, list): Number of compounding periods.
         due (int): When payments are due.
         pyr (int, list): number of periods per year.
@@ -205,6 +41,48 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
+
+    **Examples.**
+
+    In this example shows how to find different values for a loan of 5000, with a
+    monthly payment of 130 at the end of the month, a life of 48 periods, and a
+    interest rate of 0.94 per month (equivalent to 11.32% nominal)
+
+    * Periodic payment:
+
+    >>> pmt = tvmm(pval=5000, nrate=11.32/12, nper=48, fval=0)
+    >>> pmt # doctest: +ELLIPSIS
+    -130.00...
+
+    * Future value:
+
+    >>> tvmm(pval=5000, nrate=11.32/12, nper=48, pmt=pmt) # doctest: +ELLIPSIS
+    -0.0...
+
+    * Present value:
+
+    >>> tvmm(nrate=11.32/12, nper=48, pmt=pmt, fval = 0.0) # doctest: +ELLIPSIS
+    5000...
+
+    * Rate:
+
+    >>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0) # doctest: +ELLIPSIS
+    0.94...
+
+    * Number of periods:
+
+    >>> tvmm(pval=5000, nrate=11.32/12, pmt=pmt, fval=0.0) # doctest: +ELLIPSIS
+    48.0...
+
+    * Periodic paymnts:
+
+    >>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12) # doctest: +ELLIPSIS
+    -130.00...
+
+    * Nominal rate:
+
+    >>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0, pyr=12) # doctest: +ELLIPSIS
+    11.32...
 
     >>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
     Present Value: .......  5000.00
@@ -276,7 +154,7 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     else:
         nrate = result
 
-    params = vars2list([pval, fval, nper, pmt, nrate])
+    params = _vars2list([pval, fval, nper, pmt, nrate])
     pval = params[0]
     fval = params[1]
     nper = params[2]
@@ -352,7 +230,7 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     Args:
         pval (float, list): Present value.
         fval (float, list): Future value.
-        nrate (float, list): Nominal rate per year.
+        nrate (float, list): Nominal interest rate per year.
         nper (int, list): Number of compounding periods.
         pyr (int, list): number of periods per year.
 
@@ -390,7 +268,7 @@ def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
     Args:
         pmt (float, list): Periodic payment.
         pval (float, list): Present value.
-        nrate (float, list): Nominal rate per year.
+        nrate (float, list): Nominal interest rate per year.
         nper (int, list): Number of compounding periods.
         pyr (int, list): number of periods per year.
 
@@ -410,13 +288,132 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
         pval (float): present value.
         fval (float): Future value.
         pmt (float): periodic payment per period.
-        nrate (float): nominal rate per year.
+        nrate (float): nominal interest rate per year.
         nper (int): total number of compounding periods.
         due (int): When payments are due.
         pyr (int, list): number of periods per year.
 
     Returns:
         A tuple: (principal, interest, payment, balance)
+
+
+    **Examples.**
+
+    >>> pmt = tvmm(pval=100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
+    >>> amortize(pval=100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    t      Beginning     Periodic     Interest    Principal        Final
+           Principal      Payment      Payment    Repayment    Principal
+              Amount       Amount                                 Amount
+    --------------------------------------------------------------------
+    0         100.00         0.00         0.00         0.00       100.00
+    1         100.00       -26.38        10.00       -16.38        83.62
+    2          83.62       -26.38         8.36       -18.02        65.60
+    3          65.60       -26.38         6.56       -19.82        45.78
+    4          45.78       -26.38         4.58       -21.80        23.98
+    5          23.98       -26.38         2.40       -23.98         0.00
+
+
+
+    >>> amortize(pval=-100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    t      Beginning     Periodic     Interest    Principal        Final
+           Principal      Payment      Payment    Repayment    Principal
+              Amount       Amount                                 Amount
+    --------------------------------------------------------------------
+    0        -100.00         0.00         0.00         0.00      -100.00
+    1        -100.00        26.38       -10.00        16.38       -83.62
+    2         -83.62        26.38        -8.36        18.02       -65.60
+    3         -65.60        26.38        -6.56        19.82       -45.78
+    4         -45.78        26.38        -4.58        21.80       -23.98
+    5         -23.98        26.38        -2.40        23.98        -0.00
+
+    >>> amortize(pval=100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    t      Beginning     Periodic     Interest    Principal        Final
+           Principal      Payment      Payment    Repayment    Principal
+              Amount       Amount                                 Amount
+    --------------------------------------------------------------------
+    0         100.00       -23.98         0.00       -23.98        76.02
+    1          76.02       -23.98         7.60       -16.38        59.64
+    2          59.64       -23.98         5.96       -18.02        41.62
+    3          41.62       -23.98         4.16       -19.82        21.80
+    4          21.80       -23.98         2.18       -21.80         0.00
+    5           0.00         0.00         0.00         0.00         0.00
+
+    >>> amortize(pval=-100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    t      Beginning     Periodic     Interest    Principal        Final
+           Principal      Payment      Payment    Repayment    Principal
+              Amount       Amount                                 Amount
+    --------------------------------------------------------------------
+    0        -100.00        23.98         0.00        23.98       -76.02
+    1         -76.02        23.98        -7.60        16.38       -59.64
+    2         -59.64        23.98        -5.96        18.02       -41.62
+    3         -41.62        23.98        -4.16        19.82       -21.80
+    4         -21.80        23.98        -2.18        21.80        -0.00
+    5          -0.00         0.00        -0.00        -0.00        -0.00
+
+
+    >>> principal, interest, payment, balance = amortize(pval=100,
+    ... nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
+
+    >>> principal  # doctest: +ELLIPSIS
+    [0, -16.37..., -18.01..., -19.81..., -21.80..., -23.98...]
+
+    >>> interest  # doctest: +ELLIPSIS
+    [0, 10.0, 8.36..., 6.56..., 4.57..., 2.39...]
+
+    >>> payment  # doctest: +ELLIPSIS
+    [0, -26.37..., -26.37..., -26.37..., -26.37..., -26.37...]
+
+    >>> balance  # doctest: +ELLIPSIS
+    [100, 83.62..., 65.60..., 45.78..., 23.98..., 1...]
+
+    >>> principal, interest, payment, balance = amortize(pval=100,
+    ... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS
+
+    >>> sum(interest)  # doctest: +ELLIPSIS
+    31.89...
+
+    >>> sum(principal)  # doctest: +ELLIPSIS
+    -99.99...
+
+    >>> principal, interest, payment, balance = amortize(fval=0,
+    ... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS
+
+    >>> sum(interest)  # doctest: +ELLIPSIS
+    31.89...
+
+    >>> sum(principal)  # doctest: +ELLIPSIS
+    -99.99...
+
+    >>> principal, interest, payment, balance = amortize(pval=100,
+    ... fval=0, nper=5, pmt=pmt) # doctest: +ELLIPSIS
+
+    >>> sum(interest)  # doctest: +ELLIPSIS
+    31.89...
+
+    >>> sum(principal)  # doctest: +ELLIPSIS
+    -99.99...
+
+
+    >>> amortize(pval=100, fval=0, nrate=10, pmt=pmt, noprint=False) # doctest: +ELLIPSIS
+    t      Beginning     Periodic     Interest    Principal        Final
+           Principal      Payment      Payment    Repayment    Principal
+              Amount       Amount                                 Amount
+    --------------------------------------------------------------------
+    0         100.00         0.00         0.00         0.00       100.00
+    1         100.00       -26.38        10.00       -16.38        83.62
+    2          83.62       -26.38         8.36       -18.02        65.60
+    3          65.60       -26.38         6.56       -19.82        45.78
+    4          45.78       -26.38         4.58       -21.80        23.98
+    5          23.98       -26.38         2.40       -23.98         0.00
+
+    >>> principal, interest, payment, balance = amortize(pval=100,
+    ... fval=0, nrate=10, pmt=pmt) # doctest: +ELLIPSIS
+
+    >>> sum(interest)  # doctest: +ELLIPSIS
+    31.89...
+
+    >>> sum(principal)  # doctest: +ELLIPSIS
+    -99.99...
 
 
     """

@@ -1,5 +1,5 @@
 """
-Tutorial
+Asset depreciation
 ===============================================================================
 
 Depreciation using the Straight Line Method
@@ -200,8 +200,6 @@ t         Beg.    Cost  Depre.  Accum.    End.
 (3, 3)  305.18    0.00    0.00 1694.82  305.18
 
 
-Description of the functions in this module
-===============================================================================
 
 
 """
@@ -415,7 +413,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     method.
 
     Args:
-        ccost (TimeSeries): the cost per period of the assets.
+        cost (TimeSeries): the cost per period of the assets.
         life (TimeSeries): number of depreciation periods for the asset.
         salvalue(TimeSeries): salvage value as a percentage of cost.
         factor (float): acelerating factor for depreciation.

@@ -11,16 +11,20 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
-   iconv
-   basics
-   gtimeseries
-   gcashcomp
-   gcashana
+   analysis
    bond
+   common
+   currency
    depreciation
-   savings
+   gtimeseries
+   rate
+   inflation
    loan
-   utility
+   savings
+   taxing
+   tvmm
+   utilityfun
+
 
 
 Indices and tables

@@ -1,4 +1,7 @@
 """
+Economic utility functions
+===============================================================================
+
 
 """
 from math import log, exp

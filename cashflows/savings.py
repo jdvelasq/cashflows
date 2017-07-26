@@ -1,49 +1,9 @@
 """
-Tutorial
-==============================================================================
-
-Modeling of savings accounts.
-
->>> cflo = cashflow(const_value=[100] * 12, pyr=4)
->>> nrate = interest_rate([10] * 12, pyr=4)
->>> savings(deposits=cflo, nrate=nrate, initbal=0, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-t      Beginning   Deposit    Earned    Ending
-         Balance            Interest   Balance
------------------------------------------------
-(0, 0)      0.00    100.00      0.00    100.00
-(0, 1)    100.00    100.00      2.50    202.50
-(0, 2)    202.50    100.00      5.06    307.56
-(0, 3)    307.56    100.00      7.69    415.25
-(1, 0)    415.25    100.00     10.38    525.63
-(1, 1)    525.63    100.00     13.14    638.77
-(1, 2)    638.77    100.00     15.97    754.74
-(1, 3)    754.74    100.00     18.87    873.61
-(2, 0)    873.61    100.00     21.84    995.45
-(2, 1)    995.45    100.00     24.89   1120.34
-(2, 2)   1120.34    100.00     28.01   1248.35
-(2, 3)   1248.35    100.00     31.21   1379.56
-
-
->>> cflo = cashflow(const_value=[100] * 5, spec=[(0, 0), (2, 0)])
->>> nrate = interest_rate([0, 1, 2, 3, 4])
->>> savings(deposits=cflo, nrate=nrate, initbal=1000, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-t    Beginning   Deposit    Earned    Ending
-       Balance            Interest   Balance
----------------------------------------------
-(0,)   1000.00      0.00      0.00   1000.00
-(1,)   1000.00    100.00     10.00   1110.00
-(2,)   1110.00      0.00     22.20   1132.20
-(3,)   1132.20    100.00     33.97   1266.17
-(4,)   1266.17    100.00     50.65   1416.81
-
-
-
-Description of the functions and objects in this module
+Savings
 ===============================================================================
 
+
 """
-
-
 # import sys
 # import os
 
@@ -66,6 +26,42 @@ def savings(deposits, nrate, initbal=0, noprint=True):
 
     Return:
         interest, end_balance (TimeSeries, TimeSeries)
+
+
+    **Examples**
+
+    >>> cflo = cashflow(const_value=[100] * 12, pyr=4)
+    >>> nrate = interest_rate([10] * 12, pyr=4)
+    >>> savings(deposits=cflo, nrate=nrate, initbal=0, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+    t      Beginning   Deposit    Earned    Ending
+             Balance            Interest   Balance
+    -----------------------------------------------
+    (0, 0)      0.00    100.00      0.00    100.00
+    (0, 1)    100.00    100.00      2.50    202.50
+    (0, 2)    202.50    100.00      5.06    307.56
+    (0, 3)    307.56    100.00      7.69    415.25
+    (1, 0)    415.25    100.00     10.38    525.63
+    (1, 1)    525.63    100.00     13.14    638.77
+    (1, 2)    638.77    100.00     15.97    754.74
+    (1, 3)    754.74    100.00     18.87    873.61
+    (2, 0)    873.61    100.00     21.84    995.45
+    (2, 1)    995.45    100.00     24.89   1120.34
+    (2, 2)   1120.34    100.00     28.01   1248.35
+    (2, 3)   1248.35    100.00     31.21   1379.56
+
+
+    >>> cflo = cashflow(const_value=[100] * 5, spec=[(0, 0), (2, 0)])
+    >>> nrate = interest_rate([0, 1, 2, 3, 4])
+    >>> savings(deposits=cflo, nrate=nrate, initbal=1000, noprint=False) # doctest: +NORMALIZE_WHITESPACE
+    t    Beginning   Deposit    Earned    Ending
+           Balance            Interest   Balance
+    ---------------------------------------------
+    (0,)   1000.00      0.00      0.00   1000.00
+    (1,)   1000.00    100.00     10.00   1110.00
+    (2,)   1110.00      0.00     22.20   1132.20
+    (3,)   1132.20    100.00     33.97   1266.17
+    (4,)   1266.17    100.00     50.65   1416.81
+
 
     """
     verify_eq_time_range(deposits, nrate)

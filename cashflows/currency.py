@@ -49,6 +49,16 @@ def currency_conversion(cflo, exchange_rate=1, devaluation=None, base_date=0):
            (3,)   210.00
            (4,)   220.50
 
+
+    >>> cflo = cashflow(const_value=[100] * 8, pyr=4)
+    >>> currency_conversion(cflo=cflo,
+    ...                     exchange_rate=2,
+    ...                     devaluation=interest_rate([1]*8, pyr=4)) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0 200.00 202.00 204.02 206.06
+    1 208.12 210.20 212.30 214.43
+
+    >>> cflo = cashflow(const_value=[100] * 5)
     >>> currency_conversion(cflo=[cflo, cflo], exchange_rate=2) # doctest: +NORMALIZE_WHITESPACE
     [Time Series:
     Start = (0,)

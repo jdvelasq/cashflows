@@ -248,15 +248,16 @@ def to_discount_factor(nrate=None, erate=None, prate=None, base_date=0):
 
     Only one of the interest rates must be supplied for the computation.
 
-    >>> rate = interest_rate(const_value=4,nper=10, pyr=4)
-    >>> to_discount_factor(nrate=rate, base_date=2) # doctest: +ELLIPSIS
+    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
+    >>> erate, prate = iconv(nrate=nrate)
+    >>> to_discount_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
-    >>> to_discount_factor(erate=rate, base_date=2) # doctest: +ELLIPSIS
-    [1.01..., 1.0098..., 1.0, 0.99..., 0.98..., 0.97..., 0.96..., 0.95..., 0.94..., 0.9...]
+    >>> to_discount_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
+    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
-    >>> to_discount_factor(prate=rate, base_date=2) # doctest: +ELLIPSIS
-    [1.08..., 1.04, 1.0, 0.96..., 0.92..., 0.88..., 0.85..., 0.82..., 0.79..., 0.75...]
+    >>> to_discount_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
+    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
     """
     numnone = 0
     if nrate is None:
@@ -300,10 +301,18 @@ def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
     Returns:
         Compound factor (list)
 
-    >>> to_compound_factor(interest_rate(const_value=4,nper=10, pyr=4), base_date=2) # doctest: +ELLIPSIS
+
+    **Examples**
+
+    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
+    >>> erate, prate = iconv(nrate=nrate)
+    >>> to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
 
-    >>> to_compound_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS
+    >>> to_compound_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
+    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+
+    >>> to_compound_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
 
     """

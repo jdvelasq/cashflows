@@ -53,6 +53,13 @@ def timevalue(cflo, prate, base_date=0, utility=None):
 
     **Examples.**
 
+
+    >>> cflo = cashflow([-732.54] + [100]*8, pyr=4)
+    >>> prate = interest_rate([2]*9, pyr=4)
+    >>> timevalue(cflo, prate) # doctest: +ELLIPSIS
+    0.00...
+
+
     >>> prate = interest_rate([12]*5)
     >>> cflo = cashflow([100]*5, spec = (0, -200))
     >>> timevalue(cflo, prate) # doctest: +ELLIPSIS
@@ -132,6 +139,11 @@ def net_uniform_series(cflo, prate, nper=1):
 
     **Examples.**
 
+    >>> prate = interest_rate([2]*9, pyr=4)
+    >>> cflo = cashflow([-732.54] + [100]*8, pyr=4)
+    >>> net_uniform_series(cflo, prate) # doctest: +ELLIPSIS
+    0.00...
+
     >>> prate = interest_rate([12]*5)
     >>> cflo = cashflow([-200] + [100]*4)
     >>> net_uniform_series(cflo, prate) # doctest: +ELLIPSIS
@@ -182,6 +194,11 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
         Float or list of floats.
 
     **Examples.**
+
+    >>> prate = interest_rate([2]*9, pyr=4)
+    >>> cflo = cashflow([-717.01] + [100]*8, pyr=4)
+    >>> benefit_cost_ratio(cflo, prate) # doctest: +ELLIPSIS
+    1.02...
 
     >>> prate = interest_rate([12]*5)
     >>> cflo = cashflow([-200] + [100]*4)
@@ -239,6 +256,12 @@ def irr(cflo):
         Float or list of floats.
 
     **Examples.**
+
+
+    >>> cflo = cashflow([-717.01] + [100]*8, pyr=4)
+    >>> irr(cflo) # doctest: +ELLIPSIS
+    2.50...
+
 
     >>> cflo = cashflow([-200] + [100]*4)
     >>> irr(cflo) # doctest: +ELLIPSIS

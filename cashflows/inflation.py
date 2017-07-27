@@ -56,6 +56,13 @@ def const2curr(cflo, inflation, base_date=0):
            (4,)   100.00
 
 
+    >>> const2curr(cflo=cashflow(const_value=[100] * 8, pyr=4),
+    ... inflation=interest_rate(const_value=1, nper=8, pyr=4)) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0 100.00 101.00 102.01 103.03
+    1 104.06 105.10 106.15 107.21
+
+
     """
     params = _vars2list([cflo, inflation, base_date])
     cflo = params[0]
@@ -116,6 +123,11 @@ def curr2const(cflo, inflation, base_date=0):
            (3,)   120.00
            (4,)   100.00
 
+    >>> curr2const(cflo=cashflow(const_value=[100] * 8, pyr=4),
+    ... inflation=interest_rate(const_value=1, nper=8, pyr=4)) # doctest: +NORMALIZE_WHITESPACE
+        Qtr0   Qtr1   Qtr2   Qtr3
+    0 100.00  99.01  98.03  97.06
+    1  96.10  95.15  94.20  93.27
 
     """
     params = _vars2list([cflo, inflation, base_date])

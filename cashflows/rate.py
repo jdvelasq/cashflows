@@ -5,12 +5,10 @@ Interest rate transformations
 
 """
 
-
-import numpy
-from cashflows.gtimeseries import _timeid2index
-from cashflows.gtimeseries import *
-
-
+import numpy as np
+import pandas as pd
+from cashflows.timeseries import *
+from cashflows.common import getpyr
 
 
 def iconv(nrate=None, erate=None, prate=None, pyr=1):
@@ -82,59 +80,129 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 
     `iconv` accepts TimeSeries objects
 
-    >>> erate, prate = iconv(nrate = interest_rate(const_value=12, nper=12, pyr=2))
+    >>> erate, prate = iconv(nrate = interest_rate(const_value=12, start='2000-06', periods=12, freq='6M'))
     >>> prate # doctest: +NORMALIZE_WHITESPACE
-    Time Series:
-    Start = (0, 0)
-    End = (5, 1)
-    pyr = 2
-    Data = (0, 0)-(5, 1) [12] 6.00
+    2000-06    6.0
+    2000-12    6.0
+    2001-06    6.0
+    2001-12    6.0
+    2002-06    6.0
+    2002-12    6.0
+    2003-06    6.0
+    2003-12    6.0
+    2004-06    6.0
+    2004-12    6.0
+    2005-06    6.0
+    2005-12    6.0
+    Freq: 6M, dtype: float64
 
     >>> erate # doctest: +NORMALIZE_WHITESPACE
-    Time Series:
-    Start = (0, 0)
-    End = (5, 1)
-    pyr = 2
-    Data = (0, 0)-(5, 1) [12] 12.36
+    2000-06    12.36
+    2000-12    12.36
+    2001-06    12.36
+    2001-12    12.36
+    2002-06    12.36
+    2002-12    12.36
+    2003-06    12.36
+    2003-12    12.36
+    2004-06    12.36
+    2004-12    12.36
+    2005-06    12.36
+    2005-12    12.36
+    Freq: 6M, dtype: float64
 
-    >>> erate, prate = iconv(nrate = interest_rate(const_value=12, nper=12, pyr=4))
+    >>> erate, prate = iconv(nrate = interest_rate(const_value=12, start='2000-01', periods=12, freq='Q'))
     >>> prate # doctest: +NORMALIZE_WHITESPACE
-      Qtr0 Qtr1 Qtr2 Qtr3
-    0 3.00 3.00 3.00 3.00
-    1 3.00 3.00 3.00 3.00
-    2 3.00 3.00 3.00 3.00
+    2000Q1    3.0
+    2000Q2    3.0
+    2000Q3    3.0
+    2000Q4    3.0
+    2001Q1    3.0
+    2001Q2    3.0
+    2001Q3    3.0
+    2001Q4    3.0
+    2002Q1    3.0
+    2002Q2    3.0
+    2002Q3    3.0
+    2002Q4    3.0
+    Freq: Q-DEC, dtype: float64
 
     >>> erate # doctest: +NORMALIZE_WHITESPACE
-       Qtr0  Qtr1  Qtr2  Qtr3
-    0 12.55 12.55 12.55 12.55
-    1 12.55 12.55 12.55 12.55
-    2 12.55 12.55 12.55 12.55
+    2000Q1    12.550881
+    2000Q2    12.550881
+    2000Q3    12.550881
+    2000Q4    12.550881
+    2001Q1    12.550881
+    2001Q2    12.550881
+    2001Q3    12.550881
+    2001Q4    12.550881
+    2002Q1    12.550881
+    2002Q2    12.550881
+    2002Q3    12.550881
+    2002Q4    12.550881
+    Freq: Q-DEC, dtype: float64
 
     >>> nrate, prate = iconv(erate = erate)
     >>> nrate # doctest: +NORMALIZE_WHITESPACE
-       Qtr0  Qtr1  Qtr2  Qtr3
-    0 12.00 12.00 12.00 12.00
-    1 12.00 12.00 12.00 12.00
-    2 12.00 12.00 12.00 12.00
+    2000Q1    12.0
+    2000Q2    12.0
+    2000Q3    12.0
+    2000Q4    12.0
+    2001Q1    12.0
+    2001Q2    12.0
+    2001Q3    12.0
+    2001Q4    12.0
+    2002Q1    12.0
+    2002Q2    12.0
+    2002Q3    12.0
+    2002Q4    12.0
+    Freq: Q-DEC, dtype: float64
 
     >>> prate # doctest: +NORMALIZE_WHITESPACE
-      Qtr0 Qtr1 Qtr2 Qtr3
-    0 3.00 3.00 3.00 3.00
-    1 3.00 3.00 3.00 3.00
-    2 3.00 3.00 3.00 3.00
+    2000Q1    3.0
+    2000Q2    3.0
+    2000Q3    3.0
+    2000Q4    3.0
+    2001Q1    3.0
+    2001Q2    3.0
+    2001Q3    3.0
+    2001Q4    3.0
+    2002Q1    3.0
+    2002Q2    3.0
+    2002Q3    3.0
+    2002Q4    3.0
+    Freq: Q-DEC, dtype: float64
 
     >>> nrate, erate = iconv(prate = prate)
     >>> nrate # doctest: +NORMALIZE_WHITESPACE
-       Qtr0  Qtr1  Qtr2  Qtr3
-    0 12.00 12.00 12.00 12.00
-    1 12.00 12.00 12.00 12.00
-    2 12.00 12.00 12.00 12.00
+    2000Q1    12.0
+    2000Q2    12.0
+    2000Q3    12.0
+    2000Q4    12.0
+    2001Q1    12.0
+    2001Q2    12.0
+    2001Q3    12.0
+    2001Q4    12.0
+    2002Q1    12.0
+    2002Q2    12.0
+    2002Q3    12.0
+    2002Q4    12.0
+    Freq: Q-DEC, dtype: float64
 
     >>> erate # doctest: +NORMALIZE_WHITESPACE
-       Qtr0  Qtr1  Qtr2  Qtr3
-    0 12.55 12.55 12.55 12.55
-    1 12.55 12.55 12.55 12.55
-    2 12.55 12.55 12.55 12.55
+    2000Q1    12.550881
+    2000Q2    12.550881
+    2000Q3    12.550881
+    2000Q4    12.550881
+    2001Q1    12.550881
+    2001Q2    12.550881
+    2001Q3    12.550881
+    2001Q4    12.550881
+    2002Q1    12.550881
+    2002Q2    12.550881
+    2002Q3    12.550881
+    2002Q4    12.550881
+    Freq: Q-DEC, dtype: float64
 
     """
 
@@ -147,6 +215,34 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
         numnone += 1
     if numnone != 2:
         raise ValueError('Two of the rates must be set to `None`')
+
+
+    if isinstance(nrate, pd.Series):
+        pyr = getpyr(nrate)
+        erate = nrate.copy()
+        prate = nrate.copy()
+        for index in range(len(nrate)):
+            prate[index] = nrate[index] / pyr
+            erate[index] = 100 * (np.power(1 + prate[index]/100, pyr) - 1)
+        return (erate, prate)
+
+    if isinstance(erate, pd.Series):
+        pyr = getpyr(erate)
+        nrate = erate.copy()
+        prate = erate.copy()
+        for index in range(len(erate)):
+            prate[index] = 100 * (np.power(1 + erate[index]/100, 1. / pyr) - 1)
+            nrate[index] = pyr * prate[index]
+        return (nrate, prate)
+
+    if isinstance(prate, pd.Series):
+        pyr = getpyr(prate)
+        erate = prate.copy()
+        nrate = prate.copy()
+        for index in range(len(prate)):
+            nrate[index] = prate[index] * pyr
+            erate[index] = 100 * (np.power(1 + prate[index]/100, pyr) - 1)
+        return (nrate, erate)
 
     if isinstance(nrate, list) and isinstance(pyr, list) and len(nrate) != len(pyr):
         raise ValueError('List must have the same length')
@@ -167,65 +263,39 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 
     if isinstance(pyr, (int, float)):
         pyr = [pyr] * maxlen
-    pyr = numpy.array(pyr)
+    pyr = np.array(pyr)
 
     if nrate is not None:
-        if isinstance(nrate, TimeSeries):
-            erate = nrate.copy()
-            prate = nrate.copy()
-            for index in range(len(nrate.data)):
-                prate[index] = nrate[index] / nrate.pyr
-            for index in range(len(nrate.data)):
-                erate[index] = 100 * (numpy.power(1 + prate[index]/100, nrate.pyr) - 1)
-            return (erate, prate)
-        else:
-            if isinstance(nrate, (int, float)):
-                nrate = [nrate] * maxlen
-            nrate = numpy.array(nrate)
-            prate = nrate / pyr
-            erate = 100 * (numpy.power(1 + prate/100, pyr) - 1)
-            prate = prate.tolist()
-            erate = erate.tolist()
-            if maxlen == 1:
-                prate = prate[0]
-                erate = erate[0]
-            return (erate, prate)
+        if isinstance(nrate, (int, float)):
+            nrate = [nrate] * maxlen
+        nrate = np.array(nrate)
+        prate = nrate / pyr
+        erate = 100 * (np.power(1 + prate/100, pyr) - 1)
+        prate = prate.tolist()
+        erate = erate.tolist()
+        if maxlen == 1:
+            prate = prate[0]
+            erate = erate[0]
+        return (erate, prate)
 
     if erate is not None:
-        if isinstance(erate, TimeSeries):
-            nrate = erate.copy()
-            prate = erate.copy()
-            for index in range(len(erate.data)):
-                prate[index] = 100 * (numpy.power(1 + erate[index]/100, 1. / erate.pyr) - 1)
-            for index in range(len(erate.data)):
-                nrate[index] = erate.pyr * prate[index]
-            return (nrate, prate)
-        else:
-            if isinstance(erate, (int, float)):
-                erate = [erate] * maxlen
-            erate = numpy.array(erate)
-            prate = 100 * (numpy.power(1 + erate / 100, 1 / pyr) - 1)
-            nrate = pyr * prate
-            prate = prate.tolist()
-            nrate = nrate.tolist()
-            if maxlen == 1:
-                prate = prate[0]
-                nrate = nrate[0]
-            return (nrate, prate)
+        if isinstance(erate, (int, float)):
+            erate = [erate] * maxlen
+        erate = np.array(erate)
+        prate = 100 * (np.power(1 + erate / 100, 1 / pyr) - 1)
+        nrate = pyr * prate
+        prate = prate.tolist()
+        nrate = nrate.tolist()
+        if maxlen == 1:
+            prate = prate[0]
+            nrate = nrate[0]
+        return (nrate, prate)
 
-    if isinstance(prate, TimeSeries):
-        erate = prate.copy()
-        nrate = prate.copy()
-        for index in range(len(prate.data)):
-            nrate[index] = prate[index] * prate.pyr
-        for index in range(len(prate.data)):
-            erate[index] = 100 * (numpy.power(1 + prate[index]/100, prate.pyr) - 1)
-        return (nrate, erate)
-    else:
+    if prate is not None:
         if isinstance(prate, (int, float)):
             prate = [prate] * maxlen
-        prate = numpy.array(prate)
-        erate = 100 * (numpy.power(1 + prate / 100, pyr) - 1)
+        prate = np.array(prate)
+        erate = 100 * (np.power(1 + prate / 100, pyr) - 1)
         nrate = pyr * prate
         erate = erate.tolist()
         nrate = nrate.tolist()
@@ -234,29 +304,29 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
             nrate = nrate[0]
         return (nrate, erate)
 
-def to_discount_factor(nrate=None, erate=None, prate=None, base_date=0):
+def to_discount_factor(nrate=None, erate=None, prate=None, base_date=None):
     """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
 
     Args:
-        nrate (TimeSeries): Nominal interest rate per year.
-        nrate (TimeSeries): Effective interest rate per year.
-        prate (TimeSeries): Periodic interest rate.
-        base_date (int, tuple): basis time.
+        nrate (pandasSeries): Nominal interest rate per year.
+        nrate (pandasSeries): Effective interest rate per year.
+        prate (pandasSeries): Periodic interest rate.
+        base_date (string): basis time.
 
     Returns:
-        List of float values
+        pandas.Series of float values
 
     Only one of the interest rates must be supplied for the computation.
 
-    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
+    >>> nrate = interest_rate(const_value=4, periods=10, start='2016Q1', freq='Q')
     >>> erate, prate = iconv(nrate=nrate)
-    >>> to_discount_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
+    >>> to_discount_factor(nrate=nrate, base_date='2016Q3') # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
-    >>> to_discount_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
+    >>> to_discount_factor(erate=erate, base_date='2016Q3') # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 
-    >>> to_discount_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
+    >>> to_discount_factor(prate=prate, base_date='2016Q3') # doctest: +ELLIPSIS
     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
     """
     numnone = 0
@@ -270,19 +340,31 @@ def to_discount_factor(nrate=None, erate=None, prate=None, base_date=0):
         raise ValueError('Two of the rates must be set to `None`')
 
     if nrate is not None:
+        pyr = getpyr(nrate)
         prate = nrate.copy()
-        prate.data = [x/nrate.pyr for x in nrate.data]  # periodic rate
+        for i,_ in enumerate(nrate):
+            prate[i] = nrate[i] / pyr  # periodic rate
+
     if erate is not None:
+        pyr = getpyr(erate)
         prate = erate.copy()
-        prate.data = [100 * (numpy.power(1 + x/100, 1. / erate.pyr) - 1)  for x in erate.data] # periodic rate
-    factor = [x/100 for x in prate.data]
+        for i,_ in enumerate(erate):
+            prate[i] = 100 * (np.power(1 + erate[i]/100, 1. / pyr) - 1) # periodic rate
+
+    pyr = getpyr(prate)
+
+    factor = [x/100 for x in prate]
+
     for index, _ in enumerate(factor):
         if index == 0:
             factor[0] = 1 / (1 + factor[0])
         else:
             factor[index] = factor[index-1] / (1 + factor[index])
-    if isinstance(base_date, tuple):
-        base_date = _timeid2index(base_date, basis=prate.start, pyr=prate.pyr)
+
+    if isinstance(base_date, str):
+        base_date = pd.Period(base_date, freq=prate.axes[0].freq)
+        base_date = period2pos(prate.axes[0], base_date)
+
     div = factor[base_date]
     for index, _ in enumerate(factor):
         factor[index] = factor[index] / div
@@ -304,7 +386,7 @@ def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
 
     **Examples**
 
-    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
+    >>> nrate = interest_rate(const_value=4, start='2000', periods=10, freq='Q')
     >>> erate, prate = iconv(nrate=nrate)
     >>> to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
@@ -328,7 +410,7 @@ def equivalent_rate(nrate=None, erate=None, prate=None):
 
     Args:
         nrate (TimeSeries): Nominal interest rate per year.
-        nrate (TimeSeries): Effective interest rate per year.
+        erate (TimeSeries): Effective interest rate per year.
         prate (TimeSeries): Periodic interest rate.
 
     Returns:
@@ -336,7 +418,7 @@ def equivalent_rate(nrate=None, erate=None, prate=None):
 
     Only one of the interest rate must be supplied for the computation.
 
-    >>> equivalent_rate(prate=interest_rate([10]*5)) # doctest: +ELLIPSIS
+    >>> equivalent_rate(prate=interest_rate([10]*5, start='2000Q1', freq='Q')) # doctest: +ELLIPSIS
     10.0...
 
 
@@ -371,11 +453,6 @@ def equivalent_rate(nrate=None, erate=None, prate=None):
         for element in value[1:]:
             factor *= (1 + (numpy.power(1 + element/100, 1. / erate.pyr) - 1))
         return 100  * (factor**(1/(len(value) - 1)) - 1)
-
-
-
-
-
 
 
 

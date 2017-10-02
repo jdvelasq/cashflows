@@ -8,6 +8,18 @@ def period2pos(index, date):
         raise ValueError('Date does not exists: ' + date.__repr__())
     return x[0]
 
+def verify_period_range(x):
+    if not isinstance(x, list):
+        raise ValueError('Argument must be a list: ' + x.__repr__())
+    if len(x) == 1:
+        return
+
+    for elem in x:
+        if not isinstance(elem, pd.Series):
+            raise ValueError('pandas.Series expected: ' + elem.__repr__())
+        allTrue = all(x[0].axes[0] == elem.axes[0])
+        if allTrue is False:
+            raise ValueError('Series with different period_range')
 
 def cashflow(const_value=0, start=None, end=None, periods=None, freq='A'):
     """Returns a generic cashflow as a pandas.Series object.

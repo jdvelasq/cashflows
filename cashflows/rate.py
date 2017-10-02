@@ -7,8 +7,8 @@ Interest rate transformations
 
 import numpy as np
 import pandas as pd
-from cashflows.timeseries import *
-from cashflows.common import getpyr
+from timeseries import *
+from common import getpyr
 
 
 def iconv(nrate=None, erate=None, prate=None, pyr=1):

@@ -9,11 +9,13 @@ Savings
 
 # sys.path.insert(0, os.path.abspath('..'))
 
-from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
+import pandas as pd
+
+from timeseries import cashflow, interest_rate, verify_period_range
+from common import getpyr
 
 
-
-def savings(deposits, nrate, initbal=0, noprint=True):
+def savings(deposits, nrate, initbal=0):
     """
     Computes the final balance for a savings account with arbitrary deposits and
     withdrawls and variable interset rate.
@@ -30,115 +32,196 @@ def savings(deposits, nrate, initbal=0, noprint=True):
 
     **Examples**
 
-    >>> cflo = cashflow(const_value=[100] * 12, pyr=4)
-    >>> nrate = interest_rate([10] * 12, pyr=4)
-    >>> savings(deposits=cflo, nrate=nrate, initbal=0, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-    t      Beginning   Deposit    Earned    Ending
-             Balance            Interest   Balance
-    -----------------------------------------------
-    (0, 0)      0.00    100.00      0.00    100.00
-    (0, 1)    100.00    100.00      2.50    202.50
-    (0, 2)    202.50    100.00      5.06    307.56
-    (0, 3)    307.56    100.00      7.69    415.25
-    (1, 0)    415.25    100.00     10.38    525.63
-    (1, 1)    525.63    100.00     13.14    638.77
-    (1, 2)    638.77    100.00     15.97    754.74
-    (1, 3)    754.74    100.00     18.87    873.61
-    (2, 0)    873.61    100.00     21.84    995.45
-    (2, 1)    995.45    100.00     24.89   1120.34
-    (2, 2)   1120.34    100.00     28.01   1248.35
-    (2, 3)   1248.35    100.00     31.21   1379.56
+    >>> cflo = cashflow(const_value=[100]*12, start='2000Q1', freq='Q')
+    >>> nrate = interest_rate([10]*12, start='2000Q1', freq='Q')
+    >>> savings(deposits=cflo, nrate=nrate, initbal=0) # doctest: +NORMALIZE_WHITESPACE
+            Beginning Balance  Deposits  Earned interest  Ending balance
+    2000Q1           0.000000     100.0         0.000000      100.000000
+    2000Q2         100.000000     100.0         2.500000      202.500000
+    2000Q3         202.500000     100.0         5.062500      307.562500
+    2000Q4         307.562500     100.0         7.689063      415.251562
+    2001Q1         415.251562     100.0        10.381289      525.632852
+    2001Q2         525.632852     100.0        13.140821      638.773673
+    2001Q3         638.773673     100.0        15.969342      754.743015
+    2001Q4         754.743015     100.0        18.868575      873.611590
+    2002Q1         873.611590     100.0        21.840290      995.451880
+    2002Q2         995.451880     100.0        24.886297     1120.338177
+    2002Q3        1120.338177     100.0        28.008454     1248.346631
+    2002Q4        1248.346631     100.0        31.208666     1379.555297
 
 
-    >>> cflo = cashflow(const_value=[100] * 5, spec=[(0, 0), (2, 0)])
-    >>> nrate = interest_rate([0, 1, 2, 3, 4])
-    >>> savings(deposits=cflo, nrate=nrate, initbal=1000, noprint=False) # doctest: +NORMALIZE_WHITESPACE
-    t    Beginning   Deposit    Earned    Ending
-           Balance            Interest   Balance
-    ---------------------------------------------
-    (0,)   1000.00      0.00      0.00   1000.00
-    (1,)   1000.00    100.00     10.00   1110.00
-    (2,)   1110.00      0.00     22.20   1132.20
-    (3,)   1132.20    100.00     33.97   1266.17
-    (4,)   1266.17    100.00     50.65   1416.81
+    >>> cflo = cashflow(const_value=[0, 100, 0, 100, 100], start='2000Q1', freq='A')
+    >>> nrate = interest_rate([0, 1, 2, 3, 4], start='2000Q1', freq='A')
+    >>> savings(deposits=cflo, nrate=nrate, initbal=1000) # doctest: +NORMALIZE_WHITESPACE
+          Beginning Balance  Deposits  Earned interest  Ending balance
+    2000           1000.000       0.0          0.00000      1000.00000
+    2001           1000.000     100.0         10.00000      1110.00000
+    2002           1110.000       0.0         22.20000      1132.20000
+    2003           1132.200     100.0         33.96600      1266.16600
+    2004           1266.166     100.0         50.64664      1416.81264
 
 
     """
-    verify_eq_time_range(deposits, nrate)
+    verify_period_range([deposits, nrate])
 
     begbal = deposits.copy()
     interest = deposits.copy()
     endbal = deposits.copy()
+    pyr = getpyr(deposits)
 
     for time, _ in enumerate(deposits):
         if time == 0:
             begbal[0] = initbal
-            interest[0] = begbal[0] * nrate[0] / 100 / nrate.pyr
+            interest[0] = begbal[0] * nrate[0] / 100 / pyr
             endbal[0] = begbal[0] + deposits[0] + interest[0]
         else:
             begbal[time] = endbal[time - 1]
-            interest[time] = begbal[time] * nrate[time] / 100 / nrate.pyr
+            interest[time] = begbal[time] * nrate[time] / 100 / pyr
             if deposits[time] < 0 and -deposits[time] > begbal[time] + interest[time]:
                 deposits[time] = -(begbal[time] + interest[time])
             endbal[time] = begbal[time] + deposits[time] + interest[time]
 
-    if noprint is True:
-        return (interest, endbal)
+    table = pd.DataFrame({'Beginning Balance' : begbal,
+                          'Deposits' : deposits,
+                          'Earned interest': interest,
+                          'Ending balance': endbal })
+
+    return table
+    # if noprint is True:
+    #     return (interest, endbal)
 
 
 
-    len_timeid = len(deposits.end.__repr__())
-    len_number = max(len('{:1.2f}'.format(endbal[-1])), len('{:1.2f}'.format(begbal[0])), 9)
+    # len_timeid = len(deposits.end.__repr__())
+    # len_number = max(len('{:1.2f}'.format(endbal[-1])), len('{:1.2f}'.format(begbal[0])), 9)
+    #
+    # fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
+    # fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
+    # fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
+    #
+    # if deposits.pyr == 1:
+    #     xmajor, = deposits.start
+    #     xminor = 0
+    # else:
+    #     xmajor, xminor = deposits.start
+    #
+    # txt = []
+    # header = fmt_timeid.format('t')
+    # header += fmt_header.format('Beginning')
+    # header += fmt_header.format('Deposit')
+    # header += fmt_header.format('Earned')
+    # header += fmt_header.format('Ending')
+    # txt.append(header)
+    #
+    # header = fmt_timeid.format('')
+    # header += fmt_header.format('Balance')
+    # header += fmt_header.format('')
+    # header += fmt_header.format('Interest')
+    # header += fmt_header.format('Balance')
+    # txt.append(header)
+    #
+    # txt.append('-' * len_timeid + '-----' + '-' * len_number * 4)
+    #
+    #
+    # for time, _ in enumerate(deposits):
+    #     if deposits.pyr == 1:
+    #         timeid = (xmajor,)
+    #     else:
+    #         timeid = (xmajor, xminor)
+    #     fmt = fmt_timeid + fmt_number * 4
+    #     txt.append(fmt.format(timeid.__repr__(),
+    #                           begbal[time],
+    #                           deposits[time],
+    #                           interest[time],
+    #                           endbal[time]))
+    #     if deposits.pyr == 1:
+    #         xmajor += 1
+    #     else:
+    #         xminor += 1
+    #         if xminor == deposits.pyr:
+    #             xminor = 0
+    #             xmajor += 1
+    #
+    # print('\n'.join(txt))
 
-    fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
-    fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
-    fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
-
-    if deposits.pyr == 1:
-        xmajor, = deposits.start
-        xminor = 0
-    else:
-        xmajor, xminor = deposits.start
-
-    txt = []
-    header = fmt_timeid.format('t')
-    header += fmt_header.format('Beginning')
-    header += fmt_header.format('Deposit')
-    header += fmt_header.format('Earned')
-    header += fmt_header.format('Ending')
-    txt.append(header)
-
-    header = fmt_timeid.format('')
-    header += fmt_header.format('Balance')
-    header += fmt_header.format('')
-    header += fmt_header.format('Interest')
-    header += fmt_header.format('Balance')
-    txt.append(header)
-
-    txt.append('-' * len_timeid + '-----' + '-' * len_number * 4)
 
 
-    for time, _ in enumerate(deposits):
-        if deposits.pyr == 1:
-            timeid = (xmajor,)
-        else:
-            timeid = (xmajor, xminor)
-        fmt = fmt_timeid + fmt_number * 4
-        txt.append(fmt.format(timeid.__repr__(),
-                              begbal[time],
-                              deposits[time],
-                              interest[time],
-                              endbal[time]))
-        if deposits.pyr == 1:
-            xmajor += 1
-        else:
-            xminor += 1
-            if xminor == deposits.pyr:
-                xminor = 0
-                xmajor += 1
 
-    print('\n'.join(txt))
 
+    # verify_eq_time_range(deposits, nrate)
+    #
+    # begbal = deposits.copy()
+    # interest = deposits.copy()
+    # endbal = deposits.copy()
+    #
+    # for time, _ in enumerate(deposits):
+    #     if time == 0:
+    #         begbal[0] = initbal
+    #         interest[0] = begbal[0] * nrate[0] / 100 / nrate.pyr
+    #         endbal[0] = begbal[0] + deposits[0] + interest[0]
+    #     else:
+    #         begbal[time] = endbal[time - 1]
+    #         interest[time] = begbal[time] * nrate[time] / 100 / nrate.pyr
+    #         if deposits[time] < 0 and -deposits[time] > begbal[time] + interest[time]:
+    #             deposits[time] = -(begbal[time] + interest[time])
+    #         endbal[time] = begbal[time] + deposits[time] + interest[time]
+    #
+    # if noprint is True:
+    #     return (interest, endbal)
+    #
+    #
+    #
+    # len_timeid = len(deposits.end.__repr__())
+    # len_number = max(len('{:1.2f}'.format(endbal[-1])), len('{:1.2f}'.format(begbal[0])), 9)
+    #
+    # fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
+    # fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
+    # fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
+    #
+    # if deposits.pyr == 1:
+    #     xmajor, = deposits.start
+    #     xminor = 0
+    # else:
+    #     xmajor, xminor = deposits.start
+    #
+    # txt = []
+    # header = fmt_timeid.format('t')
+    # header += fmt_header.format('Beginning')
+    # header += fmt_header.format('Deposit')
+    # header += fmt_header.format('Earned')
+    # header += fmt_header.format('Ending')
+    # txt.append(header)
+    #
+    # header = fmt_timeid.format('')
+    # header += fmt_header.format('Balance')
+    # header += fmt_header.format('')
+    # header += fmt_header.format('Interest')
+    # header += fmt_header.format('Balance')
+    # txt.append(header)
+    #
+    # txt.append('-' * len_timeid + '-----' + '-' * len_number * 4)
+    #
+    #
+    # for time, _ in enumerate(deposits):
+    #     if deposits.pyr == 1:
+    #         timeid = (xmajor,)
+    #     else:
+    #         timeid = (xmajor, xminor)
+    #     fmt = fmt_timeid + fmt_number * 4
+    #     txt.append(fmt.format(timeid.__repr__(),
+    #                           begbal[time],
+    #                           deposits[time],
+    #                           interest[time],
+    #                           endbal[time]))
+    #     if deposits.pyr == 1:
+    #         xmajor += 1
+    #     else:
+    #         xminor += 1
+    #         if xminor == deposits.pyr:
+    #             xminor = 0
+    #             xmajor += 1
+    #
+    # print('\n'.join(txt))
 
 
 

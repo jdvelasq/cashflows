@@ -42,9 +42,10 @@ This module contains functions for computing the time value of the money.
 
 """
 
-import numpy
-from cashflows.common import _vars2list
-from cashflows.rate import iconv
+import numpy as np
+import pandas as pd
+from common import _vars2list
+from rate import iconv
 
 
 def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):
@@ -111,22 +112,16 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     11.32...
 
     >>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
-    Present Value: .......  5000.00
-    Future Value: ........     0.00
-    Payment: .............  -130.01
-    Due: .................      END
-    No. of Periods: ......    48.00
-    Compoundings per Year:    12
-    Nominal Rate: .......     11.32
-    Effective Rate: .....     11.93
-    Periodic Rate: ......      0.94
+       pval  fval     pmt  nper  pyr  nrate  erate  prate  due
+    0  5000     0 -130.01    48   12  11.32  11.93   0.94    0
 
     >>> tvmm(pval=[5, 500, 5], nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
-    #   pval   fval    pmt   nper  nrate  erate  prate due
-    ------------------------------------------------------
-    0   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
-    1 500.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
-    2   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
+       pval  fval   pmt  nper  pyr  nrate  erate  prate  due
+    0     5     0 -0.13    48   12  11.32  11.93   0.94    0
+    1   500     0 -0.13    48   12  11.32  11.93   0.94    0
+    2     5     0 -0.13    48   12  11.32  11.93   0.94    0
+
+
     """
 
     #pylint: disable=too-many-arguments
@@ -148,21 +143,21 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     if pmt == 0.0:
         pmt = 0.0000001
 
-    nrate = numpy.array(nrate)
+    nrate = np.array(nrate)
 
     if pval is None:
-        result = numpy.pv(rate=nrate/100/pyr, nper=nper, fv=fval, pmt=pmt, when=due)
+        result = np.pv(rate=nrate/100/pyr, nper=nper, fv=fval, pmt=pmt, when=due)
     elif fval is None:
-        result = numpy.fv(rate=nrate/100/pyr, nper=nper, pv=pval, pmt=pmt, when=due)
+        result = np.fv(rate=nrate/100/pyr, nper=nper, pv=pval, pmt=pmt, when=due)
     elif nper is None:
-        result = numpy.nper(rate=nrate/100/pyr, pv=pval, fv=fval, pmt=pmt, when=due)
+        result = np.nper(rate=nrate/100/pyr, pv=pval, fv=fval, pmt=pmt, when=due)
     elif pmt is None:
-        result = numpy.pmt(rate=nrate/100/pyr, nper=nper, pv=pval, fv=fval, when=due)
+        result = np.pmt(rate=nrate/100/pyr, nper=nper, pv=pval, fv=fval, when=due)
     else:
-        result = numpy.rate(pv=pval, nper=nper, fv=fval, pmt=pmt, when=due) * 100 * pyr
+        result = np.rate(pv=pval, nper=nper, fv=fval, pmt=pmt, when=due) * 100 * pyr
 
     if noprint is True:
-        if isinstance(result, numpy.ndarray):
+        if isinstance(result, np.ndarray):
             return result.tolist()
         return result
 
@@ -191,63 +186,78 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
     erate, prate = iconv(nrate=nrate, pyr=pyr)
 
-    if len(pval) == 1:
-        if pval is not None:
-            print('Present Value: ....... {:8.2f}'.format(pval[0]))
-        if fval is not None:
-            print('Future Value: ........ {:8.2f}'.format(fval[0]))
-        if pmt is not None:
-            print('Payment: ............. {:8.2f}'.format(pmt[0]))
-        if due is not None:
-            print('Due: .................      {:s}'.format('END' if due == 0 else 'BEG'))
-        print('No. of Periods: ...... {:8.2f}'.format(nper[0]))
-        print('Compoundings per Year: {:>5d}'.format(pyr))
-        print('Nominal Rate: .......  {:8.2f}'.format(nrate[0]))
-        print('Effective Rate: .....  {:8.2f}'.format(erate))
-        print('Periodic Rate: ......  {:8.2f}'.format(prate))
+    table = pd.DataFrame({'pval' : pval,
+                          'fval' : fval,
+                          'due': due,
+                          'nper':nper,
+                          'pyr':pyr,
+                          'nrate': nrate,
+                          'erate': erate,
+                          'prate': prate})
 
+    if len(pmt) == 1:
+        table['pmt'] = pmt
     else:
-        if due == 0:
-            sdue = 'END'
-            txtpmt = []
-            for item, _ in enumerate(pval):
-                txtpmt.append(pmt[item][-1])
-        else:
-            sdue = 'BEG'
-            txtpmt = []
-            for item, _ in enumerate(pval):
-                txtpmt.append(pmt[item][0])
+        aux = []
+        if isinstance(pmt, list):
+            if due == 0:
+                for item, _ in enumerate(pmt):
+                    aux.append(pmt[item][-1])
+            else:
+                for item, _ in enumerate(pmt):
+                    aux.append(pmt[item][0])
+            table['pmt'] = aux
 
 
-        maxlen = 5
-        for value1, value2, value3, value4 in zip(pval, fval, txtpmt, nper):
-            maxlen = max(maxlen, len('{:1.2f}'.format(value1)))
-            maxlen = max(maxlen, len('{:1.2f}'.format(value2)))
-            maxlen = max(maxlen, len('{:1.2f}'.format(value3)))
-            maxlen = max(maxlen, len('{:1.2f}'.format(value4)))
 
-        len_aux = len('{:d}'.format(len(pval)))
-
-        fmt_num = ' {:' + '{:d}'.format(maxlen) + '.2f}'
-        fmt_num = '{:<' + '{:d}'.format(len_aux) +  'd}' + fmt_num * 7 + ' {:3s}'
-        # fmt_shr = '{:' + '{:d}'.format(len_aux) + 's}'
-        fmt_hdr = ' {:>' + '{:d}'.format(maxlen) + 's}'
-        fmt_hdr = '{:' + '{:d}'.format(len_aux) + 's}' + fmt_hdr * 7 + ' due'
+    table = table[['pval', 'fval', 'pmt', 'nper', 'pyr', 'nrate', 'erate', 'prate', 'due']]
+    table = table.round(2)
+    return table
 
 
-        txt = fmt_hdr.format('#', 'pval', 'fval', 'pmt', 'nper', 'nrate', 'erate', 'prate')
-        print(txt)
-        print('-' * len_aux + '-' * maxlen * 7 + '-' * 7 + '----')
-        for item, _ in enumerate(pval):
-            print(fmt_num.format(item,
-                                 pval[item],
-                                 fval[item],
-                                 txtpmt[item],
-                                 nper[item],
-                                 nrate[item],
-                                 erate[item],
-                                 prate[item],
-                                 sdue))
+
+
+        # if due == 0:
+        #     sdue = 'END'
+        #     txtpmt = []
+        #     for item, _ in enumerate(pval):
+        #         txtpmt.append(pmt[item][-1])
+        # else:
+        #     sdue = 'BEG'
+        #     txtpmt = []
+        #     for item, _ in enumerate(pval):
+        #         txtpmt.append(pmt[item][0])
+        #
+        #
+        # maxlen = 5
+        # for value1, value2, value3, value4 in zip(pval, fval, txtpmt, nper):
+        #     maxlen = max(maxlen, len('{:1.2f}'.format(value1)))
+        #     maxlen = max(maxlen, len('{:1.2f}'.format(value2)))
+        #     maxlen = max(maxlen, len('{:1.2f}'.format(value3)))
+        #     maxlen = max(maxlen, len('{:1.2f}'.format(value4)))
+        #
+        # len_aux = len('{:d}'.format(len(pval)))
+        #
+        # fmt_num = ' {:' + '{:d}'.format(maxlen) + '.2f}'
+        # fmt_num = '{:<' + '{:d}'.format(len_aux) +  'd}' + fmt_num * 7 + ' {:3s}'
+        # # fmt_shr = '{:' + '{:d}'.format(len_aux) + 's}'
+        # fmt_hdr = ' {:>' + '{:d}'.format(maxlen) + 's}'
+        # fmt_hdr = '{:' + '{:d}'.format(len_aux) + 's}' + fmt_hdr * 7 + ' due'
+        #
+        #
+        # txt = fmt_hdr.format('#', 'pval', 'fval', 'pmt', 'nper', 'nrate', 'erate', 'prate')
+        # print(txt)
+        # print('-' * len_aux + '-' * maxlen * 7 + '-' * 7 + '----')
+        # for item, _ in enumerate(pval):
+        #     print(fmt_num.format(item,
+        #                          pval[item],
+        #                          fval[item],
+        #                          txtpmt[item],
+        #                          nper[item],
+        #                          nrate[item],
+        #                          erate[item],
+        #                          prate[item],
+        #                          sdue))
 
 
 def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
@@ -330,120 +340,73 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     **Examples.**
 
     >>> pmt = tvmm(pval=100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
-    >>> amortize(pval=100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    t      Beginning     Periodic     Interest    Principal        Final
-           Principal      Payment      Payment    Repayment    Principal
-              Amount       Amount                                 Amount
-    --------------------------------------------------------------------
-    0         100.00         0.00         0.00         0.00       100.00
-    1         100.00       -26.38        10.00       -16.38        83.62
-    2          83.62       -26.38         8.36       -18.02        65.60
-    3          65.60       -26.38         6.56       -19.82        45.78
-    4          45.78       -26.38         4.58       -21.80        23.98
-    5          23.98       -26.38         2.40       -23.98         0.00
-
-
+    >>> table = amortize(pval=100, nrate=10, nper=5, fval=0, noprint=False)
+    >>> table # doctest: +NORMALIZE_WHITESPACE
+       Beg balance  Payment  Interest  Principal  Final balance
+    0       100.00     0.00      0.00       0.00         100.00
+    1       100.00   -26.38     10.00     -16.38          83.62
+    2        83.62   -26.38      8.36     -18.02          65.60
+    3        65.60   -26.38      6.56     -19.82          45.78
+    4        45.78   -26.38      4.58     -21.80          23.98
+    5        23.98   -26.38      2.40     -23.98           0.00
 
     >>> amortize(pval=-100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    t      Beginning     Periodic     Interest    Principal        Final
-           Principal      Payment      Payment    Repayment    Principal
-              Amount       Amount                                 Amount
-    --------------------------------------------------------------------
-    0        -100.00         0.00         0.00         0.00      -100.00
-    1        -100.00        26.38       -10.00        16.38       -83.62
-    2         -83.62        26.38        -8.36        18.02       -65.60
-    3         -65.60        26.38        -6.56        19.82       -45.78
-    4         -45.78        26.38        -4.58        21.80       -23.98
-    5         -23.98        26.38        -2.40        23.98        -0.00
+       Beg balance  Payment  Interest  Principal  Final balance
+    0      -100.00     0.00      0.00       0.00        -100.00
+    1      -100.00    26.38    -10.00      16.38         -83.62
+    2       -83.62    26.38     -8.36      18.02         -65.60
+    3       -65.60    26.38     -6.56      19.82         -45.78
+    4       -45.78    26.38     -4.58      21.80         -23.98
+    5       -23.98    26.38     -2.40      23.98          -0.00
 
     >>> amortize(pval=100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    t      Beginning     Periodic     Interest    Principal        Final
-           Principal      Payment      Payment    Repayment    Principal
-              Amount       Amount                                 Amount
-    --------------------------------------------------------------------
-    0         100.00       -23.98         0.00       -23.98        76.02
-    1          76.02       -23.98         7.60       -16.38        59.64
-    2          59.64       -23.98         5.96       -18.02        41.62
-    3          41.62       -23.98         4.16       -19.82        21.80
-    4          21.80       -23.98         2.18       -21.80         0.00
-    5           0.00         0.00         0.00         0.00         0.00
+       Beg balance  Payment  Interest  Principal  Final balance
+    0       100.00   -23.98      0.00     -23.98          76.02
+    1        76.02   -23.98      7.60     -16.38          59.64
+    2        59.64   -23.98      5.96     -18.02          41.62
+    3        41.62   -23.98      4.16     -19.82          21.80
+    4        21.80   -23.98      2.18     -21.80           0.00
+    5         0.00     0.00      0.00       0.00           0.00
 
     >>> amortize(pval=-100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-    t      Beginning     Periodic     Interest    Principal        Final
-           Principal      Payment      Payment    Repayment    Principal
-              Amount       Amount                                 Amount
-    --------------------------------------------------------------------
-    0        -100.00        23.98         0.00        23.98       -76.02
-    1         -76.02        23.98        -7.60        16.38       -59.64
-    2         -59.64        23.98        -5.96        18.02       -41.62
-    3         -41.62        23.98        -4.16        19.82       -21.80
-    4         -21.80        23.98        -2.18        21.80        -0.00
-    5          -0.00         0.00        -0.00        -0.00        -0.00
+       Beg balance  Payment  Interest  Principal  Final balance
+    0      -100.00    23.98      0.00      23.98         -76.02
+    1       -76.02    23.98     -7.60      16.38         -59.64
+    2       -59.64    23.98     -5.96      18.02         -41.62
+    3       -41.62    23.98     -4.16      19.82         -21.80
+    4       -21.80    23.98     -2.18      21.80          -0.00
+    5        -0.00     0.00     -0.00      -0.00          -0.00
 
 
-    >>> principal, interest, payment, balance = amortize(pval=100,
-    ... nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
 
-    >>> principal  # doctest: +ELLIPSIS
-    [0, -16.37..., -18.01..., -19.81..., -21.80..., -23.98...]
+    >>> table = amortize(pval=100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
+    >>> table['Interest']  # doctest: +ELLIPSIS
+    0     0.00
+    1    10.00
+    2     8.36
+    3     6.56
+    4     4.58
+    5     2.40
+    Name: Interest, dtype: float64
 
-    >>> interest  # doctest: +ELLIPSIS
-    [0, 10.0, 8.36..., 6.56..., 4.57..., 2.39...]
+    >>> table['Payment']  # doctest: +ELLIPSIS
+    0     0.00
+    1   -26.38
+    2   -26.38
+    3   -26.38
+    4   -26.38
+    5   -26.38
+    Name: Payment, dtype: float64
 
-    >>> payment  # doctest: +ELLIPSIS
-    [0, -26.37..., -26.37..., -26.37..., -26.37..., -26.37...]
+    >>> table['Final balance']  # doctest: +ELLIPSIS
+    0    100.00
+    1     83.62
+    2     65.60
+    3     45.78
+    4     23.98
+    5      0.00
+    Name: Final balance, dtype: float64
 
-    >>> balance  # doctest: +ELLIPSIS
-    [100, 83.62..., 65.60..., 45.78..., 23.98..., 1...]
-
-    >>> principal, interest, payment, balance = amortize(pval=100,
-    ... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS
-
-    >>> sum(interest)  # doctest: +ELLIPSIS
-    31.89...
-
-    >>> sum(principal)  # doctest: +ELLIPSIS
-    -99.99...
-
-    >>> principal, interest, payment, balance = amortize(fval=0,
-    ... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS
-
-    >>> sum(interest)  # doctest: +ELLIPSIS
-    31.89...
-
-    >>> sum(principal)  # doctest: +ELLIPSIS
-    -99.99...
-
-    >>> principal, interest, payment, balance = amortize(pval=100,
-    ... fval=0, nper=5, pmt=pmt) # doctest: +ELLIPSIS
-
-    >>> sum(interest)  # doctest: +ELLIPSIS
-    31.89...
-
-    >>> sum(principal)  # doctest: +ELLIPSIS
-    -99.99...
-
-
-    >>> amortize(pval=100, fval=0, nrate=10, pmt=pmt, noprint=False) # doctest: +ELLIPSIS
-    t      Beginning     Periodic     Interest    Principal        Final
-           Principal      Payment      Payment    Repayment    Principal
-              Amount       Amount                                 Amount
-    --------------------------------------------------------------------
-    0         100.00         0.00         0.00         0.00       100.00
-    1         100.00       -26.38        10.00       -16.38        83.62
-    2          83.62       -26.38         8.36       -18.02        65.60
-    3          65.60       -26.38         6.56       -19.82        45.78
-    4          45.78       -26.38         4.58       -21.80        23.98
-    5          23.98       -26.38         2.40       -23.98         0.00
-
-    >>> principal, interest, payment, balance = amortize(pval=100,
-    ... fval=0, nrate=10, pmt=pmt) # doctest: +ELLIPSIS
-
-    >>> sum(interest)  # doctest: +ELLIPSIS
-    31.89...
-
-    >>> sum(principal)  # doctest: +ELLIPSIS
-    -99.99...
 
 
     """
@@ -513,27 +476,36 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
             ppmt[period] = pmt[period] + ipmt[period]
             rembal[period] = begbal[period] + ppmt[period]
 
-    if noprint is True:
-        return (ppmt, ipmt, pmt, rembal)
+    table = pd.DataFrame({'Beg balance': begbal,
+                          'Payment': pmt,
+                          'Interest': ipmt,
+                          'Principal': ppmt,
+                          'Final balance': rembal})
+    table = table[['Beg balance', 'Payment', 'Interest', 'Principal', 'Final balance']]
+    table = table.round(2)
 
-    txt = ['t      Beginning     Periodic     Interest    Principal        Final',
-           '       Principal      Payment      Payment    Repayment    Principal',
-           '          Amount       Amount                                 Amount',
-           '--------------------------------------------------------------------']
-
-    for time in range(nper + 1):
-
-        fmt = '{:<3d} {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
-
-
-        txt.append(fmt.format(time,
-                              begbal[time],
-                              pmt[time],
-                              ipmt[time],
-                              ppmt[time],
-                              rembal[time]))
-    print('\n'.join(txt))
-    return None
+    return table
+    # if noprint is True:
+    #     return (ppmt, ipmt, pmt, rembal)
+    #
+    # txt = ['t      Beginning     Periodic     Interest    Principal        Final',
+    #        '       Principal      Payment      Payment    Repayment    Principal',
+    #        '          Amount       Amount                                 Amount',
+    #        '--------------------------------------------------------------------']
+    #
+    # for time in range(nper + 1):
+    #
+    #     fmt = '{:<3d} {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
+    #
+    #
+    #     txt.append(fmt.format(time,
+    #                           begbal[time],
+    #                           pmt[time],
+    #                           ipmt[time],
+    #                           ppmt[time],
+    #                           rembal[time]))
+    # print('\n'.join(txt))
+    # return None
 
 
 

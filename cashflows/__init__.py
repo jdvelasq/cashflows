@@ -8,6 +8,7 @@ from cashflows.inflation import *
 from cashflows.loan import *
 from cashflows.rate import *
 from cashflows.savings import *
+from cashflows.series import *
 from cashflows.taxing import *
 from cashflows.tvmm import *
 from cashflows.utilityfun import *

@@ -45,8 +45,9 @@ This module contains functions for computing the time value of the money.
 import numpy as np
 import pandas as pd
 
+# cashflows.
 from cashflows.common import _vars2list
-from cashflows.rate import iconv
+
 
 
 def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
@@ -111,6 +112,15 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
     >>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0, pyr=12) # doctest: +ELLIPSIS
     11.32...
 
+    * Vectors of data:
+
+    >>> tvmm(pval=[5000, 4000, 3000], nper=48, pmt=pmt, fval = 0.0, pyr=12) # doctest: +ELLIPSIS
+    0    11.320000
+    1    23.818359
+    2    42.045544
+    dtype: float64
+
+
     """
 
     #pylint: disable=too-many-arguments
@@ -147,111 +157,9 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
 
 
     if isinstance(result, np.ndarray):
-        return result.tolist()
+        return pd.Series(result)
     return result
 
-
-    # nrate = nrate.tolist()
-    #
-    # if pval is None:
-    #     pval = result
-    # elif fval is None:
-    #     fval = result
-    # elif nper is None:
-    #     nper = result
-    # elif pmt is None:
-    #     pmt = result
-    # else:
-    #     nrate = result
-    #
-    # params = _vars2list([pval, fval, nper, pmt, nrate])
-    # pval = params[0]
-    # fval = params[1]
-    # nper = params[2]
-    # pmt = params[3]
-    # nrate = params[4]
-    #
-    # # raise ValueError(nrate.__repr__())
-    #
-    # erate, prate = iconv(nrate=nrate, pyr=pyr)
-    #
-    # table = pd.DataFrame({'pval' : pval,
-    #                       'fval' : fval,
-    #                       'due': due,
-    #                       'nper':nper,
-    #                       'pyr':pyr,
-    #                       'nrate': nrate,
-    #                       'erate': erate,
-    #                       'prate': prate})
-    #
-    # if len(pmt) == 1:
-    #     table['pmt'] = pmt
-    # else:
-    #     aux = []
-    #     if isinstance(pmt, list):
-    #         for item, _ in enumerate(pmt):
-    #             aux.append(pmt[item])
-    #         table['pmt'] = aux
-    #
-    #     # if isinstance(pmt, list):
-    #     #     if due == 0:
-    #     #         for item, _ in enumerate(pmt):
-    #     #             aux.append(pmt[item][-1])
-    #     #     else:
-    #     #         for item, _ in enumerate(pmt):
-    #     #             aux.append(pmt[item][0])
-    #     #     table['pmt'] = aux
-    #
-    #
-    #
-    # table = table[['pval', 'fval', 'pmt', 'nper', 'pyr', 'nrate', 'erate', 'prate', 'due']]
-    # # table = table.round(2)
-    # return table
-
-
-
-
-        # if due == 0:
-        #     sdue = 'END'
-        #     txtpmt = []
-        #     for item, _ in enumerate(pval):
-        #         txtpmt.append(pmt[item][-1])
-        # else:
-        #     sdue = 'BEG'
-        #     txtpmt = []
-        #     for item, _ in enumerate(pval):
-        #         txtpmt.append(pmt[item][0])
-        #
-        #
-        # maxlen = 5
-        # for value1, value2, value3, value4 in zip(pval, fval, txtpmt, nper):
-        #     maxlen = max(maxlen, len('{:1.2f}'.format(value1)))
-        #     maxlen = max(maxlen, len('{:1.2f}'.format(value2)))
-        #     maxlen = max(maxlen, len('{:1.2f}'.format(value3)))
-        #     maxlen = max(maxlen, len('{:1.2f}'.format(value4)))
-        #
-        # len_aux = len('{:d}'.format(len(pval)))
-        #
-        # fmt_num = ' {:' + '{:d}'.format(maxlen) + '.2f}'
-        # fmt_num = '{:<' + '{:d}'.format(len_aux) +  'd}' + fmt_num * 7 + ' {:3s}'
-        # # fmt_shr = '{:' + '{:d}'.format(len_aux) + 's}'
-        # fmt_hdr = ' {:>' + '{:d}'.format(maxlen) + 's}'
-        # fmt_hdr = '{:' + '{:d}'.format(len_aux) + 's}' + fmt_hdr * 7 + ' due'
-        #
-        #
-        # txt = fmt_hdr.format('#', 'pval', 'fval', 'pmt', 'nper', 'nrate', 'erate', 'prate')
-        # print(txt)
-        # print('-' * len_aux + '-' * maxlen * 7 + '-' * 7 + '----')
-        # for item, _ in enumerate(pval):
-        #     print(fmt_num.format(item,
-        #                          pval[item],
-        #                          fval[item],
-        #                          txtpmt[item],
-        #                          nper[item],
-        #                          nrate[item],
-        #                          erate[item],
-        #                          prate[item],
-        #                          sdue))
 
 
 def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1):
@@ -350,7 +258,7 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     >>> pmt = tvmm(pval=100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
     >>> table = amortize(pval=100, nrate=10, nper=5, fval=0)
     >>> table # doctest: +NORMALIZE_WHITESPACE
-       Beg balance  Payment  Interest  Principal  Final balance
+       Beg_Balance  Payment  Interest  Principal  Final_Balance
     0       100.00     0.00      0.00       0.00         100.00
     1       100.00   -26.38     10.00     -16.38          83.62
     2        83.62   -26.38      8.36     -18.02          65.60
@@ -359,7 +267,7 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     5        23.98   -26.38      2.40     -23.98           0.00
 
     >>> amortize(pval=-100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       Beg balance  Payment  Interest  Principal  Final balance
+       Beg_Balance  Payment  Interest  Principal  Final_Balance
     0      -100.00     0.00      0.00       0.00        -100.00
     1      -100.00    26.38    -10.00      16.38         -83.62
     2       -83.62    26.38     -8.36      18.02         -65.60
@@ -368,7 +276,7 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     5       -23.98    26.38     -2.40      23.98          -0.00
 
     >>> amortize(pval=100, nrate=10, nper=5, fval=0, due=1) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       Beg balance  Payment  Interest  Principal  Final balance
+       Beg_Balance  Payment  Interest  Principal  Final_Balance
     0       100.00   -23.98      0.00     -23.98          76.02
     1        76.02   -23.98      7.60     -16.38          59.64
     2        59.64   -23.98      5.96     -18.02          41.62
@@ -377,7 +285,7 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     5         0.00     0.00      0.00       0.00           0.00
 
     >>> amortize(pval=-100, nrate=10, nper=5, fval=0, due=1) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       Beg balance  Payment  Interest  Principal  Final balance
+       Beg_Balance  Payment  Interest  Principal  Final_Balance
     0      -100.00    23.98      0.00      23.98         -76.02
     1       -76.02    23.98     -7.60      16.38         -59.64
     2       -59.64    23.98     -5.96      18.02         -41.62
@@ -406,14 +314,14 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     5   -26.38
     Name: Payment, dtype: float64
 
-    >>> table['Final balance']  # doctest: +ELLIPSIS
+    >>> table['Final_Balance']  # doctest: +ELLIPSIS
     0    100.00
     1     83.62
     2     65.60
     3     45.78
     4     23.98
     5      0.00
-    Name: Final balance, dtype: float64
+    Name: Final_Balance, dtype: float64
 
 
 
@@ -484,36 +392,15 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
             ppmt[period] = pmt[period] + ipmt[period]
             rembal[period] = begbal[period] + ppmt[period]
 
-    table = pd.DataFrame({'Beg balance': begbal,
+    table = pd.DataFrame({'Beg_Balance': begbal,
                           'Payment': pmt,
                           'Interest': ipmt,
                           'Principal': ppmt,
-                          'Final balance': rembal})
-    table = table[['Beg balance', 'Payment', 'Interest', 'Principal', 'Final balance']]
+                          'Final_Balance': rembal})
+    table = table[['Beg_Balance', 'Payment', 'Interest', 'Principal', 'Final_Balance']]
     table = table.round(2)
 
     return table
-    # if asdataframe is True:
-    #     return (ppmt, ipmt, pmt, rembal)
-    #
-    # txt = ['t      Beginning     Periodic     Interest    Principal        Final',
-    #        '       Principal      Payment      Payment    Repayment    Principal',
-    #        '          Amount       Amount                                 Amount',
-    #        '--------------------------------------------------------------------']
-    #
-    # for time in range(nper + 1):
-    #
-    #     fmt = '{:<3d} {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
-    #
-    #
-    #     txt.append(fmt.format(time,
-    #                           begbal[time],
-    #                           pmt[time],
-    #                           ipmt[time],
-    #                           ppmt[time],
-    #                           rembal[time]))
-    # print('\n'.join(txt))
-    # return None
 
 def iconv(nrate=None, erate=None, prate=None, pyr=1):
     """The function `iconv` computes the conversion among periodic, nominal
@@ -537,176 +424,28 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
         * (**nrate**, **erate**): when **prate** is specified.
 
 
-    Effective rate to nominal rate compounded monthly and monthly peridic rate.
 
-    >>> iconv(erate=10, pyr=12) # doctest: +ELLIPSIS
-    (9.56..., 0.79...)
 
-    >>> iconv(prate=1, pyr=12) # doctest: +ELLIPSIS
-    (12, 12.68...)
 
-    >>> iconv(nrate=10, pyr=12) # doctest: +ELLIPSIS
-    (10.47..., 0.83...)
+
+
 
 
     `iconv` accepts Python vectors.
 
-    >>> iconv(erate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-    ([9.68..., 9.60..., 9.56...], [3.22..., 1.60..., 0.79...])
 
-    >>> iconv(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-    ([3, 6, 12], [3.03..., 6.15..., 12.68...])
 
-    >>> iconv(nrate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-    ([10.33..., 10.42..., 10.47...], [3.33..., 1.66..., 0.83...])
 
-    >>> iconv(erate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
-    ([9.56..., 11.38..., 13.17...], [0.79..., 0.94..., 1.09...])
 
-    >>> iconv(prate=[1, 2, 3], pyr=12) # doctest: +ELLIPSIS
-    ([12, 24, 36], [12.68..., 26.82..., 42.57...])
 
-    >>> iconv(nrate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
-    ([10.47..., 12.68..., 14.93...], [0.83..., 1.0, 1.16...])
 
     When a rate and the number of compounding periods (`pyr`) are vectors, they
     must have the same length. Computations are executed using the first rate
     with the first compounding and so on.
 
-    >>> iconv(erate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-    ([9.68..., 11.44..., 13.17...], [3.22..., 1.90..., 1.09...])
 
-    >>> iconv(nrate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-    ([10.33..., 12.61..., 14.93...], [3.33..., 2.0, 1.16...])
 
-    >>> iconv(prate=[1, 2, 3], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
-    ([3, 12, 36], [3.03..., 12.61..., 42.57...])
 
-    `iconv` accepts pandas.Series objects
-
-    >>> erate, prate = iconv(nrate = interest_rate(const_value=12, start='2000-06', periods=12, freq='6M'))
-    >>> prate # doctest: +NORMALIZE_WHITESPACE
-    2000-06    6.0
-    2000-12    6.0
-    2001-06    6.0
-    2001-12    6.0
-    2002-06    6.0
-    2002-12    6.0
-    2003-06    6.0
-    2003-12    6.0
-    2004-06    6.0
-    2004-12    6.0
-    2005-06    6.0
-    2005-12    6.0
-    Freq: 6M, dtype: float64
-
-    >>> erate # doctest: +NORMALIZE_WHITESPACE
-    2000-06    12.36
-    2000-12    12.36
-    2001-06    12.36
-    2001-12    12.36
-    2002-06    12.36
-    2002-12    12.36
-    2003-06    12.36
-    2003-12    12.36
-    2004-06    12.36
-    2004-12    12.36
-    2005-06    12.36
-    2005-12    12.36
-    Freq: 6M, dtype: float64
-
-    >>> erate, prate = iconv(nrate = interest_rate(const_value=12, start='2000-01', periods=12, freq='Q'))
-    >>> prate # doctest: +NORMALIZE_WHITESPACE
-    2000Q1    3.0
-    2000Q2    3.0
-    2000Q3    3.0
-    2000Q4    3.0
-    2001Q1    3.0
-    2001Q2    3.0
-    2001Q3    3.0
-    2001Q4    3.0
-    2002Q1    3.0
-    2002Q2    3.0
-    2002Q3    3.0
-    2002Q4    3.0
-    Freq: Q-DEC, dtype: float64
-
-    >>> erate # doctest: +NORMALIZE_WHITESPACE
-    2000Q1    12.550881
-    2000Q2    12.550881
-    2000Q3    12.550881
-    2000Q4    12.550881
-    2001Q1    12.550881
-    2001Q2    12.550881
-    2001Q3    12.550881
-    2001Q4    12.550881
-    2002Q1    12.550881
-    2002Q2    12.550881
-    2002Q3    12.550881
-    2002Q4    12.550881
-    Freq: Q-DEC, dtype: float64
-
-    >>> nrate, prate = iconv(erate = erate)
-    >>> nrate # doctest: +NORMALIZE_WHITESPACE
-    2000Q1    12.0
-    2000Q2    12.0
-    2000Q3    12.0
-    2000Q4    12.0
-    2001Q1    12.0
-    2001Q2    12.0
-    2001Q3    12.0
-    2001Q4    12.0
-    2002Q1    12.0
-    2002Q2    12.0
-    2002Q3    12.0
-    2002Q4    12.0
-    Freq: Q-DEC, dtype: float64
-
-    >>> prate # doctest: +NORMALIZE_WHITESPACE
-    2000Q1    3.0
-    2000Q2    3.0
-    2000Q3    3.0
-    2000Q4    3.0
-    2001Q1    3.0
-    2001Q2    3.0
-    2001Q3    3.0
-    2001Q4    3.0
-    2002Q1    3.0
-    2002Q2    3.0
-    2002Q3    3.0
-    2002Q4    3.0
-    Freq: Q-DEC, dtype: float64
-
-    >>> nrate, erate = iconv(prate = prate)
-    >>> nrate # doctest: +NORMALIZE_WHITESPACE
-    2000Q1    12.0
-    2000Q2    12.0
-    2000Q3    12.0
-    2000Q4    12.0
-    2001Q1    12.0
-    2001Q2    12.0
-    2001Q3    12.0
-    2001Q4    12.0
-    2002Q1    12.0
-    2002Q2    12.0
-    2002Q3    12.0
-    2002Q4    12.0
-    Freq: Q-DEC, dtype: float64
-
-    >>> erate # doctest: +NORMALIZE_WHITESPACE
-    2000Q1    12.550881
-    2000Q2    12.550881
-    2000Q3    12.550881
-    2000Q4    12.550881
-    2001Q1    12.550881
-    2001Q2    12.550881
-    2001Q3    12.550881
-    2001Q4    12.550881
-    2002Q1    12.550881
-    2002Q2    12.550881
-    2002Q3    12.550881
-    2002Q4    12.550881
-    Freq: Q-DEC, dtype: float64
 
     """
 
@@ -769,70 +508,31 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
         pyr = [pyr] * maxlen
     pyr = np.array(pyr)
 
-    if nrate is not None:
-        if isinstance(nrate, (int, float)):
-            nrate = [nrate] * maxlen
-        nrate = np.array(nrate)
-        prate = nrate / pyr
-        erate = 100 * (np.power(1 + prate/100, pyr) - 1)
-        prate = prate.tolist()
-        erate = erate.tolist()
-        if maxlen == 1:
-            prate = prate[0]
-            erate = erate[0]
-        return (erate, prate)
-
-    if erate is not None:
-        if isinstance(erate, (int, float)):
-            erate = [erate] * maxlen
-        erate = np.array(erate)
-        prate = 100 * (np.power(1 + erate / 100, 1 / pyr) - 1)
-        nrate = pyr * prate
-        prate = prate.tolist()
-        nrate = nrate.tolist()
-        if maxlen == 1:
-            prate = prate[0]
-            nrate = nrate[0]
-        return (nrate, prate)
-
-    if prate is not None:
-        if isinstance(prate, (int, float)):
-            prate = [prate] * maxlen
-        prate = np.array(prate)
-        erate = 100 * (np.power(1 + prate / 100, pyr) - 1)
-        nrate = pyr * prate
-        erate = erate.tolist()
-        nrate = nrate.tolist()
-        if maxlen == 1:
-            erate = erate[0]
-            nrate = nrate[0]
-        return (nrate, erate)
 
 
-# def to_discount_factor(nrate=None, erate=None, prate=None, base_date=None):
-#     """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
+
+
+
+
+
+
+# def equivalent_rate(nrate=None, erate=None, prate=None):
+#     """Returns the equivalent interest rate over a time period.
 #
 #     Args:
-#         nrate (pandasSeries): Nominal interest rate per year.
-#         nrate (pandasSeries): Effective interest rate per year.
-#         prate (pandasSeries): Periodic interest rate.
-#         base_date (string): basis time.
+#         nrate (TimeSeries): Nominal interest rate per year.
+#         erate (TimeSeries): Effective interest rate per year.
+#         prate (TimeSeries): Periodic interest rate.
 #
 #     Returns:
-#         pandas.Series of float values
+#         float value.
 #
-#     Only one of the interest rates must be supplied for the computation.
+#     Only one of the interest rate must be supplied for the computation.
 #
-#     >>> nrate = interest_rate(const_value=4, periods=10, start='2016Q1', freq='Q')
-#     >>> erate, prate = iconv(nrate=nrate)
-#     >>> to_discount_factor(nrate=nrate, base_date='2016Q3') # doctest: +ELLIPSIS
-#     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+#     >>> equivalent_rate(prate=interest_rate([10]*5, start='2000Q1', freq='Q')) # doctest: +ELLIPSIS
+#     10.0...
 #
-#     >>> to_discount_factor(erate=erate, base_date='2016Q3') # doctest: +ELLIPSIS
-#     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 #
-#     >>> to_discount_factor(prate=prate, base_date='2016Q3') # doctest: +ELLIPSIS
-#     [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
 #     """
 #     numnone = 0
 #     if nrate is None:
@@ -845,119 +545,25 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 #         raise ValueError('Two of the rates must be set to `None`')
 #
 #     if nrate is not None:
-#         pyr = getpyr(nrate)
-#         prate = nrate.copy()
-#         for i,_ in enumerate(nrate):
-#             prate[i] = nrate[i] / pyr  # periodic rate
+#         value = nrate.tolist()
+#         factor = 1
+#         for element in value[1:]:
+#             factor *= (1 + element / 100 / nrate.pyr)
+#         return 100 * nrate.pyr * (factor**(1/(len(value) - 1)) - 1)
+#
+#     if prate is not None:
+#         value = prate.tolist()
+#         factor = 1
+#         for element in value[1:]:
+#             factor *= (1 + element / 100)
+#         return 100  * (factor**(1/(len(value) - 1)) - 1)
 #
 #     if erate is not None:
-#         pyr = getpyr(erate)
-#         prate = erate.copy()
-#         for i,_ in enumerate(erate):
-#             prate[i] = 100 * (np.power(1 + erate[i]/100, 1. / pyr) - 1) # periodic rate
-#
-#     pyr = getpyr(prate)
-#
-#     factor = [x/100 for x in prate]
-#
-#     for index, _ in enumerate(factor):
-#         if index == 0:
-#             factor[0] = 1 / (1 + factor[0])
-#         else:
-#             factor[index] = factor[index-1] / (1 + factor[index])
-#
-#     if isinstance(base_date, str):
-#         base_date = pd.Period(base_date, freq=prate.axes[0].freq)
-#         base_date = period2pos(prate.axes[0], base_date)
-#
-#     div = factor[base_date]
-#     for index, _ in enumerate(factor):
-#         factor[index] = factor[index] / div
-#     return factor
-
-
-# def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
-#     """Returns a list of compounding factors calculated as (1 + r)^(t - t0).
-#
-#     Args:
-#         nrate (TimeSeries): Nominal interest rate per year.
-#         nrate (TimeSeries): Effective interest rate per year.
-#         prate (TimeSeries): Periodic interest rate.
-#         base_date (int, tuple): basis time.
-#
-#     Returns:
-#         Compound factor (list)
-#
-#
-#     **Examples**
-#
-#     >>> nrate = interest_rate(const_value=4, start='2000', periods=10, freq='Q')
-#     >>> erate, prate = iconv(nrate=nrate)
-#     >>> to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
-#     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
-#
-#     >>> to_compound_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
-#     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
-#
-#     >>> to_compound_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
-#     [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
-#
-#     """
-#     factor = to_discount_factor(nrate=nrate, erate=erate, prate=prate, base_date=base_date)
-#     for time, _ in enumerate(factor):
-#         factor[time] = 1 / factor[time]
-#     return factor
-
-
-
-def equivalent_rate(nrate=None, erate=None, prate=None):
-    """Returns the equivalent interest rate over a time period.
-
-    Args:
-        nrate (TimeSeries): Nominal interest rate per year.
-        erate (TimeSeries): Effective interest rate per year.
-        prate (TimeSeries): Periodic interest rate.
-
-    Returns:
-        float value.
-
-    Only one of the interest rate must be supplied for the computation.
-
-    >>> equivalent_rate(prate=interest_rate([10]*5, start='2000Q1', freq='Q')) # doctest: +ELLIPSIS
-    10.0...
-
-
-    """
-    numnone = 0
-    if nrate is None:
-        numnone += 1
-    if erate is None:
-        numnone += 1
-    if prate is None:
-        numnone += 1
-    if numnone != 2:
-        raise ValueError('Two of the rates must be set to `None`')
-
-    if nrate is not None:
-        value = nrate.tolist()
-        factor = 1
-        for element in value[1:]:
-            factor *= (1 + element / 100 / nrate.pyr)
-        return 100 * nrate.pyr * (factor**(1/(len(value) - 1)) - 1)
-
-    if prate is not None:
-        value = prate.tolist()
-        factor = 1
-        for element in value[1:]:
-            factor *= (1 + element / 100)
-        return 100  * (factor**(1/(len(value) - 1)) - 1)
-
-    if erate is not None:
-        value = erate.tolist()
-        factor = 1
-        for element in value[1:]:
-            factor *= (1 + (numpy.power(1 + element/100, 1. / erate.pyr) - 1))
-        return 100  * (factor**(1/(len(value) - 1)) - 1)
+#         value = erate.tolist()
+#         factor = 1
+#         for element in value[1:]:
+#             factor *= (1 + (numpy.power(1 + element/100, 1. / erate.pyr) - 1))
+#         return 100  * (factor**(1/(len(value) - 1)) - 1)
 
 
 

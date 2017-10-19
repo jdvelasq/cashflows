@@ -34,7 +34,7 @@ def depreciation_sl(costs, life, salvalue=None, delay=None):
     >>> life = cashflow(const_value=0, periods=16, start='2000Q1', freq='Q')
     >>> life[0] = 4
     >>> depreciation_sl(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0  250.0       250.0     750.0
     2000Q3     750.0     0.0  250.0       500.0     500.0
@@ -55,7 +55,7 @@ def depreciation_sl(costs, life, salvalue=None, delay=None):
     >>> delay = cashflow(const_value=0, start='2000Q1', periods=16, freq='Q')
     >>> delay[0] = 2
     >>> depreciation_sl(costs=costs, life=life, delay=delay) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0    0.0         0.0    1000.0
     2000Q3    1000.0     0.0    0.0         0.0    1000.0
@@ -80,7 +80,7 @@ def depreciation_sl(costs, life, salvalue=None, delay=None):
     >>> life[0] = 4
     >>> life[8] = 4
     >>> depreciation_sl(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0  250.0       250.0     750.0
     2000Q3     750.0     0.0  250.0       500.0     500.0
@@ -102,7 +102,7 @@ def depreciation_sl(costs, life, salvalue=None, delay=None):
     >>> delay[0] = 2
     >>> delay[8] = 2
     >>> depreciation_sl(costs=costs, life=life, delay=delay) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0    0.0         0.0    1000.0
     2000Q3    1000.0     0.0    0.0         0.0    1000.0
@@ -164,26 +164,16 @@ def depreciation_sl(costs, life, salvalue=None, delay=None):
 
 
 
-    table = pd.DataFrame({'Beg book': begbook,
+    table = pd.DataFrame({'Beg_Book': begbook,
                           'Costs': costs,
                           'Depr': depr,
-                          'Accum depr': adepr,
-                          'End book': endbook})
+                          'Accum_Depr': adepr,
+                          'End_Book': endbook})
 
-    table = table[['Beg book', 'Costs', 'Depr', 'Accum depr', 'End book']]
+    table = table[['Beg_Book', 'Costs', 'Depr', 'Accum_Depr', 'End_Book']]
     table = table.round(2)
     return table
 
-
-    #
-    #
-    # if noprint is True:
-    #     retval = costs.copy()
-    #     for index, _ in enumerate(costs):
-    #         retval[index] = depr[index]
-    #     return retval
-    #
-    # print_depr(depr, adepr, costs, begbook, endbook)
 
 
 def depreciation_soyd(costs, life, salvalue=None, delay=None):
@@ -206,7 +196,7 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None):
     >>> life = cashflow(const_value=0, periods=16, start='2000Q1', freq='Q')
     >>> life[0] = 4
     >>> depreciation_soyd(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0  400.0       400.0     600.0
     2000Q3     600.0     0.0  300.0       700.0     300.0
@@ -227,7 +217,7 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None):
     >>> delay = cashflow(const_value=0, periods=16, start='2000Q1', freq='Q')
     >>> delay[0] = 2
     >>> depreciation_soyd(costs=costs, life=life, delay=delay) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0    0.0         0.0    1000.0
     2000Q3    1000.0     0.0    0.0         0.0    1000.0
@@ -252,7 +242,7 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None):
     >>> life[0] = 4
     >>> life[8] = 4
     >>> depreciation_soyd(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0  400.0       400.0     600.0
     2000Q3     600.0     0.0  300.0       700.0     300.0
@@ -274,7 +264,7 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None):
     >>> delay[0] = 2
     >>> delay[8] = 2
     >>> depreciation_soyd(costs=costs, life=life, delay=delay) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs   Depr  Accum depr  End book
+            Beg_Book   Costs   Depr  Accum_Depr  End_Book
     2000Q1       0.0  1000.0    0.0         0.0    1000.0
     2000Q2    1000.0     0.0    0.0         0.0    1000.0
     2000Q3    1000.0     0.0    0.0         0.0    1000.0
@@ -332,22 +322,15 @@ def depreciation_soyd(costs, life, salvalue=None, delay=None):
         endbook[time] = begbook[time] - depr[time] + costs[time]
 
 
-    table = pd.DataFrame({'Beg book': begbook,
+    table = pd.DataFrame({'Beg_Book': begbook,
                           'Costs': costs,
                           'Depr': depr,
-                          'Accum depr': adepr,
-                          'End book': endbook})
-    table = table[['Beg book', 'Costs', 'Depr', 'Accum depr', 'End book']]
+                          'Accum_Depr': adepr,
+                          'End_Book': endbook})
+    table = table[['Beg_Book', 'Costs', 'Depr', 'Accum_Depr', 'End_Book']]
     table = table.round(2)
     return table
 
-    # if noprint is True:
-    #     retval = costs.copy()
-    #     for index, _ in enumerate(costs):
-    #         retval[index] = depr[index]
-    #     return retval
-    #
-    # print_depr(depr, adepr, costs, begbook, endbook)
 
 
 
@@ -374,7 +357,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     >>> life = cashflow(const_value=0, periods=16, start='2000Q1', freq='Q')
     >>> life[0] = 4
     >>> depreciation_db(costs=costs, life=life, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs    Depr  Accum depr  End book
+            Beg_Book   Costs    Depr  Accum_Depr  End_Book
     2000Q1      0.00  1000.0    0.00        0.00   1000.00
     2000Q2   1000.00     0.0  375.00      375.00    625.00
     2000Q3    625.00     0.0  234.38      609.38    390.62
@@ -395,7 +378,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     >>> delay = cashflow(const_value=0, periods=16, start='2000Q1', freq='Q')
     >>> delay[0] = 2
     >>> depreciation_db(costs=costs, life=life, delay=delay, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs    Depr  Accum depr  End book
+            Beg_Book   Costs    Depr  Accum_Depr  End_Book
     2000Q1      0.00  1000.0    0.00        0.00   1000.00
     2000Q2   1000.00     0.0    0.00        0.00   1000.00
     2000Q3   1000.00     0.0    0.00        0.00   1000.00
@@ -421,7 +404,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     >>> life[0] = 4
     >>> life[8] = 4
     >>> depreciation_db(costs=costs, life=life, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs    Depr  Accum depr  End book
+            Beg_Book   Costs    Depr  Accum_Depr  End_Book
     2000Q1      0.00  1000.0    0.00        0.00   1000.00
     2000Q2   1000.00     0.0  375.00      375.00    625.00
     2000Q3    625.00     0.0  234.38      609.38    390.62
@@ -443,7 +426,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     >>> delay[0] = 2
     >>> delay[8] = 2
     >>> depreciation_db(costs=costs, life=life, delay=delay, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE
-            Beg book   Costs    Depr  Accum depr  End book
+            Beg_Book   Costs    Depr  Accum_Depr  End_Book
     2000Q1      0.00  1000.0    0.00        0.00   1000.00
     2000Q2   1000.00     0.0    0.00        0.00   1000.00
     2000Q3   1000.00     0.0    0.00        0.00   1000.00
@@ -521,25 +504,15 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
             begbook[time] = endbook[time - 1]
         endbook[time] = begbook[time] - depr[time] + costs[time]
 
-    table = pd.DataFrame({'Beg book': begbook,
+    table = pd.DataFrame({'Beg_Book': begbook,
                           'Costs': costs,
                           'Depr': depr,
-                          'Accum depr': adepr,
-                          'End book': endbook})
+                          'Accum_Depr': adepr,
+                          'End_Book': endbook})
 
-    table = table[['Beg book', 'Costs', 'Depr', 'Accum depr', 'End book']]
+    table = table[['Beg_Book', 'Costs', 'Depr', 'Accum_Depr', 'End_Book']]
     table = table.round(2)
     return table
-
-
-    # if noprint is True:
-    #     retval = costs.copy()
-    #     for index, _ in enumerate(costs):
-    #         retval[index] = depr[index]
-    #     return retval
-    #
-    # print_depr(depr, adepr, costs, begbook, endbook)
-
 
 
 
@@ -547,83 +520,3 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
-
-# def print_depr(depr, adepr, costs, begbook, endbook):
-#     """Prints a depreciation table
-#
-#     Args:
-#        cost (int, float): Initial cost of the asset
-#        depr (list): Depreciation per period
-#        adepr (list): Accumulated depreciation per period
-#        begbook (list): Beginning book value
-#        endbook (list): Ending book value
-#
-#     Returns:
-#        None
-#
-#     """
-#
-#
-#     len_timeid = len(costs.end.__repr__())
-#     len_number = max(len('{:1.2f}'.format(max(begbook))), 7)
-#
-#     fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
-#     fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
-#     fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
-#
-#     if costs.pyr == 1:
-#         xmajor, = costs.start
-#         xminor = 0
-#     else:
-#         xmajor, xminor = costs.start
-#
-#     txt = []
-#     header = fmt_timeid.format('t')
-#     header += fmt_header.format('Beg.')
-#     header += fmt_header.format('Cost')
-#     header += fmt_header.format('Depre.')
-#     header += fmt_header.format('Accum.')
-#     header += fmt_header.format('End.')
-#     txt.append(header)
-#
-#     header = fmt_timeid.format('')
-#     header += fmt_header.format('Book')
-#     header += fmt_header.format('')
-#     header += fmt_header.format('')
-#     header += fmt_header.format('Depre.')
-#     header += fmt_header.format('Book')
-#     txt.append(header)
-#
-#     header = fmt_timeid.format('')
-#     header += fmt_header.format('Value')
-#     header += fmt_header.format('')
-#     header += fmt_header.format('')
-#     header += fmt_header.format('')
-#     header += fmt_header.format('Value')
-#     txt.append(header)
-#
-#     txt.append('-' * len_timeid + '-----' + '-' * len_number * 5)
-#
-#
-#     for time, _ in enumerate(costs):
-#         if costs.pyr == 1:
-#             timeid = (xmajor,)
-#         else:
-#             timeid = (xmajor, xminor)
-#         fmt = fmt_timeid + fmt_number * 5
-#         txt.append(fmt.format(timeid.__repr__(),
-#                               begbook[time],
-#                               costs[time],
-#                               depr[time],
-#                               adepr[time],
-#                               endbook[time]))
-#         if costs.pyr == 1:
-#             xmajor += 1
-#         else:
-#             xminor += 1
-#             if xminor == costs.pyr:
-#                 xminor = 0
-#                 xmajor += 1
-#
-#     print('\n'.join(txt))

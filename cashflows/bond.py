@@ -11,7 +11,9 @@ the bond.
 
 import numpy as np
 import pandas as pd
-from cashflows.tvmm import tvmm
+
+# cashflows.
+from tvmm import tvmm
 
 def bond(maturity_date=None, freq='A', face_value=None,
          coupon_rate=None, coupon_value=None, num_coupons=None, value=None, ytm=None):
@@ -26,40 +28,40 @@ def bond(maturity_date=None, freq='A', face_value=None,
     5.6...
 
     >>> bond(face_value=[1000, 1200, 1400], coupon_value=56, num_coupons=10, value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       coupon_rate  coupon_value  face_value  num_coupons  value      ytm
+       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value      YTM
     0     5.600000            56        1000           10   1000  5.60000
     1     4.666667            56        1200           10   1000  7.04451
     2     4.000000            56        1400           10   1000  8.31956
 
 
     >>> bond(face_value=1000, coupon_value=[56., 57, 58], num_coupons=10, value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       coupon_rate  coupon_value  face_value  num_coupons  value  ytm
+       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM
     0          5.6          56.0        1000           10   1000  5.6
     1          5.7          57.0        1000           10   1000  5.7
     2          5.8          58.0        1000           10   1000  5.8
 
 
     >>> bond(face_value=1000, coupon_rate=[5.6, 5.7, 5.8], num_coupons=10, value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       coupon_rate  coupon_value  face_value  num_coupons  value  ytm
+       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM
     0          5.6          56.0        1000           10   1000  5.6
     1          5.7          57.0        1000           10   1000  5.7
     2          5.8          58.0        1000           10   1000  5.8
 
     >>> bond(face_value=1000, coupon_rate=5.6, num_coupons=[10, 20, 30], value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       coupon_rate  coupon_value  face_value  num_coupons  value  ytm
+       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM
     0          5.6          56.0        1000           10   1000  5.6
     1          5.6          56.0        1000           20   1000  5.6
     2          5.6          56.0        1000           30   1000  5.6
 
 
     >>> bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=[800, 900, 1000]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       coupon_rate  coupon_value  face_value  num_coupons  value       ytm
+       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value       YTM
     0          5.6          56.0        1000           10    800  8.671484
     1          5.6          56.0        1000           10    900  7.025450
     2          5.6          56.0        1000           10   1000  5.600000
 
     >>> bond(face_value=[1000, 1100, 1200], coupon_rate=5.6, num_coupons=10, value=[800, 900, 1000]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       coupon_rate  coupon_value  face_value  num_coupons  value        ytm
+       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value        YTM
     0     5.600000          56.0        1000           10    800   8.671484
     1     5.600000          56.0        1000           10    900   7.025450
     2     5.600000          56.0        1000           10   1000   5.600000
@@ -71,7 +73,7 @@ def bond(maturity_date=None, freq='A', face_value=None,
     8     4.666667          56.0        1200           10   1000   7.044510
 
     >>> bond(face_value=[1000, 1100, 1200], coupon_rate=[5.6, 5.7, 5.8], num_coupons=10, value=[800, 900, 1000]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-        coupon_rate  coupon_value  face_value  num_coupons  value        ytm
+        Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value        YTM
     0      5.600000          56.0        1000           10    800   8.671484
     1      5.600000          56.0        1000           10    900   7.025450
     2      5.600000          56.0        1000           10   1000   5.600000
@@ -101,18 +103,19 @@ def bond(maturity_date=None, freq='A', face_value=None,
     26     4.833333          58.0        1200           10   1000   7.231779
 
     >>> bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=1000, ytm=[5.1, 5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       basis_value        change  coupon_rate  coupon_value  face_value  \\
+       Basis_Value        Change  Coupon_Rate  Coupon_Value  Face_Value  \\
     0         1000  3.842187e+00          5.6          56.0        1000
     1         1000  1.136868e-14          5.6          56.0        1000
     2         1000 -3.662671e+00          5.6          56.0        1000
     <BLANKLINE>
-       num_coupons        value  ytm
+       Num_Coupons        Value  YTM
     0           10  1038.421866  5.1
     1           10  1000.000000  5.6
     2           10   963.373290  6.1
 
+
     >>> bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=[1000, 1100], ytm=[5.1, 5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       basis_value        change  coupon_rate  coupon_value  face_value  \\
+       Basis_Value        Change  Coupon_Rate  Coupon_Value  Face_Value  \\
     0         1000  3.842187e+00          5.6          56.0        1000
     1         1000  1.136868e-14          5.6          56.0        1000
     2         1000 -3.662671e+00          5.6          56.0        1000
@@ -120,7 +123,7 @@ def bond(maturity_date=None, freq='A', face_value=None,
     4         1100 -9.090909e+00          5.6          56.0        1000
     5         1100 -1.242061e+01          5.6          56.0        1000
     <BLANKLINE>
-       num_coupons        value  ytm
+       Num_Coupons        Value  YTM
     0           10  1038.421866  5.1
     1           10  1000.000000  5.6
     2           10   963.373290  6.1
@@ -129,34 +132,18 @@ def bond(maturity_date=None, freq='A', face_value=None,
     5           10   963.373290  6.1
 
 
->>> bond(face_value=1000, coupon_rate=5.6, num_coupons=[10, 20], value=[1000, 1100], ytm=[5.1, 5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-        basis_value        change  coupon_rate  coupon_value  face_value  \\
-    0          1000  3.842187e+00          5.6          56.0        1000
-    1          1000  1.136868e-14          5.6          56.0        1000
-    2          1000 -3.662671e+00          5.6          56.0        1000
-    3          1000  6.178609e+00          5.6          56.0        1000
-    4          1000  0.000000e+00          5.6          56.0        1000
-    5          1000 -5.688693e+00          5.6          56.0        1000
-    6          1100 -5.598012e+00          5.6          56.0        1000
-    7          1100 -9.090909e+00          5.6          56.0        1000
-    8          1100 -1.242061e+01          5.6          56.0        1000
-    9          1100 -3.473992e+00          5.6          56.0        1000
-    10         1100 -9.090909e+00          5.6          56.0        1000
-    11         1100 -1.426245e+01          5.6          56.0        1000
+>>> bond(face_value=1000, coupon_rate=5.6, num_coupons=[20], value=[1000, 1100], ytm=[5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+       Basis_Value     Change  Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  \
+    0         1000   0.000000          5.6          56.0        1000           20
+    1         1000  -5.688693          5.6          56.0        1000           20
+    2         1100  -9.090909          5.6          56.0        1000           20
+    3         1100 -14.262448          5.6          56.0        1000           20
     <BLANKLINE>
-        num_coupons        value  ytm
-    0            10  1038.421866  5.1
-    1            10  1000.000000  5.6
-    2            10   963.373290  6.1
-    3            20  1061.786086  5.1
-    4            20  1000.000000  5.6
-    5            20   943.113073  6.1
-    6            10  1038.421866  5.1
-    7            10  1000.000000  5.6
-    8            10   963.373290  6.1
-    9            20  1061.786086  5.1
-    10           20  1000.000000  5.6
-    11           20   943.113073  6.1
+             Value  YTM
+    0  1000.000000  5.6
+    1   943.113073  6.1
+    2  1000.000000  5.6
+    3   943.113073  6.1  
 
 
     """
@@ -211,12 +198,12 @@ def bond(maturity_date=None, freq='A', face_value=None,
 
                         xcoupon_rate = xcoupon_value / xface_value * 100.0
 
-                        aux = pd.DataFrame({'face_value': xface_value,
-                                            'coupon_value': xcoupon_value,
-                                            'coupon_rate': xcoupon_rate,
-                                            'num_coupons':xnum_coupons,
-                                            'ytm':xytm,
-                                            'value': -xvalue},
+                        aux = pd.DataFrame({'Face_Value': xface_value,
+                                            'Coupon_Value': xcoupon_value,
+                                            'Coupon_Rate': xcoupon_rate,
+                                            'Num_Coupons':xnum_coupons,
+                                            'YTM':xytm,
+                                            'Value': -xvalue},
                                             index = [counter])
                         counter += 1
 
@@ -227,7 +214,7 @@ def bond(maturity_date=None, freq='A', face_value=None,
 
 
         if len(result) == 1:
-            return np.asscalar(result['value'])
+            return np.asscalar(result['Value'])
         return result
 
     ## ytm is unknown
@@ -250,12 +237,12 @@ def bond(maturity_date=None, freq='A', face_value=None,
 
                         xcoupon_rate = xcoupon_value / xface_value * 100.0
 
-                        aux = pd.DataFrame({'face_value': xface_value,
-                                            'coupon_value': xcoupon_value,
-                                            'coupon_rate': xcoupon_rate,
-                                            'num_coupons':xnum_coupons,
-                                            'ytm':xytm,
-                                            'value': xvalue},
+                        aux = pd.DataFrame({'Face_Value': xface_value,
+                                            'Coupon_Value': xcoupon_value,
+                                            'Coupon_Rate': xcoupon_rate,
+                                            'Num_Coupons':xnum_coupons,
+                                            'YTM':xytm,
+                                            'Value': xvalue},
                                             index = [counter])
 
                         counter += 1
@@ -266,7 +253,7 @@ def bond(maturity_date=None, freq='A', face_value=None,
                             result = result.append(aux, ignore_index=True)
 
         if len(result) == 1:
-            return np.asscalar(result['ytm'])
+            return np.asscalar(result['YTM'])
         return result
 
 
@@ -295,14 +282,14 @@ def bond(maturity_date=None, freq='A', face_value=None,
 
                         xcoupon_rate = xcoupon_value / xface_value * 100.0
 
-                        aux = pd.DataFrame({'coupon_value': xcoupon_value,
-                                            'coupon_rate': xcoupon_rate,
-                                            'face_value': xface_value,
-                                            'num_coupons':xnum_coupons,
-                                            'basis_value': basis_value,
-                                            'ytm':xytm,
-                                            'value': -xvalue,
-                                            'change': 100 * (-xvalue-basis_value)/basis_value},
+                        aux = pd.DataFrame({'Coupon_Value': xcoupon_value,
+                                            'Coupon_Rate': xcoupon_rate,
+                                            'Face_Value': xface_value,
+                                            'Num_Coupons':xnum_coupons,
+                                            'Basis_Value': basis_value,
+                                            'YTM':xytm,
+                                            'Value': -xvalue,
+                                            'Change': 100 * (-xvalue-basis_value)/basis_value},
                                             index = [counter])
 
                         counter += 1

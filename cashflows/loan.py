@@ -22,13 +22,10 @@ Computes the amorization schedule for the following types of loans:
 import numpy as np
 import pandas as pd
 
-# cashflows.
-from analysis import timevalue, irr
-# from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
-# from cashflows.gtimeseries import repr_table
-from tvmm import pvpmt
-from timeseries import *
-from common import getpyr
+from cashflows.analysis import timevalue, irr
+from cashflows.tvmm import pvpmt
+from cashflows.timeseries import *
+from cashflows.common import getpyr
 
 ##
 ## base class for computations

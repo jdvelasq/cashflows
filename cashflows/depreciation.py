@@ -10,10 +10,8 @@ Asset depreciation
 
 import pandas as pd
 
-from timeseries import cashflow, interest_rate, verify_period_range
-
-
-
+#
+from cashflows.timeseries import cashflow, interest_rate, verify_period_range
 
 
 def depreciation_sl(costs, life, salvalue=None, delay=None):
@@ -24,7 +22,6 @@ def depreciation_sl(costs, life, salvalue=None, delay=None):
         cost (TimeSeries): the cost per period of the assets.
         life (TimeSeries): number of depreciation periods for the asset.
         salvalue(TimeSeries): salvage value as a percentage of cost.
-        noprint (bool): when True, the procedure prints a depreciation table.
 
     Returns:
         depreciation, accum_depreciation (TimeSeries, TimeSeries).

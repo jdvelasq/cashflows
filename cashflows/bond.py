@@ -11,7 +11,7 @@ the bond.
 
 import numpy as np
 import pandas as pd
-from tvmm import tvmm
+from cashflows.tvmm import tvmm
 
 def bond(maturity_date=None, freq='A', face_value=None,
          coupon_rate=None, coupon_value=None, num_coupons=None, value=None, ytm=None):
@@ -158,7 +158,7 @@ def bond(maturity_date=None, freq='A', face_value=None,
     10           20  1000.000000  5.6
     11           20   943.113073  6.1
 
-    
+
     """
 
 

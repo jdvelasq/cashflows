@@ -27,10 +27,11 @@ cashflows:
 import numpy as np
 import pandas as pd
 
-from timeseries import *
-from rate import *
-from common import _vars2list
-from tvmm import tvmm
+# cashflows.
+from cashflows.timeseries import *
+from cashflows.rate import *
+from cashflows.common import _vars2list
+from cashflows.tvmm import tvmm
 # from cashflows.utilityfun import exp_utility_fun, log_utility_fun, sqrt_utility_fun
 
 
@@ -53,14 +54,41 @@ def irr(cflo):
     34.90...
 
     >>> irr([cflo, cflo]) # doctest: +ELLIPSIS
-    [34.90..., 34.90...]
+    0    34.90...
+    1    34.90...
+    dtype: float64
 
     """
+    # if isinstance(cflo, pd.Series):
+    #     cflo = [cflo]
+    # retval = []
+    # freq = []
+    # for xcflo in cflo:
+    #     retval.append(100 * np.irr(xcflo.tolist()))
+    #     freq.append(xcflo.index.freq.__repr__())
+    # if len(retval) == 1:
+    #     return retval[0]
+    # daux = {'<YearEnd: month=12>':'A',
+    #         '<BusinessYearEnd: month=12>':'BA',
+    #         '<QuarterEnd: startingMonth=12>':'Q',
+    #         '<BusinessQuarterEnd: startingMonth=12>':'BQ',
+    #         '<MonthEnd>':'M',
+    #         '<BusinessMonthEnd>':'BM',
+    #         '<CustomBusinessMonthEnd>':'CBM',
+    #         '<SemiMonthEnd: day_of_month=15>':'SM',
+    #         '<6 * MonthEnds>':'6M',
+    #         '<6 * BusinessMonthEnds>':'6BM',
+    #         '<6 * CustomBusinessMonthEnds>':'6CBM'}
+    # freq = [daux[i] for i in freq]
+    # retval = pd.DataFrame({'IRR':retval, 'Freq':freq})
+    # return retval
+
+
     if isinstance(cflo, pd.Series):
         cflo = [cflo]
-    retval = []
-    for xcflo in cflo:
-        retval.append(100 * np.irr(xcflo.tolist()))
+    retval = pd.Series([0] * len(cflo), dtype=np.float64)
+    for index, xcflo in enumerate(cflo):
+        retval[index] = (100 * np.irr(xcflo))
     if len(retval) == 1:
         return retval[0]
     return retval
@@ -85,7 +113,9 @@ def mirr(cflo, finance_rate=0, reinvest_rate=0):
     18.92...
 
     >>> mirr([cflo, cflo]) # doctest: +ELLIPSIS
-    [18.92..., 18.92...]
+    0    18.920712
+    1    18.920712
+    dtype: float64
 
 
     """
@@ -93,11 +123,11 @@ def mirr(cflo, finance_rate=0, reinvest_rate=0):
     # positivos: reinvest_rate
     if isinstance(cflo, pd.Series):
         cflo = [cflo]
-    retval = []
-    for xcflo in cflo:
-        retval.append(100 *  np.mirr(xcflo.tolist(),
-                                     finance_rate,
-                                     reinvest_rate))
+    retval = pd.Series([0] * len(cflo), dtype=np.float64)
+    for index, xcflo in enumerate(cflo):
+        retval[index] = (100 *  np.mirr(xcflo,
+                                        finance_rate,
+                                        reinvest_rate))
 
     if len(retval) == 1:
         return retval[0]
@@ -138,15 +168,6 @@ def timevalue(cflo, prate, base_date=0, utility=None):
     >>> timevalue(cflo, prate, 4) # doctest: +ELLIPSIS
     163.22...
 
-    # >>> timevalue(cflo, prate, base_date=0, utility=exp_utility_fun(200)) # doctest: +ELLIPSIS
-    # -84.15...
-
-    # >>> timevalue(cflo, prate, base_date=0, utility=log_utility_fun(210)) # doctest: +ELLIPSIS
-    # 369092793...
-
-    # >>> timevalue(cflo, prate, base_date=0, utility=sqrt_utility_fun(210)) # doctest: +ELLIPSIS
-    # 2998.12...
-
 
     >>> prate = interest_rate([12]*5, start='2000Q1', freq='Q')
     >>> cflo = cashflow([-200] + [100]*4, start='2000Q1', freq='Q')
@@ -154,44 +175,55 @@ def timevalue(cflo, prate, base_date=0, utility=None):
     103.73...
 
     >>> timevalue(cflo=[cflo, cflo], prate=prate) # doctest: +ELLIPSIS
-    [103.73..., 103.73...]
-
-    >>> timevalue(cflo=cflo, prate=[prate, prate]) # doctest: +ELLIPSIS
-    [103.73..., 103.73...]
-
-    >>> timevalue(cflo=[cflo, cflo], prate=[prate, prate]) # doctest: +ELLIPSIS
-    [103.73..., 103.73...]
-
-    >>> timevalue(cflo=[cflo, cflo], prate=[prate, prate], base_date=[4, 4]) # doctest: +ELLIPSIS
-    [163.22..., 163.22...]
+    0    103.734935
+    1    103.734935
+    dtype: float64
 
 
     """
-    params = _vars2list([cflo, prate, base_date])
-    cflo = params[0]
-    prate = params[1]
-    base_date = params[2]
-    retval = []
-    for xcflo, xprate, xbase_date in zip(cflo, prate, base_date):
-        if not isinstance(xcflo, pd.Series):
-            raise TypeError("`cflo` must be a pandas.Series")
-        if not isinstance(xprate, pd.Series):
-            raise TypeError("`prate` must be a pandas.Series")
-        verify_period_range([xcflo, xprate])
+
+    if isinstance(cflo, pd.Series):
+        cflo = [cflo]
+    if not isinstance(prate, pd.Series):
+        raise TypeError("`prate` must be a pandas.Series")
+    verify_period_range(cflo + [prate])
+    retval = pd.Series([0] * len(cflo), dtype=np.float64)
+    factor = to_discount_factor(prate=prate, base_date=base_date)
+    for index, xcflo in enumerate(cflo):
         netval = 0
-        factor = to_discount_factor(prate=xprate, base_date=xbase_date)
         for time, _ in enumerate(xcflo):
-            if utility is None:
-                xcflo_aux = xcflo[time]
-            else:
-                xcflo_aux = utility(xcflo[time])
-            netval += xcflo_aux * factor[time]
-        if utility is not None:
-            netval = utility(netval, inverse=True)
-        retval.append(netval)
+            netval += xcflo[time] * factor[time]
+        retval[index] = netval
     if len(retval) == 1:
         return retval[0]
     return retval
+
+
+    # params = _vars2list([cflo, prate, base_date])
+    # cflo = params[0]
+    # prate = params[1]
+    # base_date = params[2]
+    # retval = []
+    # for xcflo, xprate, xbase_date in zip(cflo, prate, base_date):
+    #     if not isinstance(xcflo, pd.Series):
+    #         raise TypeError("`cflo` must be a pandas.Series")
+    #     if not isinstance(xprate, pd.Series):
+    #         raise TypeError("`prate` must be a pandas.Series")
+    #     verify_period_range([xcflo, xprate])
+    #     netval = 0
+    #     factor = to_discount_factor(prate=xprate, base_date=xbase_date)
+    #     for time, _ in enumerate(xcflo):
+    #         if utility is None:
+    #             xcflo_aux = xcflo[time]
+    #         else:
+    #             xcflo_aux = utility(xcflo[time])
+    #         netval += xcflo_aux * factor[time]
+    #     if utility is not None:
+    #         netval = utility(netval, inverse=True)
+    #     retval.append(netval)
+    # if len(retval) == 1:
+    #     return retval[0]
+    # return retval
 
 
 
@@ -221,34 +253,42 @@ def net_uniform_series(cflo, prate, nper=1):
     116.18...
 
     >>> net_uniform_series([cflo, cflo], prate) # doctest: +ELLIPSIS
-    [116.18..., 116.18...]
+    0    116.183127
+    1    116.183127
+    dtype: float64
 
-    >>> net_uniform_series(cflo, [prate, prate]) # doctest: +ELLIPSIS
-    [116.18..., 116.18...]
-
-    >>> net_uniform_series([cflo, cflo], [prate, prate]) # doctest: +ELLIPSIS
-    [116.18..., 116.18...]
-
-    >>> net_uniform_series([cflo, cflo], [prate, prate], nper=5) # doctest: +ELLIPSIS
-    [28.77..., 28.77...]
-
-    >>> net_uniform_series([cflo, cflo], [prate, prate], nper=[5, 5]) # doctest: +ELLIPSIS
-    [28.77..., 28.77...]
 
 
     """
-    params = _vars2list([cflo, prate, nper])
-    cflo = params[0]
-    prate = params[1]
-    nper = params[2]
-    retval = []
-    for xcflo, xprate, xnper in zip(cflo, prate, nper):
-        netval = timevalue(cflo=xcflo, prate=xprate, base_date=0)
-        erate = equivalent_rate(prate=xprate)
-        retval.append(-tvmm(nrate=erate, nper=xnper, pval=netval, fval=0, pmt=None))
+
+    if isinstance(cflo, pd.Series):
+        cflo = [cflo]
+    if not isinstance(prate, pd.Series):
+        raise TypeError("`prate` must be a pandas.Series")
+    verify_period_range(cflo + [prate])
+    retval = pd.Series([0] * len(cflo), dtype=np.float64)
+    erate = equivalent_rate(prate=prate)
+    for index, xcflo in enumerate(cflo):
+        netval = timevalue(cflo=xcflo, prate=prate, base_date=0)
+        retval[index] = (-tvmm(nrate=erate, nper=nper, pval=netval, fval=0, pmt=None))
     if len(retval) == 1:
         return retval[0]
     return retval
+
+
+
+    # params = _vars2list([cflo, prate, nper])
+    # cflo = params[0]
+    # prate = params[1]
+    # nper = params[2]
+    # retval = []
+    # for xcflo, xprate, xnper in zip(cflo, prate, nper):
+    #     netval = timevalue(cflo=xcflo, prate=xprate, base_date=0)
+    #     erate = equivalent_rate(prate=xprate)
+    #     retval.append(-tvmm(nrate=erate, nper=xnper, pval=netval, fval=0, pmt=None))
+    # if len(retval) == 1:
+    #     return retval[0]
+    # return retval
 
 
 def benefit_cost_ratio(cflo, prate, base_date=0):
@@ -277,28 +317,20 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
     1.518...
 
     >>> benefit_cost_ratio([cflo, cflo], prate) # doctest: +ELLIPSIS
-    [1.518..., 1.518...]
-
-    >>> benefit_cost_ratio(cflo, [prate, prate]) # doctest: +ELLIPSIS
-    [1.518..., 1.518...]
-
-    >>> benefit_cost_ratio([cflo, cflo], [prate, prate]) # doctest: +ELLIPSIS
-    [1.518..., 1.518...]
-
-    >>> benefit_cost_ratio([cflo, cflo], [prate, prate], [0, 0]) # doctest: +ELLIPSIS
-    [1.518..., 1.518...]
+    0    1.518675
+    1    1.518675
+    dtype: float64
 
 
     """
 
-    params = _vars2list([prate, cflo, base_date])
-    prate = params[0]
-    cflo = params[1]
-    base_date = params[2]
-
-    retval = []
-    for xprate, xcflo, xbase_date in zip(prate, cflo, base_date):
-        verify_period_range([xcflo, xprate])
+    if isinstance(cflo, pd.Series):
+        cflo = [cflo]
+    if not isinstance(prate, pd.Series):
+        raise TypeError("`prate` must be a pandas.Series")
+    verify_period_range(cflo + [prate])
+    retval = pd.Series([0] * len(cflo), dtype=np.float64)
+    for index, xcflo in enumerate(cflo):
         num = 0
         den = 0
         num = xcflo.copy()
@@ -308,11 +340,35 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
                 den[time] = 0
             else:
                 num[time] = 0
-        retval.append(-timevalue(num, xprate, xbase_date) / timevalue(den, xprate, xbase_date))
-
+        retval[index] = -timevalue(num, prate, base_date) / timevalue(den, prate, base_date)
     if len(retval) == 1:
         return retval[0]
     return retval
+
+
+
+    # params = _vars2list([prate, cflo, base_date])
+    # prate = params[0]
+    # cflo = params[1]
+    # base_date = params[2]
+    #
+    # retval = []
+    # for xprate, xcflo, xbase_date in zip(prate, cflo, base_date):
+    #     verify_period_range([xcflo, xprate])
+    #     num = 0
+    #     den = 0
+    #     num = xcflo.copy()
+    #     den = xcflo.copy()
+    #     for time, _ in enumerate(xcflo):
+    #         if xcflo[time] >= 0.0:
+    #             den[time] = 0
+    #         else:
+    #             num[time] = 0
+    #     retval.append(-timevalue(num, xprate, xbase_date) / timevalue(den, xprate, xbase_date))
+    #
+    # if len(retval) == 1:
+    #     return retval[0]
+    # return retval
 
 
 

@@ -7,8 +7,9 @@ After tax cashflow calculation.
 
 import pandas as pd
 
-from timeseries import *
-from common import _vars2list
+# cashflows.
+from cashflows.timeseries import *
+from cashflows.common import _vars2list
 
 
 def after_tax_cashflow(cflo, tax_rate):
@@ -42,24 +43,43 @@ def after_tax_cashflow(cflo, tax_rate):
     Freq: A-DEC, dtype: float64
 
     """
-    params = _vars2list([cflo, tax_rate])
-    cflo = params[0]
-    tax_rate = params[1]
-    retval = []
-    for xcflo, xtax_rate in zip(cflo, tax_rate):
-        if not isinstance(xcflo, pd.Series):
-            raise TypeError("cashflow must be a TimeSeries")
-        verify_period_range([xcflo, xtax_rate])
-        result = xcflo.copy()
-        for time, _ in enumerate(xcflo):
-            if result[time] > 0:
-                result[time] *= xtax_rate[time] / 100
-            else:
-                result[time] = 0
-        retval.append(result)
-    if len(retval) == 1:
-        return retval[0]
-    return retval
+    if not isinstance(cflo, pd.Series):
+        raise TypeError("cashflow must be a pandas.Series")
+    if not isinstance(tax_rate, pd.Series):
+        raise TypeError("tax_rate must be a pandas.Series")
+    verify_period_range([cflo, tax_rate])
+    result = cflo.copy()
+    for time, _ in enumerate(cflo):
+        if result[time] > 0:
+            result[time] *= tax_rate[time] / 100
+        else:
+            result[time] = 0
+    return result
+
+    ##
+    ## version vectorizada
+    ##
+
+    # params = _vars2list([cflo, tax_rate])
+    # cflo = params[0]
+    # tax_rate = params[1]
+    # retval = []
+    # for xcflo, xtax_rate in zip(cflo, tax_rate):
+    #     if not isinstance(xcflo, pd.Series):
+    #         raise TypeError("cashflow must be a TimeSeries")
+    #     verify_period_range([xcflo, xtax_rate])
+    #     result = xcflo.copy()
+    #     for time, _ in enumerate(xcflo):
+    #         if result[time] > 0:
+    #             result[time] *= xtax_rate[time] / 100
+    #         else:
+    #             result[time] = 0
+    #     retval.append(result)
+    # if len(retval) == 1:
+    #     return retval[0]
+    # return retval
+
+
 
 if __name__ == "__main__":
     import doctest

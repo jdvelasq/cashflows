@@ -13,13 +13,89 @@ def verify_period_range(x):
         raise ValueError('Argument must be a list: ' + x.__repr__())
     if len(x) == 1:
         return
-
     for elem in x:
         if not isinstance(elem, pd.Series):
             raise ValueError('pandas.Series expected: ' + elem.__repr__())
         allTrue = all(x[0].axes[0] == elem.axes[0])
         if allTrue is False:
             raise ValueError('Series with different period_range')
+
+
+def textplot(cflo):
+    """Text plot of a cashflow.
+
+    >>> cflo = cashflow(const_value=[-10, 5, 0, 20] * 3, start='2000Q1', freq='Q')
+    >>> textplot(cflo)# doctest: +NORMALIZE_WHITESPACE
+    time      value +------------------+------------------+
+    2000Q1   -10.00           **********
+    2000Q2     5.00                    *****
+    2000Q3     0.00                    *
+    2000Q4    20.00                    ********************
+    2001Q1   -10.00           **********
+    2001Q2     5.00                    *****
+    2001Q3     0.00                    *
+    2001Q4    20.00                    ********************
+    2002Q1   -10.00           **********
+    2002Q2     5.00                    *****
+    2002Q3     0.00                    *
+    2002Q4    20.00                    ********************
+
+    """
+
+
+    timeid = cflo.index.to_series().astype(str)
+
+
+    len_timeid = len(timeid[-1].__repr__())
+    fmt_timeid = '{:<' + '{:d}'.format(len_timeid) + 's}'
+
+    len_number = 0
+    for value in cflo:
+        len_number = max(len_number, len('{:1.2f}'.format(value)))
+
+    fmt_number = ' {:' + '{:d}'.format(len_number) + '.2f}'
+    fmt_header = ' {:>' + '{:d}'.format(len_number) + 's}'
+
+    # if cflo.pyr == 1:
+    #     xmajor, = cflo.start
+    #     xminor = 0
+    # else:
+    #     xmajor, xminor = cflo.start
+
+    maxval = max(abs(cflo))
+    width = 20
+
+    txt = []
+    txtrow = fmt_timeid.format("time") + fmt_header.format('value')
+    txtrow += " +" + "-" * (width - 2) + "+" + "-" * (width - 2) + "+"
+    txt.append(txtrow)
+
+    for value, timeid in zip(cflo, cflo.index.to_series().astype(str)):
+
+        # if cflo.pyr == 1:
+        #     timeid = (xmajor,)
+        # else:
+        #     timeid = (xmajor, xminor)
+
+        txtrow = fmt_timeid.format(timeid.__str__())
+        txtrow += fmt_number.format(value)
+
+        # fmt_row = "                    *                    "
+        xlim = int(width * abs(value / maxval))
+        if value < 0:
+            txtrow += " " + " " * (width - xlim) + '*' * (xlim)
+        elif value > 0:
+            txtrow += " " + " " * (width - 1) + "*" * (xlim)
+        else:
+            txtrow += " " + " " * (width - 1) + '*'
+
+        txt.append(txtrow)
+
+
+    print('\n'.join(txt))
+
+
+
 
 def cashflow(const_value=0, start=None, end=None, periods=None, freq='A'):
     """Returns a generic cashflow as a pandas.Series object.
@@ -86,13 +162,11 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A'):
         raise ValueError(msg)
     if isinstance(const_value, list):
         periods = len(const_value)
-
     prng = pd.period_range(start=start, end=end, periods=periods, freq=freq)
     periods = len(prng)
     if not isinstance(const_value, list):
         const_value = [const_value] * periods
     time_series = pd.Series(data=const_value, index=prng, dtype=np.float64)
-    # time_series.freq = freq
     return time_series
 
 

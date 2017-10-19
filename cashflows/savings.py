@@ -11,8 +11,9 @@ Savings
 
 import pandas as pd
 
-from timeseries import cashflow, interest_rate, verify_period_range
-from common import getpyr
+#
+from cashflows.timeseries import cashflow, interest_rate, verify_period_range
+from cashflows.common import getpyr
 
 
 def savings(deposits, nrate, initbal=0):
@@ -24,10 +25,9 @@ def savings(deposits, nrate, initbal=0):
         deposits (TimeSeries): deposits to the account.
         nrate (TimeSeries): nominal interest rate paid by the account.
         initbal (float): initial balance of the account.
-        noprint (bool): prints summary report?
 
     Return:
-        interest, end_balance (TimeSeries, TimeSeries)
+        A pandas.DataFrame.
 
 
     **Examples**

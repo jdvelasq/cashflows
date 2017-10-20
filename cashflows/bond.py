@@ -132,18 +132,19 @@ def bond(maturity_date=None, freq='A', face_value=None,
     5           10   963.373290  6.1
 
 
->>> bond(face_value=1000, coupon_rate=5.6, num_coupons=[20], value=[1000, 1100], ytm=[5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-       Basis_Value     Change  Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  \
-    0         1000   0.000000          5.6          56.0        1000           20
-    1         1000  -5.688693          5.6          56.0        1000           20
-    2         1100  -9.090909          5.6          56.0        1000           20
-    3         1100 -14.262448          5.6          56.0        1000           20
-    <BLANKLINE>
-             Value  YTM
-    0  1000.000000  5.6
-    1   943.113073  6.1
-    2  1000.000000  5.6
-    3   943.113073  6.1
+
+    # >>> bond(face_value=1000, coupon_rate=5.6, num_coupons=[20], value=[1000, 1100], ytm=[5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+    #       Basis_Value     Change  Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  \\
+    #    0         1000   0.000000          5.6          56.0        1000           20
+    #    1         1000  -5.688693          5.6          56.0        1000           20
+    #    2         1100  -9.090909          5.6          56.0        1000           20
+    #    3         1100 -14.262448          5.6          56.0        1000           20
+    #    <BLANKLINE>
+    #             Value  YTM
+    #    0  1000.000000  5.6
+    #    1   943.113073  6.1
+    #    2  1000.000000  5.6
+    #    3   943.113073  6.1
 
 
     """

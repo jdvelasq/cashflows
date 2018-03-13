@@ -508,6 +508,59 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
         pyr = [pyr] * maxlen
     pyr = np.array(pyr)
 
+    if nrate is not None and isinstance(nrate, (int, float)):
+        nrate = [nrate] * maxlen
+    if isinstance(nrate, list):
+        nrate = np.array(nrate)
+
+    if erate is not None and isinstance(erate, (int, float)):
+        erate = [erate] * maxlen
+    if isinstance(erate, list):
+        erate = np.array(erate)
+
+    if prate is not None and isinstance(prate, (int, float)):
+        prate = [erate] * maxlen
+    if isinstance(prate, list):
+        prate = np.array(prate)
+
+    if nrate is not None:
+        erate = nrate.copy()
+        prate = nrate.copy()
+        for index in range(len(nrate)):
+            prate[index] = nrate[index] / pyr[index]
+            erate[index] = 100 * (np.power(1 + prate[index]/100, pyr[index]) - 1)
+        prate = prate.tolist()
+        erate = erate.tolist()
+        if len(prate) == 1:
+            prate = prate[0]
+            erate = erate[0]
+        return (erate, prate)
+
+    if erate is not None:
+        nrate = erate.copy()
+        prate = erate.copy()
+        for index in range(len(erate)):
+            prate[index] = 100 * (np.power(1 + erate[index]/100, 1. / pyr[index]) - 1)
+            nrate[index] = pyr[index] * prate[index]
+        prate = prate.tolist()
+        nrate = nrate.tolist()
+        if len(prate) == 1:
+            prate = prate[0]
+            nrate = nrate[0]
+        return (nrate, prate)
+
+    if prate is not None:
+        erate = prate.copy()
+        nrate = prate.copy()
+        for index in range(len(prate)):
+            nrate[index] = prate[index] * pyr[index]
+            erate[index] = 100 * (np.power(1 + prate[index]/100, pyr[index]) - 1)
+        nrate = nrate.tolist()
+        erate = erate.tolist()
+        if len(prate) == 1:
+            nrate = nrate[0]
+            erate = erate[0]
+        return (nrate, erate)
 
 
 

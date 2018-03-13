@@ -22,6 +22,7 @@ Computes the amorization schedule for the following types of loans:
 import numpy as np
 import pandas as pd
 
+# cashflows.
 from cashflows.analysis import timevalue, irr
 from cashflows.tvmm import pvpmt
 from cashflows.timeseries import *
@@ -32,27 +33,50 @@ from cashflows.common import getpyr
 ##
 class Loan(pd.DataFrame):
 
-    def __init__(self, life, amount, grace, nrate, data=None, index=None, columns=None, dtype=None, copy=False):
+    def __init__(self, life, amount, grace, nrate, dispoints=0, orgpoints=0,
+                 data=None, index=None, columns=None, dtype=None, copy=False):
         super().__init__(data=data, index=index, columns=columns, dtype=dtype, copy=copy)
         self.life = life
         self.amount = amount
         self.grace = grace
         self.nrate = nrate
+        self.dispoints = dispoints
+        self.orgpoints = orgpoints
 
     def tocashflow(self, tax_rate=None):
         cflo = self.nrate.copy()
         cflo[:] = 0
-        cflo[0] = self.amount
         if tax_rate is None:
             tax_rate = cflo.copy()
             tax_rate[:] = 0
-        cflo += -self.Tot_Payment - self.Int_Payment * (1 + tax_rate / 100)
+        #
+        # descuenta todos los pagos adicionales
+        #
+        cflo[0] += self.amount
+        cflo[0] -= self.amount * self.orgpoints / 100
+        cflo[0] -= self.amount * self.dispoints / 100
+        cflo[0] += self.amount * self.dispoints / 100 * tax_rate[0] / 100
+        cflo -= self.Ppal_Payment
+        cflo -= self.Int_Payment
+        cflo += self.Int_Payment * tax_rate / 100
         return cflo
 
     def true_rate(self, tax_rate=None):
-        return irr(self.tocashflow(tax_rate))
+        cflo = self.tocashflow(tax_rate)
+        return irr(cflo) * getpyr(cflo)
 
 
+    def __str__(self):
+
+        str = []
+        str.append("Amount:             {:.2f}".format(self.amount))
+        str.append("Total interest:     {:.2f}".format(sum(self.Int_Payment)))
+        str.append("Total payment:      {:.2f}".format(sum(self.Tot_Payment)))
+        str.append("Discount points:    {:.2f}".format(self.dispoints))
+        str.append("Origination points: {:.2f}".format(self.orgpoints))
+        str = '\n'.join(str) + '\n\n'
+        str = str + super().__str__()
+        return str
 
 
 
@@ -74,8 +98,15 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
        A object of the class ``Loan``.
 
     >>> nrate = interest_rate(const_value=[10]*11, start='2018Q1', freq='Q')
+    >>> tax_rate = interest_rate(const_value=[35]*11, start='2018Q1', freq='Q')
     >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=0, dispoints=0, orgpoints=0,
     ...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     137.50
+    Total payment:      1137.50
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2018Q1              0.0      10.0          0.0          0.0           0.0
     2018Q2           1000.0      10.0        125.0         25.0         100.0
@@ -104,6 +135,12 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
 
     >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
     ...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     162.50
+    Total payment:      1162.50
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2018Q1              0.0      10.0        0.000        0.000           0.0
     2018Q2           1000.0      10.0       25.000       25.000           0.0
@@ -134,6 +171,12 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
     >>> pmt['2019Q4'] = 200
     >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
     ...                prepmt=pmt, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     149.38
+    Total payment:      1149.38
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2018Q1              0.0      10.0        0.000        0.000           0.0
     2018Q2           1000.0      10.0       25.000       25.000           0.0
@@ -162,6 +205,12 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
 
     >>> fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
     ...                prepmt=None, balloonpmt=pmt)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    Amount:             1000.00
+    Total interest:     165.00
+    Total payment:      1165.00
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2018Q1              0.0      10.0          0.0          0.0           0.0
     2018Q2           1000.0      10.0         25.0         25.0           0.0
@@ -192,21 +241,109 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
     >>> x = fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,
     ...                     prepmt=None, balloonpmt=pmt)
     >>> x.true_rate() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
-    5.000...
+    10.00...
+
+    >>> x.true_rate(tax_rate) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    6.50...
 
     >>> x.tocashflow()
     2018Q1    1000.0
-    2018Q2     -50.0
-    2018Q3     -50.0
-    2018Q4    -150.0
-    2019Q1    -145.0
-    2019Q2    -140.0
-    2019Q3    -135.0
-    2019Q4    -330.0
-    2020Q1    -115.0
-    2020Q2    -110.0
-    2020Q3    -105.0
+    2018Q2     -25.0
+    2018Q3     -25.0
+    2018Q4    -125.0
+    2019Q1    -122.5
+    2019Q2    -120.0
+    2019Q3    -117.5
+    2019Q4    -315.0
+    2020Q1    -107.5
+    2020Q2    -105.0
+    2020Q3    -102.5
     Freq: Q-DEC, dtype: float64
+
+    >>> x.tocashflow(tax_rate)
+    2018Q1    1000.000
+    2018Q2     -16.250
+    2018Q3     -16.250
+    2018Q4    -116.250
+    2019Q1    -114.625
+    2019Q2    -113.000
+    2019Q3    -111.375
+    2019Q4    -309.750
+    2020Q1    -104.875
+    2020Q2    -103.250
+    2020Q3    -101.625
+    Freq: Q-DEC, dtype: float64
+
+
+    >>> x = fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=10,
+    ...                     prepmt=None, balloonpmt=pmt)
+    >>> x # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    Amount:             1000.00
+    Total interest:     165.00
+    Total payment:      1265.00
+    Discount points:    0.00
+    Origination points: 10.00
+    <BLANKLINE>
+            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
+    2018Q1              0.0      10.0        100.0          0.0           0.0
+    2018Q2           1000.0      10.0         25.0         25.0           0.0
+    2018Q3           1000.0      10.0         25.0         25.0           0.0
+    2018Q4           1000.0      10.0        125.0         25.0         100.0
+    2019Q1            900.0      10.0        122.5         22.5         100.0
+    2019Q2            800.0      10.0        120.0         20.0         100.0
+    2019Q3            700.0      10.0        117.5         17.5         100.0
+    2019Q4            600.0      10.0        315.0         15.0         300.0
+    2020Q1            300.0      10.0        107.5          7.5         100.0
+    2020Q2            200.0      10.0        105.0          5.0         100.0
+    2020Q3            100.0      10.0        102.5          2.5         100.0
+    <BLANKLINE>
+            End_Ppal_Amount
+    2018Q1           1000.0
+    2018Q2           1000.0
+    2018Q3           1000.0
+    2018Q4            900.0
+    2019Q1            800.0
+    2019Q2            700.0
+    2019Q3            600.0
+    2019Q4            300.0
+    2020Q1            200.0
+    2020Q2            100.0
+    2020Q3              0.0
+
+    >>> x.true_rate() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    17.1725...
+
+    >>> x.tocashflow() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    2018Q1    900.0
+    2018Q2    -25.0
+    2018Q3    -25.0
+    2018Q4   -125.0
+    2019Q1   -122.5
+    2019Q2   -120.0
+    2019Q3   -117.5
+    2019Q4   -315.0
+    2020Q1   -107.5
+    2020Q2   -105.0
+    2020Q3   -102.5
+    Freq: Q-DEC, dtype: float64
+
+    >>> x.true_rate(tax_rate) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    13.4232...
+
+    >>> x.tocashflow(tax_rate) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS
+    2018Q1    900.000
+    2018Q2    -16.250
+    2018Q3    -16.250
+    2018Q4   -116.250
+    2019Q1   -114.625
+    2019Q2   -113.000
+    2019Q3   -111.375
+    2019Q4   -309.750
+    2020Q1   -104.875
+    2020Q2   -103.250
+    2020Q3   -101.625
+    Freq: Q-DEC, dtype: float64
+
 
 
     """
@@ -253,8 +390,8 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
         if time == 0:
             begppalbal[time] = 0
             endppalbal[time] = amount - prepmt[time]
-            totpmt[time] = amount * (dispoints + orgpoints)
-            intpmt[time] = amount * dispoints
+            totpmt[time] = amount * (dispoints + orgpoints) / 100
+            ### intpmt[time] = amount * dispoints / 100
         else:
             begppalbal[time] = endppalbal[time - 1]
             intpmt[time] = begppalbal[time] * nrate[time] / pyr / float(100)
@@ -274,7 +411,9 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
 
 
     data = {'Beg_Ppal_Amount':begppalbal}
-    result = Loan(life=life, amount=amount, grace=grace, nrate=nrate, data=data)
+    result = Loan(life=life, amount=amount, grace=grace, nrate=nrate,
+                  dispoints=dispoints, orgpoints=orgpoints,
+                  data=data)
     result['Nom_Rate'] = nrate
     result['Tot_Payment'] = totpmt
     result['Int_Payment'] = intpmt
@@ -300,6 +439,12 @@ def bullet_loan(amount, nrate, dispoints=0, orgpoints=0, prepmt=None):
 
     >>> nrate = interest_rate(const_value=[10]*11, start='2018Q1', freq='Q')
     >>> bullet_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     250.00
+    Total payment:      1250.00
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2018Q1              0.0      10.0          0.0          0.0           0.0
     2018Q2           1000.0      10.0         25.0         25.0           0.0
@@ -339,8 +484,8 @@ def bullet_loan(amount, nrate, dispoints=0, orgpoints=0, prepmt=None):
 
 
 
-def fixed_rate_loan(amount, nrate, life, start, freq='A', grace=0, dispoints=0,
-                    orgpoints=0, prepmt=None, balloonpmt=None):
+def fixed_rate_loan(amount, nrate, life, start, freq='A', grace=0,
+                    dispoints=0, orgpoints=0, prepmt=None, balloonpmt=None):
     """Fixed rate loan.
 
     Args:
@@ -363,6 +508,12 @@ def fixed_rate_loan(amount, nrate, life, start, freq='A', grace=0, dispoints=0,
     >>> fixed_rate_loan(amount=1000, nrate=10, life=10, start='2016Q1', freq='Q',
     ...                 grace=0, dispoints=0,
     ...                 orgpoints=0, prepmt=pmt, balloonpmt=None) # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     129.68
+    Total payment:      1129.68
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000
     2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763
@@ -443,8 +594,8 @@ def fixed_rate_loan(amount, nrate, life, start, freq='A', grace=0, dispoints=0,
         if time == 0:
             begppalbal[0] = amount
             endppalbal[0] = amount
-            totpmt[time] = amount * (dispoints + orgpoints)
-            intpmt[time] = amount * dispoints
+            totpmt[time] = amount * (dispoints + orgpoints) / 100
+            ### intpmt[time] = amount * dispoints / 100
         else:
             begppalbal[time] = endppalbal[time - 1]
             if time <= grace:
@@ -468,7 +619,9 @@ def fixed_rate_loan(amount, nrate, life, start, freq='A', grace=0, dispoints=0,
                     prepmt[time] = 0
 
     data = {'Beg_Ppal_Amount':begppalbal}
-    result = Loan(life=life, amount=amount, grace=grace, nrate=nrate, data=data)
+    result = Loan(life=life, amount=amount, grace=grace, nrate=nrate,
+                  dispoints=dispoints, orgpoints=orgpoints,
+                  data=data)
     result['Nom_Rate'] = nrate
     result['Tot_Payment'] = totpmt
     result['Int_Payment'] = intpmt
@@ -496,6 +649,12 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
 
     >>> nrate = interest_rate(const_value=10, start='2016Q1', periods=11, freq='Q', chgpts={'2017Q2':20})
     >>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     200.99
+    Total payment:      1200.99
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000
     2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763
@@ -525,6 +684,12 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
     >>> pmt = cashflow(const_value=0, start='2016Q1', periods=11, freq='Q')
     >>> pmt['2017Q4'] = 200
     >>> buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=pmt)  # doctest: +NORMALIZE_WHITESPACE
+    Amount:             1000.00
+    Total interest:     180.67
+    Total payment:      1180.67
+    Discount points:    0.00
+    Origination points: 0.00
+    <BLANKLINE>
             Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\
     2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000
     2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763
@@ -587,8 +752,8 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
             #
             begppalbal[time] = amount
             endppalbal[time] = amount
-            totpmt[time] = amount * (dispoints + orgpoints)
-            intpmt[time] = amount * dispoints
+            totpmt[time] = amount * (dispoints + orgpoints) / 100
+            ### intpmt[time] = amount * dispoints / 100
             #
         else:
             #
@@ -616,7 +781,9 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
 
 
     data = {'Beg_Ppal_Amount':begppalbal}
-    result = Loan(life=life, amount=amount, grace=grace, nrate=nrate, data=data)
+    result = Loan(life=life, amount=amount, grace=grace, nrate=nrate,
+                  dispoints=dispoints, orgpoints=orgpoints,
+                  data=data)
     result['Nom_Rate'] = nrate
     result['Tot_Payment'] = totpmt
     result['Int_Payment'] = intpmt
@@ -625,113 +792,113 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
     return result
 
 
-class xLoan():
-    """
-    Class for representing loans
-    """
-
-    # pylint: disable=too-many-instance-attributes
-
-    def __init__(self):
-        """
-        """
-        self.life = self.amount = self.grace = self.df = None
-        # self.intpmt = self.endppalbal = self.begppalbal = None
-        # self.totpmt = None
-
-    def to_cashflow(self, tax_rate=0):
-        """Converts the loan to the equivalent cashflow.
-
-        For the conversion, origination points are considered as exogenous costs
-        and they are not taking in to account in the computation. In oposition,
-        discount points are considered as prepaid interest and included in the
-        cashflow.
-
-        When tax_rate is different from zero, tax benefits are considered."""
-
-
-        if isinstance(tax_rate, (int, float)):
-            tax_rate = interest_rate(const_value = [tax_rate] * (self.life + self.grace + 1))
-
-        cflo = cashflow(const_value= [0] * (self.grace + self.life + 1))
-
-        ##
-        ## payments per period
-        ##
-        for time in range(self.grace + self.life + 1):
-            if time == 0:
-                cflo[0] = self.amount
-            cflo[time] += -self.totpmt[time] + self.intpmt[time] * tax_rate[time] / 100
-
-        return cflo
-
-    def true_rate(self, tax_rate=0):
-        """Computes the true interest rate for the loan.
-
-        For the computation, the loan is converted to the equivalent cashflow,
-        taking in to account the following aspects:
-
-        * Origination points are considered as non deducible costs and they \
-        are ignored in the computation.
-
-        * Discount points are prepaid interest and they are considered as \
-        deducibles in the computation.
-
-        * When `tax_rate` is different from zero, the After-Tax true interest \
-        rate is calculated. This is, only the (1 - `tax_rate`) of paid interests \
-        (including discount points) are used in the computation.
-
-        """
-        return irr(self.to_cashflow(tax_rate))
-
-
-
-    def __repr__(self):
-
-        return self.df.__repr__()
-        # return repr_table(cols=[self.begppalbal,
-        #                         self.nrate,
-        #                         self.totpmt,
-        #                         self.intpmt,
-        #                         self.ppalpmt,
-        #                         self.endppalbal],
-        #                header=[['Beg.', 'Per.', 'Total', 'Int.', 'Ppal', 'Ending'],
-        #                        ['Ppal', 'Rate', 'Pmt', 'Pmt', 'Pmt', 'Ppal']])
-
-#    def x__repr__(self):
-#        txt = ['']
-#        txt.append('  t          Beginning  Periodic      Total     Interest    Principal       Ending')
-#        txt.append('             Principal  Rate     Payment      Payment      Payment    Principal')
-#        txt.append('--------------------------------------------------------------------------')
+# class xLoan():
+#     """
+#     Class for representing loans
+#     """
 #
-#        for time in range(self.grace + self.life + 1):
-#            fmt = ' {:3d}       {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
-#            txt.append(fmt.format(time,
-#                                  self.begppalbal[time],
-#                                  self.totpmt[time],
-#                                  self.intpmt[time],
-#                                  self.ppalpmt[time],
-#                                  self.endppalbal[time]))
-#        return '\n'.join(txt)
-
-    def interest(self):
-        """Returns the interest paid as a Cashflow object."""
-        return Cashflow(constValue=self.intpmt.tolist())
-
-    def begbal(self):
-        """Returns the balance at the begining of each period as
-        a Cashflow object."""
-        return Cashflow(constValue=self.begppalbal.tolist())
-
-    def endbal(self):
-        """Returns the balance at the ending of each period as
-        a Cashflow object."""
-        return Cashflow(constValue=self.endppalbal.tolist())
-
-    def ppalpmt(self):
-        """Returns the principal payment for each period as
-        a Cashflow object."""
-        return Cashflow(constValue=self.ppalpmt.tolist())
+#     # pylint: disable=too-many-instance-attributes
+#
+#     def __init__(self):
+#         """
+#         """
+#         self.life = self.amount = self.grace = self.df = None
+#         # self.intpmt = self.endppalbal = self.begppalbal = None
+#         # self.totpmt = None
+#
+#     def to_cashflow(self, tax_rate=0):
+#         """Converts the loan to the equivalent cashflow.
+#
+#         For the conversion, origination points are considered as exogenous costs
+#         and they are not taking in to account in the computation. In oposition,
+#         discount points are considered as prepaid interest and included in the
+#         cashflow.
+#
+#         When tax_rate is different from zero, tax benefits are considered."""
+#
+#
+#         if isinstance(tax_rate, (int, float)):
+#             tax_rate = interest_rate(const_value = [tax_rate] * (self.life + self.grace + 1))
+#
+#         cflo = cashflow(const_value= [0] * (self.grace + self.life + 1))
+#
+#         ##
+#         ## payments per period
+#         ##
+#         for time in range(self.grace + self.life + 1):
+#             if time == 0:
+#                 cflo[0] = self.amount
+#             cflo[time] += -self.totpmt[time] + self.intpmt[time] * tax_rate[time] / 100
+#
+#         return cflo
+#
+#     def true_rate(self, tax_rate=0):
+#         """Computes the true interest rate for the loan.
+#
+#         For the computation, the loan is converted to the equivalent cashflow,
+#         taking in to account the following aspects:
+#
+#         * Origination points are considered as non deducible costs and they \
+#         are ignored in the computation.
+#
+#         * Discount points are prepaid interest and they are considered as \
+#         deducibles in the computation.
+#
+#         * When `tax_rate` is different from zero, the After-Tax true interest \
+#         rate is calculated. This is, only the (1 - `tax_rate`) of paid interests \
+#         (including discount points) are used in the computation.
+#
+#         """
+#         return irr(self.to_cashflow(tax_rate))
+#
+#
+#
+#     def __repr__(self):
+#
+#         return self.df.__repr__()
+#         # return repr_table(cols=[self.begppalbal,
+#         #                         self.nrate,
+#         #                         self.totpmt,
+#         #                         self.intpmt,
+#         #                         self.ppalpmt,
+#         #                         self.endppalbal],
+#         #                header=[['Beg.', 'Per.', 'Total', 'Int.', 'Ppal', 'Ending'],
+#         #                        ['Ppal', 'Rate', 'Pmt', 'Pmt', 'Pmt', 'Ppal']])
+#
+# #    def x__repr__(self):
+# #        txt = ['']
+# #        txt.append('  t          Beginning  Periodic      Total     Interest    Principal       Ending')
+# #        txt.append('             Principal  Rate     Payment      Payment      Payment    Principal')
+# #        txt.append('--------------------------------------------------------------------------')
+# #
+# #        for time in range(self.grace + self.life + 1):
+# #            fmt = ' {:3d}       {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
+# #            txt.append(fmt.format(time,
+# #                                  self.begppalbal[time],
+# #                                  self.totpmt[time],
+# #                                  self.intpmt[time],
+# #                                  self.ppalpmt[time],
+# #                                  self.endppalbal[time]))
+# #        return '\n'.join(txt)
+#
+#     def interest(self):
+#         """Returns the interest paid as a Cashflow object."""
+#         return Cashflow(constValue=self.intpmt.tolist())
+#
+#     def begbal(self):
+#         """Returns the balance at the begining of each period as
+#         a Cashflow object."""
+#         return Cashflow(constValue=self.begppalbal.tolist())
+#
+#     def endbal(self):
+#         """Returns the balance at the ending of each period as
+#         a Cashflow object."""
+#         return Cashflow(constValue=self.endppalbal.tolist())
+#
+#     def ppalpmt(self):
+#         """Returns the principal payment for each period as
+#         a Cashflow object."""
+#         return Cashflow(constValue=self.ppalpmt.tolist())
 
 
 

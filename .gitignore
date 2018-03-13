@@ -1,3 +1,6 @@
+# mac OS
+.DS_Store
+
 # Jupyter notebooks
 *.ipynb
 

@@ -19,7 +19,7 @@ def depreciation_sl(costs, life, salvalue=None):
     method.
 
     Args:
-        costs (pandas.Series): the cost per period of the assets.
+        costs (TimeSeries): the cost per period of the assets.
         life (TimeSeries): number of depreciation periods for the asset.
         salvalue(TimeSeries): salvage value as a percentage of cost.
 

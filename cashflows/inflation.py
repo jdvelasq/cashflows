@@ -21,8 +21,8 @@ def const2curr(cflo, inflation, base_date=0):
     of the time `base_date`.
 
     Args:
-        cflo (pandas.Series): A cashflow.
-        inflation (pandas.Series): Inflation rate per compounding period.
+        cflo (TimeSeries): Generic cashflow.
+        inflation (TimeSeries): Inflation rate per compounding period.
         base_date (int, str): base date.
 
     Returns:
@@ -147,7 +147,7 @@ def curr2const(cflo, inflation, base_date=0):
     the date `base_date`.
 
     Args:
-        cflo (list, Cashflow): A cashflow.
+        cflo (TimeSeries): Generic cashflow.
         inflation_rate (float, Rate): Inflation rate per compounding period.
         base_date (int): base time..
 

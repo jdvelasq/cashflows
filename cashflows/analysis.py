@@ -42,7 +42,7 @@ def irr(cflo):
     interest rate.
 
     Args:
-        cflo (Series): Generic cashflow.
+        cflo (TimeSeries): Generic cashflow.
 
     Returns:
         Float or list of floats.
@@ -99,7 +99,7 @@ def mirr(cflo, finance_rate=0, reinvest_rate=0):
     as a periodic interest rate.
 
     Args:
-        cflo (list, cashflow): Generic cashflow.
+        cflo (TimeSeries): Generic cashflow.
         finance_rate (float): Periodic interest rate applied to negative values of the cashflow.
         reinvest_rate (float): Periodic interest rate applied to positive values of the cashflow.
 
@@ -233,7 +233,7 @@ def net_uniform_series(cflo, prate, nper=1):
     to the cashflow `cflo` at the periodic interest rate `prate`.
 
     Args:
-        cflo (cashflow): Generic cashflow.
+        cflo (TimeSeries): Generic cashflow.
         prate (TimeSeries): Periodic interest rate.
         nper (int, list): Number of equivalent payment periods.
 
@@ -298,7 +298,7 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
 
     Args:
         prate (int float, Rate): Periodic interest rate.
-        cflo (cashflow, list): Generic cashflow.
+        cflo (TimeSeries): Generic cashflow.
         base_date (int, list): Time.
 
     Returns:

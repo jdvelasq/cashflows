@@ -108,13 +108,13 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
 
     Args:
         const_value (number): constant value for all time series.
-        start(string): Date as string using pandas convetion for dates.
-        end(string):  Date as string using pandas convetion for dates.
-        peridos(integer): Length of the time seriesself.
-        freq(string): String indicating the period of time series. Valid values
+        start (string): Date as string using pandas convetion for dates.
+        end (string):  Date as string using pandas convetion for dates.
+        peridos (integer): Length of the time seriesself.
+        freq (string): String indicating the period of time series. Valid values
                       are `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`,
                       `'6BM'` and `'6CMB'`. See https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
-        chgpts(dict): Dictionary indicating point changes in the values of the time series.
+        chgpts (dict): Dictionary indicating point changes in the values of the time series.
 
     Returns:
         A Pandas time series object.
@@ -224,13 +224,13 @@ def interest_rate(const_value=0, start=None, end=None, periods=None, freq='A', c
 
     Args:
         const_value (number): constant value for all time series.
-        start(string): Date as string using pandas convetion for dates.
-        end(string):  Date as string using pandas convetion for dates.
-        peridos(integer): Length of the time seriesself.
-        freq(string): String indicating the period of time series. Valid values
+        start (string): Date as string using pandas convetion for dates.
+        end (string):  Date as string using pandas convetion for dates.
+        peridos (integer): Length of the time seriesself.
+        freq (string): String indicating the period of time series. Valid values
                       are `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`,
                       `'6BM'` and `'6CMB'`. See https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
-        chgpts(dict): Dictionary indicating point changes in the values of the time series.
+        chgpts (dict): Dictionary indicating point changes in the values of the time series.
 
     Returns:
         A Pandas time series object.

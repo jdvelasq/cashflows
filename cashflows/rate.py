@@ -14,6 +14,16 @@ from cashflows.common import getpyr
 
 def effrate(nrate=None, prate=None, pyr=1):
     """
+    Computes the effective interest rate given the nominal interest rate or the periodic interest rate.
+
+    Args:
+        nrate (float, TimeSeries): Nominal interest rate.
+        prate (float, TimeSeries): Periodic interest rate.
+        pyr(int): Number of compounding periods per year.
+
+
+    Returns:
+        Effective interest rate(float, TimeSeries).
 
     >>> effrate(prate=1, pyr=12) # doctest: +ELLIPSIS
     12.68...
@@ -174,6 +184,15 @@ def effrate(nrate=None, prate=None, pyr=1):
 
 def nomrate(erate=None, prate=None, pyr=1):
     """
+    Computes the nominal interest rate given the nominal interest rate or the periodic interest rate.
+
+    Args:
+        erate (float, TimeSeries): Effective interest rate.
+        prate (float, TimeSeries): Periodic interest rate.
+        pyr(int): Number of compounding periods per year.
+
+    Returns:
+        Nominal interest rate(float, TimeSeries).
 
     >>> nomrate(prate=1, pyr=12) # doctest: +ELLIPSIS
     12.0
@@ -334,6 +353,16 @@ def nomrate(erate=None, prate=None, pyr=1):
 
 def perrate(nrate=None, erate=None, pyr=1):
     """
+    Computes the periodic interest rate given the nominal interest rate or the effective interest rate.
+
+    Args:
+        nrate (float, TimeSeries): Nominal interest rate.
+        erate (float, TimeSeries): Effective interest rate.
+        pyr(int): Number of compounding periods per year.
+
+
+    Returns:
+        Periodic interest rate(float, TimeSeries).
 
     >>> perrate(nrate=10, pyr=12) # doctest: +ELLIPSIS
     0.8333...
@@ -497,13 +526,13 @@ def to_discount_factor(nrate=None, erate=None, prate=None, base_date=None):
     """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
 
     Args:
-        nrate (pandasSeries): Nominal interest rate per year.
-        nrate (pandasSeries): Effective interest rate per year.
-        prate (pandasSeries): Periodic interest rate.
+        nrate (TimeSeries): Nominal interest rate per year.
+        nrate (TimeSeries): Effective interest rate per year.
+        prate (TimeSeries): Periodic interest rate.
         base_date (string): basis time.
 
     Returns:
-        pandas.Series of float values
+        TimeSeries of float values.
 
     Only one of the interest rates must be supplied for the computation.
 

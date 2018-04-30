@@ -24,7 +24,7 @@ def depreciation_sl(costs, life, salvalue=None):
         salvalue(TimeSeries): salvage value as a percentage of cost.
 
     Returns:
-        depreciation, accum_depreciation (TimeSeries, TimeSeries).
+        Returns a pandas DataFrame with the computations.
 
 
     **Examples.**
@@ -139,10 +139,10 @@ def depreciation_soyd(costs, life, salvalue=None):
     Args:
         costs (TimeSeries): the cost per period of the assets.
         life (TimeSeries): number of depreciation periods for the asset.
-        salvalue(TimeSeries): salvage value as a percentage of cost.
+        salvalue (TimeSeries): salvage value as a percentage of cost.
 
     Returns:
-        A tuple (dep, accum) of lists (tuple): depreciation per period and accumulated depreciation per period
+        Returns a pandas DataFrame with the computations.
 
 
     **Examples.**
@@ -261,7 +261,7 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
         noprint (bool): when True, the procedure prints a depreciation table.
 
     Returns:
-        A tuple (dep, accum) of lists (tuple): depreciation per period and accumulated depreciation per period
+        Returns a pandas DataFrame with the computations.
 
 
     **Examples.**

@@ -19,6 +19,16 @@ def bond(maturity_date=None, freq='A', face_value=None,
          coupon_rate=None, coupon_value=None, num_coupons=None, value=None, ytm=None):
     """
 
+    Args:
+        face_value (float, list): bond’s value at maturity.
+        coupon_value (float):  amount of money you receive periodically as the bond matures.
+        num_coupons (int, list): number of coupons before maturity.
+        ytm (float): yield to maturity.
+        coupon_rate (float, list): rate of the face value that defines the coupon value.
+
+    Returns:
+        Float or list of floats.
+
     Examples:
 
     >>> bond(face_value=1000, coupon_value=56, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS

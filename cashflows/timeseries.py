@@ -24,6 +24,12 @@ def verify_period_range(x):
 def textplot(cflo):
     """Text plot of a cashflow.
 
+    Args:
+        cflo (TimeSeries): Generic cashflow
+
+    Returns:
+        None.
+
     >>> cflo = cashflow(const_value=[-10, 5, 0, 20] * 3, start='2000Q1', freq='Q')
     >>> textplot(cflo)# doctest: +NORMALIZE_WHITESPACE
     time      value +------------------+------------------+

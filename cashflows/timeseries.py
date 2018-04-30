@@ -25,7 +25,7 @@ def textplot(cflo):
     """Text plot of a cashflow.
 
     Args:
-        cflo (TimeSeries): Generic cashflow
+        cflo (TimeSeries): Generic cashflow.
 
     Returns:
         None.
@@ -103,8 +103,22 @@ def textplot(cflo):
 
 
 
-def cashflow(const_value=0, start=None, end=None, periods=None, freq='A'):
+def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts=None):
     """Returns a generic cashflow as a pandas.Series object.
+
+    Args:
+        const_value (number): constant value for all time series.
+        start(string): Date as string using pandas convetion for dates.
+        end(string):  Date as string using pandas convetion for dates.
+        peridos(integer): Length of the time seriesself.
+        freq(string): String indicating the period of time series. Valid values
+                      are `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`,
+                      `'6BM'` and `'6CMB'`. See https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
+        chgpts(dict): Dictionary indicating point changes in the values of the time series.
+
+    Returns:
+        A Pandas time series object.
+
 
     >>> cashflow(const_value=1.0, start='2000Q1', periods=8, freq='Q') # doctest: +NORMALIZE_WHITESPACE
     2000Q1    1.0
@@ -162,6 +176,25 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A'):
     2001Q2    15.0
     Freq: Q-DEC, dtype: float64
 
+    >>> cashflow(const_value=0, freq='Q', periods=6, start='2000Q1', chgpts={2:10}) # doctest: +NORMALIZE_WHITESPACE
+    2000Q1     0.0
+    2000Q2     0.0
+    2000Q3    10.0
+    2000Q4     0.0
+    2001Q1     0.0
+    2001Q2     0.0
+    Freq: Q-DEC, dtype: float64
+
+    >>> cashflow(const_value=0, freq='Q', periods=6, start='2000Q1', chgpts={'2000Q3':10}) # doctest: +NORMALIZE_WHITESPACE
+    2000Q1     0.0
+    2000Q2     0.0
+    2000Q3    10.0
+    2000Q4     0.0
+    2001Q1     0.0
+    2001Q2     0.0
+    Freq: Q-DEC, dtype: float64
+
+
     """
     if freq not in ['A', 'BA', 'Q', 'BQ', 'M', 'BM', 'CBM', 'SM', '6M', '6BM', '6CMB']:
         msg = 'Invalid freq value:  ' + freq.__repr__()
@@ -173,11 +206,35 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A'):
     if not isinstance(const_value, list):
         const_value = [const_value] * periods
     time_series = pd.Series(data=const_value, index=prng, dtype=np.float64)
+
+    if isinstance(chgpts, dict):
+        keys = sorted(chgpts.keys())
+        for k in keys:
+            if isinstance(k, int):
+                x = time_series.axes[0][k]
+            else:
+                x = k
+            time_series[x] = chgpts[k]
+
     return time_series
 
 
 def interest_rate(const_value=0, start=None, end=None, periods=None, freq='A', chgpts=None):
     """Creates a time series object specified as a interest rate.
+
+    Args:
+        const_value (number): constant value for all time series.
+        start(string): Date as string using pandas convetion for dates.
+        end(string):  Date as string using pandas convetion for dates.
+        peridos(integer): Length of the time seriesself.
+        freq(string): String indicating the period of time series. Valid values
+                      are `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`,
+                      `'6BM'` and `'6CMB'`. See https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
+        chgpts(dict): Dictionary indicating point changes in the values of the time series.
+
+    Returns:
+        A Pandas time series object.
+
 
     >>> chgpts = {'2000Q4':10}
     >>> interest_rate(const_value=1, start='2000Q1', periods=8, freq='Q', chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE

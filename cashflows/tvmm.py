@@ -155,9 +155,11 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1):
     else:
         result = np.rate(pv=pval, nper=nper, fv=fval, pmt=pmt, when=due) * 100 * pyr
 
-
     if isinstance(result, np.ndarray):
-        return pd.Series(result)
+        if result.size == 1:
+            return result.tolist()
+        else:
+            return pd.Series(result)
     return result
 
 

@@ -22,7 +22,7 @@ def savings(deposits, nrate, initbal=0):
     withdrawls and variable interset rate.
 
     Args:
-        cflo (TimeSeries): Generic cashflow
+        cflo (TimeSeries): Generic cashflow.
         deposits (TimeSeries): deposits to the account.
         nrate (TimeSeries): nominal interest rate paid by the account.
         initbal (float): initial balance of the account.

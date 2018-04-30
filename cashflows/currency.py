@@ -21,7 +21,7 @@ def currency_conversion(cflo, exchange_rate=1, devaluation=None, base_date=0):
     """Converts a cashflow of dollars to another currency.
 
     Args:
-        cflo (TimeSeries): A cashflow.
+        cflo (TimeSeries): Generic cashflow.
         exchange_rate (float): Exchange rate at time `base_date`.
         devaluation (TimeSeries): Devaluation rate per compounding period.
         base_date (int): Time index for the `exchange_rate` in current dollars.

@@ -10,9 +10,11 @@ Contents:
 
 .. toctree::
    :maxdepth: 4
-   tvmm
    
-rate
+tvmm
+   
+    rate
+
 taxing
 currency
 inflation

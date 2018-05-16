@@ -32,7 +32,7 @@ def local():
 @task
 def sphinx():
     """Document creation using Shinx"""
-    sh('cd docs-source; make html; cp -R _build/html/*  ../docs/; cd ..')
+    sh('cd docs; make html; cd ..')
   
 @needs('nosetests', 'pylint', 'sphinx')
 @task

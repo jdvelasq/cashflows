@@ -4,28 +4,27 @@
    contain the root `toctree` directive.
 
 Cashflows: A Package for Investment Modeling and Advanced Engineering Economics using Python
-============================================================================================
+===============================================================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 4
 
+
+   tvmm
    rate
-   
-tvmm
-   
+   gtimeseries
+   taxing
+   currency
+   inflation
+   analysis
+   bond
+   depreciation
+   loan
+   savings
+   utilityfun
 
-
-taxing
-currency
-inflation
-analysis
-bond
-depreciation
-loan
-savings
-utilityfun
 
 
 Indices and tables

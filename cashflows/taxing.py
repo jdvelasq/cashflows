@@ -5,10 +5,8 @@ After tax cashflow calculation.
 
 """
 
-import pandas as pd
 
-# cashflows.
-from cashflows.timeseries import *
+from cashflows.gtimeseries import *
 from cashflows.common import _vars2list
 
 
@@ -32,54 +30,35 @@ def after_tax_cashflow(cflo, tax_rate):
 
     **Example***
 
-    >>> cflo = cashflow(const_value=[-50] + [100] * 4, start='2010', freq='A')
-    >>> tax_rate = interest_rate(const_value=[10] * 5, start='2010', freq='A')
+    >>> cflo = cashflow(const_value=[100] * 5, spec=(0, -100))
+    >>> tax_rate = interest_rate(const_value=[10] * 5)
     >>> after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE
-    2010     0.0
-    2011    10.0
-    2012    10.0
-    2013    10.0
-    2014    10.0
-    Freq: A-DEC, dtype: float64
+    Time Series:
+    Start = (0,)
+    End = (4,)
+    pyr = 1
+    Data = (0,)           0.00
+           (1,)-(4,) [4] 10.00
 
     """
-    if not isinstance(cflo, pd.Series):
-        raise TypeError("cashflow must be a pandas.Series")
-    if not isinstance(tax_rate, pd.Series):
-        raise TypeError("tax_rate must be a pandas.Series")
-    verify_period_range([cflo, tax_rate])
-    result = cflo.copy()
-    for time, _ in enumerate(cflo):
-        if result[time] > 0:
-            result[time] *= tax_rate[time] / 100
-        else:
-            result[time] = 0
-    return result
-
-    ##
-    ## version vectorizada
-    ##
-
-    # params = _vars2list([cflo, tax_rate])
-    # cflo = params[0]
-    # tax_rate = params[1]
-    # retval = []
-    # for xcflo, xtax_rate in zip(cflo, tax_rate):
-    #     if not isinstance(xcflo, pd.Series):
-    #         raise TypeError("cashflow must be a TimeSeries")
-    #     verify_period_range([xcflo, xtax_rate])
-    #     result = xcflo.copy()
-    #     for time, _ in enumerate(xcflo):
-    #         if result[time] > 0:
-    #             result[time] *= xtax_rate[time] / 100
-    #         else:
-    #             result[time] = 0
-    #     retval.append(result)
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
-
+    params = _vars2list([cflo, tax_rate])
+    cflo = params[0]
+    tax_rate = params[1]
+    retval = []
+    for xcflo, xtax_rate in zip(cflo, tax_rate):
+        if not isinstance(xcflo, TimeSeries):
+            raise TypeError("cashflow must be a TimeSeries")
+        verify_eq_time_range(xcflo, xtax_rate)
+        result = xcflo.copy()
+        for time, _ in enumerate(xcflo):
+            if result[time] > 0:
+                result[time] *= xtax_rate[time] / 100
+            else:
+                result[time] = 0
+        retval.append(result)
+    if len(retval) == 1:
+        return retval[0]
+    return retval
 
 if __name__ == "__main__":
     import doctest

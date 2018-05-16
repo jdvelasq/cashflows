@@ -1,4 +1,4 @@
 .. automodule:: cashflows.tvmm
-   :members:
-   :undoc-members:
-   :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:

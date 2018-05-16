@@ -10,8 +10,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 4
-   
-   tvmm
+
+tvmm
    rate
    taxing
    currency

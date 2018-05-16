@@ -44,8 +44,6 @@ This module contains functions for computing the time value of the money.
 
 import numpy as np
 import pandas as pd
-
-# cashflows.
 from cashflows.common import _vars2list
 
 
@@ -426,28 +424,11 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
         * (**nrate**, **erate**): when **prate** is specified.
 
 
-
-
-
-
-
-
-
     `iconv` accepts Python vectors.
-
-
-
-
-
-
 
     When a rate and the number of compounding periods (`pyr`) are vectors, they
     must have the same length. Computations are executed using the first rate
     with the first compounding and so on.
-
-
-
-
 
     """
 

@@ -14,7 +14,6 @@ Contents:
 
    tvmm
    rate
-   gtimeseries
    taxing
    currency
    inflation

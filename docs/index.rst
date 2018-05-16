@@ -12,9 +12,9 @@ Contents:
    :maxdepth: 4
 
 
+   
    tvmm
    rate
-   gtimeseries
    taxing
    currency
    inflation

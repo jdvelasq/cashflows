@@ -8,6 +8,8 @@ for different values for the yield-to-maturity and one present value of
 the bond.
 
 """
+import numpy as np
+import pandas as pd
 
 from cashflows.tvmm import tvmm
 
@@ -29,7 +31,7 @@ def bond(face_value=None, coupon_rate=None, coupon_value=None, num_coupons=None,
     Returns:
         None, a float value, or a list of float values:
         * ``value``: when `ytm` is specified.
-        * ``ytm```:  when `value` is specified.
+        * ``ytm``:  when `value` is specified.
         * ``None``: when `ytm` and `value` are specified. Prints a sensibility table.
 
     When ``coupon_rate`` is defined, ``coupon_value`` is calculated automaticly.

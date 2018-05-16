@@ -11,18 +11,19 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
-
-   tvmm
    rate
-   taxing
-   currency
-   inflation
-   analysis
-   bond
-   depreciation
-   loan
-   savings
-   utilityfun
+
+tvmm
+rate   
+taxing
+currency
+inflation
+analysis
+bond
+depreciation
+loan
+savings
+utilityfun
 
 
 

@@ -1,0 +1,270 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Bond Valuation &#8212; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Asset depreciation" href="depreciation.html" />
+    <link rel="prev" title="Analysis of cashflows" href="analysis.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="depreciation.html" title="Asset depreciation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="analysis.html" title="Analysis of cashflows"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-cashflows.bond"></span><div class="section" id="bond-valuation">
+<h1>Bond Valuation<a class="headerlink" href="#bond-valuation" title="Permalink to this headline">¶</a></h1>
+<p>This module computes the present value or the yield-to-maturity of of the
+expected cashflow of a bond. Also,it is possible to make a sensibility analysis
+for different values for the yield-to-maturity and one present value of
+the bond.</p>
+<dl class="function">
+<dt id="cashflows.bond.bond">
+<code class="descclassname">cashflows.bond.</code><code class="descname">bond</code><span class="sig-paren">(</span><em>maturity_date=None</em>, <em>freq='A'</em>, <em>face_value=None</em>, <em>coupon_rate=None</em>, <em>coupon_value=None</em>, <em>num_coupons=None</em>, <em>value=None</em>, <em>ytm=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/bond.html#bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.bond.bond" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>face_value</strong> (<em>float</em><em>, </em><em>list</em>) – bond’s value at maturity.</li>
+<li><strong>coupon_value</strong> (<em>float</em>) – amount of money you receive periodically as the bond matures.</li>
+<li><strong>num_coupons</strong> (<em>int</em><em>, </em><em>list</em>) – number of coupons before maturity.</li>
+<li><strong>ytm</strong> (<em>float</em>) – yield to maturity.</li>
+<li><strong>coupon_rate</strong> (<em>float</em><em>, </em><em>list</em>) – rate of the face value that defines the coupon value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Float or list of floats.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_value</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ytm</span><span class="o">=</span><span class="mf">5.6</span><span class="p">)</span> 
+<span class="go">1000.0...</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> 
+<span class="go">5.6...</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">1400</span><span class="p">],</span> <span class="n">coupon_value</span><span class="o">=</span><span class="mi">56</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> 
+<span class="go">   Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value      YTM</span>
+<span class="go">0     5.600000            56        1000           10   1000  5.60000</span>
+<span class="go">1     4.666667            56        1200           10   1000  7.04451</span>
+<span class="go">2     4.000000            56        1400           10   1000  8.31956</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_value</span><span class="o">=</span><span class="p">[</span><span class="mf">56.</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">58</span><span class="p">],</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> 
+<span class="go">   Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM</span>
+<span class="go">0          5.6          56.0        1000           10   1000  5.6</span>
+<span class="go">1          5.7          57.0        1000           10   1000  5.7</span>
+<span class="go">2          5.8          58.0        1000           10   1000  5.8</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="p">[</span><span class="mf">5.6</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">,</span> <span class="mf">5.8</span><span class="p">],</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> 
+<span class="go">   Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM</span>
+<span class="go">0          5.6          56.0        1000           10   1000  5.6</span>
+<span class="go">1          5.7          57.0        1000           10   1000  5.7</span>
+<span class="go">2          5.8          58.0        1000           10   1000  5.8</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">value</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> 
+<span class="go">   Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM</span>
+<span class="go">0          5.6          56.0        1000           10   1000  5.6</span>
+<span class="go">1          5.6          56.0        1000           20   1000  5.6</span>
+<span class="go">2          5.6          56.0        1000           30   1000  5.6</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mi">800</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span> 
+<span class="go">   Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value       YTM</span>
+<span class="go">0          5.6          56.0        1000           10    800  8.671484</span>
+<span class="go">1          5.6          56.0        1000           10    900  7.025450</span>
+<span class="go">2          5.6          56.0        1000           10   1000  5.600000</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">1200</span><span class="p">],</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mi">800</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span> 
+<span class="go">   Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value        YTM</span>
+<span class="go">0     5.600000          56.0        1000           10    800   8.671484</span>
+<span class="go">1     5.600000          56.0        1000           10    900   7.025450</span>
+<span class="go">2     5.600000          56.0        1000           10   1000   5.600000</span>
+<span class="go">3     5.090909          56.0        1100           10    800   9.419301</span>
+<span class="go">4     5.090909          56.0        1100           10    900   7.772838</span>
+<span class="go">5     5.090909          56.0        1100           10   1000   6.346424</span>
+<span class="go">6     4.666667          56.0        1200           10    800  10.119360</span>
+<span class="go">7     4.666667          56.0        1200           10    900   8.472129</span>
+<span class="go">8     4.666667          56.0        1200           10   1000   7.044510</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">1200</span><span class="p">],</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="p">[</span><span class="mf">5.6</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">,</span> <span class="mf">5.8</span><span class="p">],</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mi">800</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span> 
+<span class="go">    Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value        YTM</span>
+<span class="go">0      5.600000          56.0        1000           10    800   8.671484</span>
+<span class="go">1      5.600000          56.0        1000           10    900   7.025450</span>
+<span class="go">2      5.600000          56.0        1000           10   1000   5.600000</span>
+<span class="go">3      5.700000          57.0        1000           10    800   8.787284</span>
+<span class="go">4      5.700000          57.0        1000           10    900   7.132508</span>
+<span class="go">5      5.700000          57.0        1000           10   1000   5.700000</span>
+<span class="go">6      5.800000          58.0        1000           10    800   8.903126</span>
+<span class="go">7      5.800000          58.0        1000           10    900   7.239584</span>
+<span class="go">8      5.800000          58.0        1000           10   1000   5.800000</span>
+<span class="go">9      5.090909          56.0        1100           10    800   9.419301</span>
+<span class="go">10     5.090909          56.0        1100           10    900   7.772838</span>
+<span class="go">11     5.090909          56.0        1100           10   1000   6.346424</span>
+<span class="go">12     5.181818          57.0        1100           10    800   9.531367</span>
+<span class="go">13     5.181818          57.0        1100           10    900   7.876353</span>
+<span class="go">14     5.181818          57.0        1100           10   1000   6.443037</span>
+<span class="go">15     5.272727          58.0        1100           10    800   9.643488</span>
+<span class="go">16     5.272727          58.0        1100           10    900   7.979898</span>
+<span class="go">17     5.272727          58.0        1100           10   1000   6.539664</span>
+<span class="go">18     4.666667          56.0        1200           10    800  10.119360</span>
+<span class="go">19     4.666667          56.0        1200           10    900   8.472129</span>
+<span class="go">20     4.666667          56.0        1200           10   1000   7.044510</span>
+<span class="go">21     4.750000          57.0        1200           10    800  10.228122</span>
+<span class="go">22     4.750000          57.0        1200           10    900   8.572512</span>
+<span class="go">23     4.750000          57.0        1200           10   1000   7.138133</span>
+<span class="go">24     4.833333          58.0        1200           10    800  10.336951</span>
+<span class="go">25     4.833333          58.0        1200           10    900   8.672936</span>
+<span class="go">26     4.833333          58.0        1200           10   1000   7.231779</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">ytm</span><span class="o">=</span><span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">])</span> 
+<span class="go">   Basis_Value        Change  Coupon_Rate  Coupon_Value  Face_Value  \</span>
+<span class="go">0         1000  3.842187e+00          5.6          56.0        1000</span>
+<span class="go">1         1000  1.136868e-14          5.6          56.0        1000</span>
+<span class="go">2         1000 -3.662671e+00          5.6          56.0        1000</span>
+
+<span class="go">   Num_Coupons        Value  YTM</span>
+<span class="go">0           10  1038.421866  5.1</span>
+<span class="go">1           10  1000.000000  5.6</span>
+<span class="go">2           10   963.373290  6.1</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="mf">5.6</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">],</span> <span class="n">ytm</span><span class="o">=</span><span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.6</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">])</span> 
+<span class="go">   Basis_Value        Change  Coupon_Rate  Coupon_Value  Face_Value  \</span>
+<span class="go">0         1000  3.842187e+00          5.6          56.0        1000</span>
+<span class="go">1         1000  1.136868e-14          5.6          56.0        1000</span>
+<span class="go">2         1000 -3.662671e+00          5.6          56.0        1000</span>
+<span class="go">3         1100 -5.598012e+00          5.6          56.0        1000</span>
+<span class="go">4         1100 -9.090909e+00          5.6          56.0        1000</span>
+<span class="go">5         1100 -1.242061e+01          5.6          56.0        1000</span>
+
+<span class="go">   Num_Coupons        Value  YTM</span>
+<span class="go">0           10  1038.421866  5.1</span>
+<span class="go">1           10  1000.000000  5.6</span>
+<span class="go">2           10   963.373290  6.1</span>
+<span class="go">3           10  1038.421866  5.1</span>
+<span class="go">4           10  1000.000000  5.6</span>
+<span class="go">5           10   963.373290  6.1</span>
+</pre></div>
+</div>
+<p># &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=[20], value=[1000, 1100], ytm=[5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+#       Basis_Value     Change  Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  #    0         1000   0.000000          5.6          56.0        1000           20
+#    1         1000  -5.688693          5.6          56.0        1000           20
+#    2         1100  -9.090909          5.6          56.0        1000           20
+#    3         1100 -14.262448          5.6          56.0        1000           20
+#    &lt;BLANKLINE&gt;
+#             Value  YTM
+#    0  1000.000000  5.6
+#    1   943.113073  6.1
+#    2  1000.000000  5.6
+#    3   943.113073  6.1</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="analysis.html"
+                        title="previous chapter">Analysis of cashflows</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="depreciation.html"
+                        title="next chapter">Asset depreciation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/bond.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="depreciation.html" title="Asset depreciation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="analysis.html" title="Analysis of cashflows"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Juan D. Velasquez &amp; Ibeth K. Vergara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

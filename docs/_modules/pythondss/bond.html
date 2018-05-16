@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pythondss.bond &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pythondss.bond</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Evaluation of bond investments.</span>
+
+<span class="sd">Examples:</span>
+
+<span class="sd">&gt;&gt;&gt; bond(face_value=1000, coupon_value=56, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS</span>
+<span class="sd">1000.0...</span>
+
+<span class="sd">&gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS</span>
+<span class="sd">1000.0...</span>
+
+<span class="sd">&gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=1000) # doctest: +ELLIPSIS</span>
+<span class="sd">5.6...</span>
+
+
+<span class="sd">Also, it is possible to make sensibility analysis for bond&#39;s data. In the</span>
+<span class="sd">following case, the present value of the bond is calculated for various</span>
+<span class="sd">values of the yield-to-maturity.</span>
+
+<span class="sd">&gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10,</span>
+<span class="sd">... ytm=[4.0, 5.0, 5.6, 6.0, 7.0]) # doctest: +ELLIPSIS</span>
+<span class="sd">[1129.77..., 1046.33..., 1000.0..., 970.55..., 901.66...]</span>
+
+
+<span class="sd">And for differnt values:</span>
+
+<span class="sd">&gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10,</span>
+<span class="sd">... value=[900, 1000, 1100]) # doctest: +ELLIPSIS</span>
+<span class="sd">[7.0..., 5.6..., 4.3...]</span>
+
+<span class="sd">When values for the yield-to-maturity and one value for present value of</span>
+<span class="sd">the bond are supplied, the function prints a report.</span>
+
+<span class="sd">&gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10,</span>
+<span class="sd">... ytm=[4.0, 5.0, 5.6, 6.0, 7.0], value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">Bond valuation analysis</span>
+<span class="sd">Reference price: 1000</span>
+<span class="sd">Analysis:</span>
+<span class="sd">          Yield     Value Change</span>
+<span class="sd">            (%)       ($)    (%)</span>
+<span class="sd">         ------------------------</span>
+<span class="sd">           4.00   1129.77  12.98</span>
+<span class="sd">           5.00   1046.33   4.63</span>
+<span class="sd">           5.60   1000.00   0.00</span>
+<span class="sd">           6.00    970.56  -2.94</span>
+<span class="sd">           7.00    901.67  -9.83</span>
+
+
+<span class="sd">Description of the functions in this module</span>
+<span class="sd">==============================================================================</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pythondss.basics</span> <span class="kn">import</span> <span class="n">tvmm</span>
+
+<div class="viewcode-block" id="bond"><a class="viewcode-back" href="../../bond.html#pythondss.bond.bond">[docs]</a><span class="k">def</span> <span class="nf">bond</span><span class="p">(</span><span class="n">face_value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">coupon_rate</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">coupon_value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+         <span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">ytm</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">       face_value (float): the bond&#39;s value-at-maturity.</span>
+<span class="sd">       coupon_rate (float): rate for calculate the coupon payment.</span>
+<span class="sd">       coupon_value (float): periodic payment.</span>
+<span class="sd">       num_coupons (int): number of couont payments before maturity.</span>
+<span class="sd">       value (float, list): present value of the bond</span>
+<span class="sd">       ytm (float, list): yield-to-maturity.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">       value (float, list): when `ytm` is specified.</span>
+<span class="sd">       ytm (float, list): when &#39;value&#39; is specified.</span>
+<span class="sd">       None: when `ytm` and `value` are specified. Prints a sensibility table.</span>
+
+<span class="sd">    * When `coupon_rate` is defined, `coupon_value` is calculated automaticly.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">coupon_rate</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;coupon_rate or coupon_value must be specified&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">coupon_rate</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">coupon_rate</span> <span class="o">=</span> <span class="n">coupon_value</span> <span class="o">/</span> <span class="n">face_value</span>
+
+    <span class="k">if</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">coupon_value</span> <span class="o">=</span> <span class="n">coupon_rate</span> <span class="o">*</span> <span class="n">face_value</span> <span class="o">/</span> <span class="mi">100</span>
+
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="n">coupon_value</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="n">face_value</span><span class="p">,</span>
+                     <span class="n">nper</span><span class="o">=</span><span class="n">num_coupons</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">ytm</span><span class="p">,</span> <span class="n">due</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">if</span> <span class="n">ytm</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="n">coupon_value</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="n">face_value</span><span class="p">,</span> <span class="n">pval</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="n">num_coupons</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># value and ytm are not None</span>
+    <span class="c1"># sensibility analysis</span>
+    <span class="c1">#</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="n">coupon_value</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="n">face_value</span><span class="p">,</span>
+                  <span class="n">nper</span><span class="o">=</span><span class="n">num_coupons</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">ytm</span><span class="p">,</span> <span class="n">due</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="o">-</span><span class="n">values</span>
+
+    <span class="n">txt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bond valuation analysis&#39;</span><span class="p">]</span>
+    <span class="n">txt</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;Reference price: &#39;</span> <span class="o">+</span> <span class="n">value</span><span class="o">.</span><span class="n">__str__</span><span class="p">()]</span>
+    <span class="n">txt</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;Analysis:&#39;</span><span class="p">]</span>
+    <span class="n">txt</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;           Yield     Value Change&#39;</span><span class="p">]</span>
+    <span class="n">txt</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;             (%)       ($)    (%)&#39;</span><span class="p">]</span>
+    <span class="n">txt</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;          ------------------------&#39;</span><span class="p">]</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">ytm</span> <span class="o">=</span> <span class="p">[</span><span class="n">ytm</span><span class="p">]</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">iytm</span><span class="p">,</span> <span class="n">ivalue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39;          {:6.2f} {:9.2f} {:6.2f}&#39;</span>
+        <span class="n">txt</span> <span class="o">+=</span> <span class="p">[</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iytm</span><span class="p">,</span> <span class="n">ivalue</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">ivalue</span><span class="o">-</span><span class="n">value</span><span class="p">)</span><span class="o">/</span><span class="n">value</span><span class="p">)]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span><span class="p">))</span></div>
+
+
+
+
+    <span class="c1"># value = tvmm(pmt=coupon_value, fval=face_value,</span>
+    <span class="c1">#                  nper=num_coupons, nrate=ytm, due=0, pyr=1)</span>
+    <span class="c1"># if isinstance(value, list):</span>
+    <span class="c1">#     value = [-x for x in value]</span>
+    <span class="c1">#</span>
+
+
+
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Juan D. Velasquez &amp; Ibeth K. Vergara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>

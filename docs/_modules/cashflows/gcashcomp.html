@@ -1,0 +1,481 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>cashflows.gcashcomp &#8212; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cashflows.gcashcomp</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">Cashflow taxing</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">The function `after_tax_cashflow` returns a new cashflow object for which the</span>
+<span class="sd">values are taxed. The specified tax rate is only appled to positive values</span>
+<span class="sd">in the cashflow. Negative values are reemplazed by a zero value. `Cashflow`</span>
+<span class="sd">and `Rate` must have the same length.</span>
+
+
+<span class="sd">&gt;&gt;&gt; cflo = cashflow(const_value=[100] * 5, spec=(0, -100))</span>
+<span class="sd">&gt;&gt;&gt; tax_rate = interest_rate(const_value=[10] * 5)</span>
+<span class="sd">&gt;&gt;&gt; after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)           0.00</span>
+<span class="sd">       (1,)-(4,) [4] 10.00</span>
+
+<span class="sd">Constant and current dollars transformations</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">**Constant to current.**</span>
+
+<span class="sd">&gt;&gt;&gt; const2curr(cflo=cashflow(const_value=[100] * 5),</span>
+<span class="sd">... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)   100.00</span>
+<span class="sd">       (1,)   110.00</span>
+<span class="sd">       (2,)   132.00</span>
+<span class="sd">       (3,)   158.40</span>
+<span class="sd">       (4,)   190.08</span>
+
+
+<span class="sd">&gt;&gt;&gt; const2curr(cflo=cashflow(const_value=[100] * 5),</span>
+<span class="sd">... inflation=interest_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)    52.61</span>
+<span class="sd">       (1,)    57.87</span>
+<span class="sd">       (2,)    69.44</span>
+<span class="sd">       (3,)    83.33</span>
+<span class="sd">       (4,)   100.00</span>
+
+
+<span class="sd">**Current dollars to constant dollars.**</span>
+
+<span class="sd">&gt;&gt;&gt; curr2const(cflo=cashflow(const_value=[100] * 5),</span>
+<span class="sd">... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)   100.00</span>
+<span class="sd">       (1,)    90.91</span>
+<span class="sd">       (2,)    75.76</span>
+<span class="sd">       (3,)    63.13</span>
+<span class="sd">       (4,)    52.61</span>
+
+<span class="sd">&gt;&gt;&gt; curr2const(cflo=cashflow(const_value=[100] * 5),</span>
+<span class="sd">... inflation=interest_rate(const_value=[10, 10, 20, 20, 20]), base_date=4) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)   190.08</span>
+<span class="sd">       (1,)   172.80</span>
+<span class="sd">       (2,)   144.00</span>
+<span class="sd">       (3,)   120.00</span>
+<span class="sd">       (4,)   100.00</span>
+
+
+
+<span class="sd">Currency conversion</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">&gt;&gt;&gt; currency_conversion(cflo=cashflow(const_value=[100] * 5), exchange_rate = 2) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)-(4,) [5] 200.00</span>
+
+<span class="sd">&gt;&gt;&gt; currency_conversion(cflo=cashflow(const_value=[100] * 5), exchange_rate = 2,</span>
+<span class="sd">... devaluation=interest_rate(const_value=[5]*5), base_date=(2,)) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">Time Series:</span>
+<span class="sd">Start = (0,)</span>
+<span class="sd">End = (4,)</span>
+<span class="sd">pyr = 1</span>
+<span class="sd">Data = (0,)   181.41</span>
+<span class="sd">       (1,)   190.48</span>
+<span class="sd">       (2,)   200.00</span>
+<span class="sd">       (3,)   210.00</span>
+<span class="sd">       (4,)   220.50</span>
+
+
+
+<span class="sd">Description of the functions in this module</span>
+<span class="sd">===============================================================================</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">cashflows.gtimeseries</span> <span class="k">import</span> <span class="n">TimeSeries</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="n">interest_rate</span><span class="p">,</span> <span class="n">verify_eq_time_range</span><span class="p">,</span> <span class="n">_timeid2index</span>
+
+<div class="viewcode-block" id="vars2list"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.vars2list">[docs]</a><span class="k">def</span> <span class="nf">vars2list</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Converts the variables on lists of the same length</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="o">!=</span> <span class="n">length</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Lists in parameters must the same length&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">param</span><span class="p">]</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="after_tax_cashflow"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.after_tax_cashflow">[docs]</a><span class="k">def</span> <span class="nf">after_tax_cashflow</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">tax_rate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the after cashflow for a tax rate. Taxes are not computed</span>
+<span class="sd">    for negative values in the cashflow.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cflo (TimeSeries): generic cashflow.</span>
+<span class="sd">        tax_rate (TimeSeries): income tax rate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        TimeSeries objects with taxed values</span>
+
+
+<span class="sd">    &gt;&gt;&gt; cflo = cashflow(const_value=[100] * 5, spec=(0, -100))</span>
+<span class="sd">    &gt;&gt;&gt; tax_rate = interest_rate(const_value=[10] * 5)</span>
+<span class="sd">    &gt;&gt;&gt; after_tax_cashflow(cflo=cflo, tax_rate=tax_rate) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Time Series:</span>
+<span class="sd">    Start = (0,)</span>
+<span class="sd">    End = (4,)</span>
+<span class="sd">    pyr = 1</span>
+<span class="sd">    Data = (0,)           0.00</span>
+<span class="sd">           (1,)-(4,) [4] 10.00</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">vars2list</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">tax_rate</span><span class="p">])</span>
+    <span class="n">cflo</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tax_rate</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">xcflo</span><span class="p">,</span> <span class="n">xtax_rate</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">tax_rate</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;cashflow must be a TimeSeries&quot;</span><span class="p">)</span>
+        <span class="n">verify_eq_time_range</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">xtax_rate</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">xcflo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xcflo</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*=</span> <span class="n">xtax_rate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">retval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">retval</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="to_discount_factor"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.to_discount_factor">[docs]</a><span class="k">def</span> <span class="nf">to_discount_factor</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (TimeSeries): nominal interest rate.</span>
+<span class="sd">        base_date (int, tuple): basis time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Discount factor (list)</span>
+
+
+<span class="sd">    &gt;&gt;&gt; to_discount_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=2) # doctest: +ELLIPSIS</span>
+<span class="sd">    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+
+
+<span class="sd">    &gt;&gt;&gt; to_discount_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS</span>
+<span class="sd">    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">prate</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">/</span><span class="n">nrate</span><span class="o">.</span><span class="n">pyr</span><span class="o">/</span><span class="mi">100</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nrate</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>  <span class="c1"># periodic rate</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">prate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">factor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">factor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_date</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">base_date</span> <span class="o">=</span> <span class="n">_timeid2index</span><span class="p">(</span><span class="n">base_date</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="n">nrate</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="n">nrate</span><span class="o">.</span><span class="n">pyr</span><span class="p">)</span>
+    <span class="n">div</span> <span class="o">=</span> <span class="n">factor</span><span class="p">[</span><span class="n">base_date</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+        <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">/</span> <span class="n">div</span>
+    <span class="k">return</span> <span class="n">factor</span></div>
+
+
+<div class="viewcode-block" id="to_compound_factor"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.to_compound_factor">[docs]</a><span class="k">def</span> <span class="nf">to_compound_factor</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of compounding factors calculated as (1 + r)^(t - t0).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (TimeSeries): nominal interest rate.</span>
+<span class="sd">        base_date (int, tuple): basis time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Compound factor (list)</span>
+
+<span class="sd">    &gt;&gt;&gt; to_compound_factor(interest_rate(const_value=4,nper=10, pyr=4), base_date=2) # doctest: +ELLIPSIS</span>
+<span class="sd">    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+
+<span class="sd">    &gt;&gt;&gt; to_compound_factor(interest_rate(const_value=4,nper=12, pyr=4), base_date=(0, 2)) # doctest: +ELLIPSIS</span>
+<span class="sd">    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">to_discount_factor</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">base_date</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+        <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">factor</span></div>
+
+
+
+<div class="viewcode-block" id="equivalent_nrate"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.equivalent_nrate">[docs]</a><span class="k">def</span> <span class="nf">equivalent_nrate</span><span class="p">(</span><span class="n">nrate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the equivalent interest rate over a time period.</span>
+
+<span class="sd">    # &gt;&gt;&gt; equivalent_nrate(TimeSeries([10]*5)) # doctest: +ELLIPSIS</span>
+<span class="sd">    # 10.0...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">factor</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">element</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">nrate</span><span class="o">.</span><span class="n">pyr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">nrate</span><span class="o">.</span><span class="n">pyr</span> <span class="o">*</span> <span class="p">(</span><span class="n">factor</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="const2curr"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.const2curr">[docs]</a><span class="k">def</span> <span class="nf">const2curr</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a cashflow of constant dollars to current dollars</span>
+<span class="sd">    of the time `base_date`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cflo (TimeSeries): A cashflow.</span>
+<span class="sd">        inflation (TimeSeries): Inflation rate.</span>
+<span class="sd">        base_date (int, tuple): base time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A cashflow in current money (TimeSeries)</span>
+
+<span class="sd">    &gt;&gt;&gt; const2curr(cflo=cashflow(const_value=[100] * 5),</span>
+<span class="sd">    ... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Time Series:</span>
+<span class="sd">    Start = (0,)</span>
+<span class="sd">    End = (4,)</span>
+<span class="sd">    pyr = 1</span>
+<span class="sd">    Data = (0,)   100.00</span>
+<span class="sd">           (1,)   110.00</span>
+<span class="sd">           (2,)   132.00</span>
+<span class="sd">           (3,)   158.40</span>
+<span class="sd">           (4,)   190.08</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">vars2list</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="p">])</span>
+    <span class="n">cflo</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">inflation</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">base_date</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">xcflo</span><span class="p">,</span> <span class="n">xinflation</span><span class="p">,</span> <span class="n">xbase_date</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;cflo must be a TimeSeries object&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xinflation</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;inflation must be a TimeSeries object&quot;</span><span class="p">)</span>
+        <span class="n">verify_eq_time_range</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">xinflation</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">to_compound_factor</span><span class="p">(</span><span class="n">xinflation</span><span class="p">,</span> <span class="n">xbase_date</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">xcflo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">retval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">retval</span></div>
+
+
+
+<div class="viewcode-block" id="curr2const"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.curr2const">[docs]</a><span class="k">def</span> <span class="nf">curr2const</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a cashflow of current dollars to constant dollars of</span>
+<span class="sd">    the time `t0`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cflo (list, Cashflow): A cashflow.</span>
+<span class="sd">        inflation_rate (float, Rate): Inflation rate.</span>
+<span class="sd">        t0 (int): base time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A cashflow in constant dollars</span>
+
+<span class="sd">    &gt;&gt;&gt; curr2const(cflo=cashflow(const_value=[100] * 5),</span>
+<span class="sd">    ... inflation=interest_rate(const_value=[10, 10, 20, 20, 20])) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Time Series:</span>
+<span class="sd">    Start = (0,)</span>
+<span class="sd">    End = (4,)</span>
+<span class="sd">    pyr = 1</span>
+<span class="sd">    Data = (0,)   100.00</span>
+<span class="sd">           (1,)    90.91</span>
+<span class="sd">           (2,)    75.76</span>
+<span class="sd">           (3,)    63.13</span>
+<span class="sd">           (4,)    52.61</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">vars2list</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="p">])</span>
+    <span class="n">cflo</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">inflation</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">base_date</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">xcflo</span><span class="p">,</span> <span class="n">xinflation</span><span class="p">,</span> <span class="n">xbase_date</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;cflo must be a TimeSeries object&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xinflation</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;inflation must be a TimeSeries object&quot;</span><span class="p">)</span>
+        <span class="n">verify_eq_time_range</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">xinflation</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">to_discount_factor</span><span class="p">(</span><span class="n">xinflation</span><span class="p">,</span> <span class="n">xbase_date</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">xcflo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*=</span> <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">retval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">retval</span></div>
+
+
+<div class="viewcode-block" id="currency_conversion"><a class="viewcode-back" href="../../gcashcomp.html#cashflows.gcashcomp.currency_conversion">[docs]</a><span class="k">def</span> <span class="nf">currency_conversion</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">exchange_rate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">devaluation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts a cashflow of dollars to another currency.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cflo (TimeSeries): A cashflow.</span>
+<span class="sd">        exchange_rate (float): Exchange rate at time `base_date`.</span>
+<span class="sd">        devaluaton (TimeSeries): Devaluation rate.</span>
+<span class="sd">        base_date (int): Time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A cashflow in other currency.</span>
+
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">vars2list</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">exchange_rate</span><span class="p">,</span> <span class="n">devaluation</span><span class="p">,</span> <span class="n">base_date</span><span class="p">])</span>
+    <span class="n">cflo</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">exchange_rate</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">devaluation</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">base_date</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">retval</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">xcflo</span><span class="p">,</span> <span class="n">xexchange_rate</span><span class="p">,</span> <span class="n">xdevaluation</span><span class="p">,</span> <span class="n">xbase_date</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">exchange_rate</span><span class="p">,</span> <span class="n">devaluation</span><span class="p">,</span> <span class="n">base_date</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`cashflow` must be a TimeSeries&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xdevaluation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">xcflo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*=</span> <span class="n">xexchange_rate</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xdevaluation</span><span class="p">,</span> <span class="n">TimeSeries</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`devaluation` must be a TimeSeries&quot;</span><span class="p">)</span>
+            <span class="n">verify_eq_time_range</span><span class="p">(</span><span class="n">xcflo</span><span class="p">,</span> <span class="n">xdevaluation</span><span class="p">)</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="n">to_compound_factor</span><span class="p">(</span><span class="n">xdevaluation</span><span class="p">,</span> <span class="n">xbase_date</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">xcflo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*=</span> <span class="n">xexchange_rate</span> <span class="o">*</span> <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="n">retval</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">retval</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">retval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">retval</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Juan D. Velasquez &amp; Ibeth K. Vergara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+    </div>
+  </body>
+</html>

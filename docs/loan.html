@@ -1,0 +1,650 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Loan analysis &#8212; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Savings" href="savings.html" />
+    <link rel="prev" title="Asset depreciation" href="depreciation.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="savings.html" title="Savings"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="depreciation.html" title="Asset depreciation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-cashflows.loan"></span><div class="section" id="loan-analysis">
+<h1>Loan analysis<a class="headerlink" href="#loan-analysis" title="Permalink to this headline">¶</a></h1>
+<p>Computes the amorization schedule for the following types of loans:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">fixed_rate_loan</span></code>: In this loan, the interest rate is fixed and the total
+payments are equal during the life of the loan.</li>
+<li><code class="docutils literal"><span class="pre">buydown_loan</span></code>: the interest rate changes during the life of the loan;
+the value of the payments are calculated using the current value of the
+interest rate. When the interest rate is constant during the life of the loan,
+the results are equals to the function <code class="docutils literal"><span class="pre">fixed_rate_loan</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">fixed_ppal_loan</span></code>: the payments to the principal are constant during the life
+of loan.</li>
+<li><code class="docutils literal"><span class="pre">bullet_loan</span></code>: the principal is payed at the end of the life of the loan.</li>
+</ul>
+<dl class="class">
+<dt id="cashflows.loan.Loan">
+<em class="property">class </em><code class="descclassname">cashflows.loan.</code><code class="descname">Loan</code><span class="sig-paren">(</span><em>life</em>, <em>amount</em>, <em>grace</em>, <em>nrate</em>, <em>dispoints=0</em>, <em>orgpoints=0</em>, <em>data=None</em>, <em>index=None</em>, <em>columns=None</em>, <em>dtype=None</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#Loan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.Loan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pandas.core.frame.DataFrame</span></code></p>
+<dl class="method">
+<dt id="cashflows.loan.Loan.tocashflow">
+<code class="descname">tocashflow</code><span class="sig-paren">(</span><em>tax_rate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#Loan.tocashflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.Loan.tocashflow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="cashflows.loan.Loan.true_rate">
+<code class="descname">true_rate</code><span class="sig-paren">(</span><em>tax_rate=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#Loan.true_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.Loan.true_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="cashflows.loan.bullet_loan">
+<code class="descclassname">cashflows.loan.</code><code class="descname">bullet_loan</code><span class="sig-paren">(</span><em>amount</em>, <em>nrate</em>, <em>dispoints=0</em>, <em>orgpoints=0</em>, <em>prepmt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#bullet_loan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.bullet_loan" title="Permalink to this definition">¶</a></dt>
+<dd><p>In this type of loan, the principal is payed at the end for the life of the
+loan. Periodic payments correspond only to interests.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>amount</strong> (<em>float</em>) – Loan amount.</li>
+<li><strong>nrate</strong> (<em>float</em><em>, </em><em>TimeSeries</em>) – nominal interest rate per year.</li>
+<li><strong>dispoints</strong> (<em>float</em>) – Discount points of the loan.</li>
+<li><strong>orgpoints</strong> (<em>float</em>) – Origination points of the loan.</li>
+<li><strong>prepmt</strong> (<em>TimeSeries</em>) – generic cashflow representing prepayments.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A object of the class <code class="docutils literal"><span class="pre">Loan</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">*</span><span class="mi">11</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2018Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bullet_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     250.00</span>
+<span class="go">Total payment:      1250.00</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2018Q1              0.0      10.0          0.0          0.0           0.0</span>
+<span class="go">2018Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2018Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2018Q4           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2019Q1           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2019Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2019Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2019Q4           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2020Q1           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2020Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2020Q3           1000.0      10.0       1025.0         25.0        1000.0</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2018Q1           1000.0</span>
+<span class="go">2018Q2           1000.0</span>
+<span class="go">2018Q3           1000.0</span>
+<span class="go">2018Q4           1000.0</span>
+<span class="go">2019Q1           1000.0</span>
+<span class="go">2019Q2           1000.0</span>
+<span class="go">2019Q3           1000.0</span>
+<span class="go">2019Q4           1000.0</span>
+<span class="go">2020Q1           1000.0</span>
+<span class="go">2020Q2           1000.0</span>
+<span class="go">2020Q3              0.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="cashflows.loan.buydown_loan">
+<code class="descclassname">cashflows.loan.</code><code class="descname">buydown_loan</code><span class="sig-paren">(</span><em>amount</em>, <em>nrate</em>, <em>grace=0</em>, <em>dispoints=0</em>, <em>orgpoints=0</em>, <em>prepmt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#buydown_loan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.buydown_loan" title="Permalink to this definition">¶</a></dt>
+<dd><p>In this loan, the periodic payments are recalculated when there are changes
+in the value of the interest rate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>amount</strong> (<em>float</em>) – Loan amount.</li>
+<li><strong>nrate</strong> (<em>float</em><em>, </em><em>TimeSeries</em>) – nominal interest rate per year.</li>
+<li><strong>grace</strong> (<em>int</em>) – numner of grace periods without paying the principal.</li>
+<li><strong>dispoints</strong> (<em>float</em>) – Discount points of the loan.</li>
+<li><strong>orgpoints</strong> (<em>float</em>) – Origination points of the loan.</li>
+<li><strong>prepmt</strong> (<em>TimeSeries</em>) – generic cashflow representing prepayments.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A object of the class <code class="docutils literal"><span class="pre">Loan</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2016Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;2017Q2&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">buydown_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     200.99</span>
+<span class="go">Total payment:      1200.99</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="go">2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763</span>
+<span class="go">2016Q3       910.741237      10.0   114.258763    22.768531     91.490232</span>
+<span class="go">2016Q4       819.251005      10.0   114.258763    20.481275     93.777488</span>
+<span class="go">2017Q1       725.473517      10.0   114.258763    18.136838     96.121925</span>
+<span class="go">2017Q2       629.351591      20.0   123.993257    31.467580     92.525677</span>
+<span class="go">2017Q3       536.825914      20.0   123.993257    26.841296     97.151961</span>
+<span class="go">2017Q4       439.673952      20.0   123.993257    21.983698    102.009559</span>
+<span class="go">2018Q1       337.664393      20.0   123.993257    16.883220    107.110037</span>
+<span class="go">2018Q2       230.554356      20.0   123.993257    11.527718    112.465539</span>
+<span class="go">2018Q3       118.088816      20.0   123.993257     5.904441    118.088816</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2016Q1     1.000000e+03</span>
+<span class="go">2016Q2     9.107412e+02</span>
+<span class="go">2016Q3     8.192510e+02</span>
+<span class="go">2016Q4     7.254735e+02</span>
+<span class="go">2017Q1     6.293516e+02</span>
+<span class="go">2017Q2     5.368259e+02</span>
+<span class="go">2017Q3     4.396740e+02</span>
+<span class="go">2017Q4     3.376644e+02</span>
+<span class="go">2018Q1     2.305544e+02</span>
+<span class="go">2018Q2     1.180888e+02</span>
+<span class="go">2018Q3     1.136868e-13</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2016Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span><span class="p">[</span><span class="s1">&#39;2017Q4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">buydown_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     180.67</span>
+<span class="go">Total payment:      1180.67</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="go">2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763</span>
+<span class="go">2016Q3       910.741237      10.0   114.258763    22.768531     91.490232</span>
+<span class="go">2016Q4       819.251005      10.0   114.258763    20.481275     93.777488</span>
+<span class="go">2017Q1       725.473517      10.0   114.258763    18.136838     96.121925</span>
+<span class="go">2017Q2       629.351591      20.0   123.993257    31.467580     92.525677</span>
+<span class="go">2017Q3       536.825914      20.0   123.993257    26.841296     97.151961</span>
+<span class="go">2017Q4       439.673952      20.0   323.993257    21.983698    302.009559</span>
+<span class="go">2018Q1       137.664393      20.0    50.551544     6.883220     43.668324</span>
+<span class="go">2018Q2        93.996068      20.0    50.551544     4.699803     45.851741</span>
+<span class="go">2018Q3        48.144328      20.0    50.551544     2.407216     48.144328</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2016Q1     1.000000e+03</span>
+<span class="go">2016Q2     9.107412e+02</span>
+<span class="go">2016Q3     8.192510e+02</span>
+<span class="go">2016Q4     7.254735e+02</span>
+<span class="go">2017Q1     6.293516e+02</span>
+<span class="go">2017Q2     5.368259e+02</span>
+<span class="go">2017Q3     4.396740e+02</span>
+<span class="go">2017Q4     1.376644e+02</span>
+<span class="go">2018Q1     9.399607e+01</span>
+<span class="go">2018Q2     4.814433e+01</span>
+<span class="go">2018Q3     4.263256e-14</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="cashflows.loan.fixed_ppal_loan">
+<code class="descclassname">cashflows.loan.</code><code class="descname">fixed_ppal_loan</code><span class="sig-paren">(</span><em>amount</em>, <em>nrate</em>, <em>grace=0</em>, <em>dispoints=0</em>, <em>orgpoints=0</em>, <em>prepmt=None</em>, <em>balloonpmt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#fixed_ppal_loan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.fixed_ppal_loan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loan with fixed principal payment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>amount</strong> (<em>float</em>) – Loan amount.</li>
+<li><strong>nrate</strong> (<em>float</em><em>, </em><em>TimeSeries</em>) – nominal interest rate per year.</li>
+<li><strong>grace</strong> (<em>int</em>) – number of grace periiods without paying principal.</li>
+<li><strong>dispoints</strong> (<em>float</em>) – Discount points of the loan.</li>
+<li><strong>orgpoints</strong> (<em>float</em>) – Origination points of the loan.</li>
+<li><strong>prepmt</strong> (<em>TimeSeries</em>) – generic cashflow representing prepayments.</li>
+<li><strong>balloonpmt</strong> (<em>TimeSeries</em>) – generic cashflow representing balloon payments.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A object of the class <code class="docutils literal"><span class="pre">Loan</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">*</span><span class="mi">11</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2018Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tax_rate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">35</span><span class="p">]</span><span class="o">*</span><span class="mi">11</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2018Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>               <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     137.50</span>
+<span class="go">Total payment:      1137.50</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2018Q1              0.0      10.0          0.0          0.0           0.0</span>
+<span class="go">2018Q2           1000.0      10.0        125.0         25.0         100.0</span>
+<span class="go">2018Q3            900.0      10.0        122.5         22.5         100.0</span>
+<span class="go">2018Q4            800.0      10.0        120.0         20.0         100.0</span>
+<span class="go">2019Q1            700.0      10.0        117.5         17.5         100.0</span>
+<span class="go">2019Q2            600.0      10.0        115.0         15.0         100.0</span>
+<span class="go">2019Q3            500.0      10.0        112.5         12.5         100.0</span>
+<span class="go">2019Q4            400.0      10.0        110.0         10.0         100.0</span>
+<span class="go">2020Q1            300.0      10.0        107.5          7.5         100.0</span>
+<span class="go">2020Q2            200.0      10.0        105.0          5.0         100.0</span>
+<span class="go">2020Q3            100.0      10.0        102.5          2.5         100.0</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2018Q1           1000.0</span>
+<span class="go">2018Q2            900.0</span>
+<span class="go">2018Q3            800.0</span>
+<span class="go">2018Q4            700.0</span>
+<span class="go">2019Q1            600.0</span>
+<span class="go">2019Q2            500.0</span>
+<span class="go">2019Q3            400.0</span>
+<span class="go">2019Q4            300.0</span>
+<span class="go">2020Q1            200.0</span>
+<span class="go">2020Q2            100.0</span>
+<span class="go">2020Q3              0.0</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>               <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     162.50</span>
+<span class="go">Total payment:      1162.50</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2018Q1              0.0      10.0        0.000        0.000           0.0</span>
+<span class="go">2018Q2           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="go">2018Q3           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="go">2018Q4           1000.0      10.0      150.000       25.000         125.0</span>
+<span class="go">2019Q1            875.0      10.0      146.875       21.875         125.0</span>
+<span class="go">2019Q2            750.0      10.0      143.750       18.750         125.0</span>
+<span class="go">2019Q3            625.0      10.0      140.625       15.625         125.0</span>
+<span class="go">2019Q4            500.0      10.0      137.500       12.500         125.0</span>
+<span class="go">2020Q1            375.0      10.0      134.375        9.375         125.0</span>
+<span class="go">2020Q2            250.0      10.0      131.250        6.250         125.0</span>
+<span class="go">2020Q3            125.0      10.0      128.125        3.125         125.0</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2018Q1           1000.0</span>
+<span class="go">2018Q2           1000.0</span>
+<span class="go">2018Q3           1000.0</span>
+<span class="go">2018Q4            875.0</span>
+<span class="go">2019Q1            750.0</span>
+<span class="go">2019Q2            625.0</span>
+<span class="go">2019Q3            500.0</span>
+<span class="go">2019Q4            375.0</span>
+<span class="go">2020Q1            250.0</span>
+<span class="go">2020Q2            125.0</span>
+<span class="go">2020Q3              0.0</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">11</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2018Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span><span class="p">[</span><span class="s1">&#39;2019Q4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>               <span class="n">prepmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     149.38</span>
+<span class="go">Total payment:      1149.38</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2018Q1              0.0      10.0        0.000        0.000           0.0</span>
+<span class="go">2018Q2           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="go">2018Q3           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="go">2018Q4           1000.0      10.0      150.000       25.000         125.0</span>
+<span class="go">2019Q1            875.0      10.0      146.875       21.875         125.0</span>
+<span class="go">2019Q2            750.0      10.0      143.750       18.750         125.0</span>
+<span class="go">2019Q3            625.0      10.0      140.625       15.625         125.0</span>
+<span class="go">2019Q4            500.0      10.0      337.500       12.500         325.0</span>
+<span class="go">2020Q1            175.0      10.0      129.375        4.375         125.0</span>
+<span class="go">2020Q2             50.0      10.0       51.250        1.250          50.0</span>
+<span class="go">2020Q3              0.0      10.0        0.000        0.000           0.0</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2018Q1           1000.0</span>
+<span class="go">2018Q2           1000.0</span>
+<span class="go">2018Q3           1000.0</span>
+<span class="go">2018Q4            875.0</span>
+<span class="go">2019Q1            750.0</span>
+<span class="go">2019Q2            625.0</span>
+<span class="go">2019Q3            500.0</span>
+<span class="go">2019Q4            175.0</span>
+<span class="go">2020Q1             50.0</span>
+<span class="go">2020Q2              0.0</span>
+<span class="go">2020Q3              0.0</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>               <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span>  
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     165.00</span>
+<span class="go">Total payment:      1165.00</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2018Q1              0.0      10.0          0.0          0.0           0.0</span>
+<span class="go">2018Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2018Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2018Q4           1000.0      10.0        125.0         25.0         100.0</span>
+<span class="go">2019Q1            900.0      10.0        122.5         22.5         100.0</span>
+<span class="go">2019Q2            800.0      10.0        120.0         20.0         100.0</span>
+<span class="go">2019Q3            700.0      10.0        117.5         17.5         100.0</span>
+<span class="go">2019Q4            600.0      10.0        315.0         15.0         300.0</span>
+<span class="go">2020Q1            300.0      10.0        107.5          7.5         100.0</span>
+<span class="go">2020Q2            200.0      10.0        105.0          5.0         100.0</span>
+<span class="go">2020Q3            100.0      10.0        102.5          2.5         100.0</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2018Q1           1000.0</span>
+<span class="go">2018Q2           1000.0</span>
+<span class="go">2018Q3           1000.0</span>
+<span class="go">2018Q4            900.0</span>
+<span class="go">2019Q1            800.0</span>
+<span class="go">2019Q2            700.0</span>
+<span class="go">2019Q3            600.0</span>
+<span class="go">2019Q4            300.0</span>
+<span class="go">2020Q1            200.0</span>
+<span class="go">2020Q2            100.0</span>
+<span class="go">2020Q3              0.0</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>                    <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">true_rate</span><span class="p">()</span> 
+<span class="go">10.00...</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">true_rate</span><span class="p">(</span><span class="n">tax_rate</span><span class="p">)</span> 
+<span class="go">6.50...</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">tocashflow</span><span class="p">()</span>
+<span class="go">2018Q1    1000.0</span>
+<span class="go">2018Q2     -25.0</span>
+<span class="go">2018Q3     -25.0</span>
+<span class="go">2018Q4    -125.0</span>
+<span class="go">2019Q1    -122.5</span>
+<span class="go">2019Q2    -120.0</span>
+<span class="go">2019Q3    -117.5</span>
+<span class="go">2019Q4    -315.0</span>
+<span class="go">2020Q1    -107.5</span>
+<span class="go">2020Q2    -105.0</span>
+<span class="go">2020Q3    -102.5</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">tocashflow</span><span class="p">(</span><span class="n">tax_rate</span><span class="p">)</span>
+<span class="go">2018Q1    1000.000</span>
+<span class="go">2018Q2     -16.250</span>
+<span class="go">2018Q3     -16.250</span>
+<span class="go">2018Q4    -116.250</span>
+<span class="go">2019Q1    -114.625</span>
+<span class="go">2019Q2    -113.000</span>
+<span class="go">2019Q3    -111.375</span>
+<span class="go">2019Q4    -309.750</span>
+<span class="go">2020Q1    -104.875</span>
+<span class="go">2020Q2    -103.250</span>
+<span class="go">2020Q3    -101.625</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="gp">... </span>                    <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> 
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     165.00</span>
+<span class="go">Total payment:      1265.00</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 10.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2018Q1              0.0      10.0        100.0          0.0           0.0</span>
+<span class="go">2018Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2018Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="go">2018Q4           1000.0      10.0        125.0         25.0         100.0</span>
+<span class="go">2019Q1            900.0      10.0        122.5         22.5         100.0</span>
+<span class="go">2019Q2            800.0      10.0        120.0         20.0         100.0</span>
+<span class="go">2019Q3            700.0      10.0        117.5         17.5         100.0</span>
+<span class="go">2019Q4            600.0      10.0        315.0         15.0         300.0</span>
+<span class="go">2020Q1            300.0      10.0        107.5          7.5         100.0</span>
+<span class="go">2020Q2            200.0      10.0        105.0          5.0         100.0</span>
+<span class="go">2020Q3            100.0      10.0        102.5          2.5         100.0</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2018Q1           1000.0</span>
+<span class="go">2018Q2           1000.0</span>
+<span class="go">2018Q3           1000.0</span>
+<span class="go">2018Q4            900.0</span>
+<span class="go">2019Q1            800.0</span>
+<span class="go">2019Q2            700.0</span>
+<span class="go">2019Q3            600.0</span>
+<span class="go">2019Q4            300.0</span>
+<span class="go">2020Q1            200.0</span>
+<span class="go">2020Q2            100.0</span>
+<span class="go">2020Q3              0.0</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">true_rate</span><span class="p">()</span> 
+<span class="go">17.1725...</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">tocashflow</span><span class="p">()</span> 
+<span class="go">2018Q1    900.0</span>
+<span class="go">2018Q2    -25.0</span>
+<span class="go">2018Q3    -25.0</span>
+<span class="go">2018Q4   -125.0</span>
+<span class="go">2019Q1   -122.5</span>
+<span class="go">2019Q2   -120.0</span>
+<span class="go">2019Q3   -117.5</span>
+<span class="go">2019Q4   -315.0</span>
+<span class="go">2020Q1   -107.5</span>
+<span class="go">2020Q2   -105.0</span>
+<span class="go">2020Q3   -102.5</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">true_rate</span><span class="p">(</span><span class="n">tax_rate</span><span class="p">)</span> 
+<span class="go">13.4232...</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">tocashflow</span><span class="p">(</span><span class="n">tax_rate</span><span class="p">)</span> 
+<span class="go">2018Q1    900.000</span>
+<span class="go">2018Q2    -16.250</span>
+<span class="go">2018Q3    -16.250</span>
+<span class="go">2018Q4   -116.250</span>
+<span class="go">2019Q1   -114.625</span>
+<span class="go">2019Q2   -113.000</span>
+<span class="go">2019Q3   -111.375</span>
+<span class="go">2019Q4   -309.750</span>
+<span class="go">2020Q1   -104.875</span>
+<span class="go">2020Q2   -103.250</span>
+<span class="go">2020Q3   -101.625</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="cashflows.loan.fixed_rate_loan">
+<code class="descclassname">cashflows.loan.</code><code class="descname">fixed_rate_loan</code><span class="sig-paren">(</span><em>amount</em>, <em>nrate</em>, <em>life</em>, <em>start</em>, <em>freq='A'</em>, <em>grace=0</em>, <em>dispoints=0</em>, <em>orgpoints=0</em>, <em>prepmt=None</em>, <em>balloonpmt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/loan.html#fixed_rate_loan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cashflows.loan.fixed_rate_loan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fixed rate loan.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>amount</strong> (<em>float</em>) – Loan amount.</li>
+<li><strong>nrate</strong> (<em>float</em>) – nominal interest rate per year.</li>
+<li><strong>life</strong> (<em>float</em>) – life of the loan.</li>
+<li><strong>start</strong> (<em>int</em><em>, </em><em>tuple</em>) – init period for the loan.</li>
+<li><strong>pyr</strong> (<em>int</em>) – number of compounding periods per year.</li>
+<li><strong>grace</strong> (<em>int</em>) – number of periods of grace (without payment of the principal)</li>
+<li><strong>dispoints</strong> (<em>float</em>) – Discount points of the loan.</li>
+<li><strong>orgpoints</strong> (<em>float</em>) – Origination points of the loan.</li>
+<li><strong>prepmt</strong> (<em>TimeSeries</em>) – generic cashflow representing prepayments.</li>
+<li><strong>balloonpmt</strong> (<em>TimeSeries</em>) – generic cashflow representing balloon payments.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A object of the class <code class="docutils literal"><span class="pre">Loan</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2016Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span><span class="p">[</span><span class="s1">&#39;2017Q4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_rate_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2016Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">grace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> 
+<span class="go">Amount:             1000.00</span>
+<span class="go">Total interest:     129.68</span>
+<span class="go">Total payment:      1129.68</span>
+<span class="go">Discount points:    0.00</span>
+<span class="go">Origination points: 0.00</span>
+
+<span class="go">        Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \</span>
+<span class="go">2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="go">2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763</span>
+<span class="go">2016Q3       910.741237      10.0   114.258763    22.768531     91.490232</span>
+<span class="go">2016Q4       819.251005      10.0   114.258763    20.481275     93.777488</span>
+<span class="go">2017Q1       725.473517      10.0   114.258763    18.136838     96.121925</span>
+<span class="go">2017Q2       629.351591      10.0   114.258763    15.733790     98.524973</span>
+<span class="go">2017Q3       530.826618      10.0   114.258763    13.270665    100.988098</span>
+<span class="go">2017Q4       429.838520      10.0   314.258763    10.745963    303.512800</span>
+<span class="go">2018Q1       126.325720      10.0   114.258763     3.158143    111.100620</span>
+<span class="go">2018Q2        15.225100      10.0    15.605727     0.380627     15.225100</span>
+<span class="go">2018Q3         0.000000      10.0     0.000000     0.000000      0.000000</span>
+
+<span class="go">        End_Ppal_Amount</span>
+<span class="go">2016Q1      1000.000000</span>
+<span class="go">2016Q2       910.741237</span>
+<span class="go">2016Q3       819.251005</span>
+<span class="go">2016Q4       725.473517</span>
+<span class="go">2017Q1       629.351591</span>
+<span class="go">2017Q2       530.826618</span>
+<span class="go">2017Q3       429.838520</span>
+<span class="go">2017Q4       126.325720</span>
+<span class="go">2018Q1        15.225100</span>
+<span class="go">2018Q2         0.000000</span>
+<span class="go">2018Q3         0.000000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="depreciation.html"
+                        title="previous chapter">Asset depreciation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="savings.html"
+                        title="next chapter">Savings</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/loan.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="savings.html" title="Savings"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="depreciation.html" title="Asset depreciation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Juan D. Velasquez &amp; Ibeth K. Vergara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

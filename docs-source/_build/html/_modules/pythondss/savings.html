@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pythondss.savings &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pythondss.savings</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tutorial</span>
+<span class="sd">==============================================================================</span>
+
+<span class="sd">Modeling of savings accounts.</span>
+
+<span class="sd">&gt;&gt;&gt; savings(deposits=100, rate=1, nper=5, initbal=0, quiet=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">   t     Beginning      Deposit       Earned       Ending</span>
+<span class="sd">           balance                  Interest      balance</span>
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd">  0           0.00       100.00         0.00       100.00</span>
+<span class="sd">  1         100.00       100.00         1.00       201.00</span>
+<span class="sd">  2         201.00       100.00         2.01       303.01</span>
+<span class="sd">  3         303.01       100.00         3.03       406.04</span>
+<span class="sd">  4         406.04       100.00         4.06       510.10</span>
+
+
+<span class="sd">&gt;&gt;&gt; savings(deposits=100, start=2, rate=1, nper=5, initbal=1000, quiet=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd"> t     Beginning      Deposit       Earned       Ending</span>
+<span class="sd">         balance                  Interest      balance</span>
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd"> 0        1000.00         0.00        10.00      1010.00</span>
+<span class="sd"> 1        1010.00         0.00        10.10      1020.10</span>
+<span class="sd"> 2        1020.10       100.00        10.20      1130.30</span>
+<span class="sd"> 3        1130.30       100.00        11.30      1241.60</span>
+<span class="sd"> 4        1241.60       100.00        12.42      1354.02</span>
+
+
+<span class="sd">&gt;&gt;&gt; savings(deposits=[100, 100], rate=1, nper=5, initbal=1000, quiet=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd"> t     Beginning      Deposit       Earned       Ending</span>
+<span class="sd">         balance                  Interest      balance</span>
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd"> 0        1000.00       100.00        10.00      1110.00</span>
+<span class="sd"> 1        1110.00       100.00        11.10      1221.10</span>
+<span class="sd"> 2        1221.10         0.00        12.21      1233.31</span>
+<span class="sd"> 3        1233.31         0.00        12.33      1245.64</span>
+<span class="sd"> 4        1245.64         0.00        12.46      1258.10</span>
+
+<span class="sd">&gt;&gt;&gt; savings(deposits=[100, 100], start=3, rate=[1, 1, 10], nper=8, initbal=1000, quiet=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd"> t     Beginning      Deposit       Earned       Ending</span>
+<span class="sd">         balance                  Interest      balance</span>
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd"> 0        1000.00         0.00        10.00      1010.00</span>
+<span class="sd"> 1        1010.00         0.00        10.10      1020.10</span>
+<span class="sd"> 2        1020.10         0.00       102.01      1122.11</span>
+<span class="sd"> 3        1122.11       100.00       112.21      1334.32</span>
+<span class="sd"> 4        1334.32       100.00       133.43      1567.75</span>
+<span class="sd"> 5        1567.75         0.00       156.78      1724.53</span>
+<span class="sd"> 6        1724.53         0.00       172.45      1896.98</span>
+<span class="sd"> 7        1896.98         0.00       189.70      2086.68</span>
+
+<span class="sd">&gt;&gt;&gt; savings(deposits= 100, rate = [1, 1, 10, 10, 10], nper=5, initbal = 0, quiet=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd"> t     Beginning      Deposit       Earned       Ending</span>
+<span class="sd">         balance                  Interest      balance</span>
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd"> 0           0.00       100.00         0.00       100.00</span>
+<span class="sd"> 1         100.00       100.00         1.00       201.00</span>
+<span class="sd"> 2         201.00       100.00        20.10       321.10</span>
+<span class="sd"> 3         321.10       100.00        32.11       453.21</span>
+<span class="sd"> 4         453.21       100.00        45.32       598.53</span>
+
+<span class="sd">Description of the functions and objects in this module</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># import sys</span>
+<span class="c1"># import os</span>
+
+<span class="c1"># sys.path.insert(0, os.path.abspath(&#39;..&#39;))</span>
+
+<span class="c1"># from cashflows.gcashrepr import Cashflow, Rate</span>
+
+
+
+<div class="viewcode-block" id="savings"><a class="viewcode-back" href="../../savings.html#pythondss.savings.savings">[docs]</a><span class="k">def</span> <span class="nf">savings</span><span class="p">(</span><span class="n">deposits</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">initbal</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        deposits (list): deposits to the account.</span>
+<span class="sd">        start (int): initial period for the deposits</span>
+<span class="sd">        rate (float, list): interest rate paid by the account.</span>
+<span class="sd">        nper (int): total number of periods to simulate.</span>
+<span class="sd">        initbal (float): initial balance of the account.</span>
+<span class="sd">        quie (bool): prints summary report?</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        interes, ending_balance (list, list): earned interest and final balance.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deposits</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="n">nper</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;deposits must be a list or `nper` must be &gt; 1&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nper</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;`nper` must be an integer&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid type for `rate`&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deposits</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">nper</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nper</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">deposits</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deposits</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">deposits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">start</span> <span class="o">+</span> <span class="p">[</span><span class="n">deposits</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">nper</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">deposits</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">nper</span><span class="p">:</span>
+        <span class="n">deposits</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">start</span> <span class="o">+</span> <span class="n">deposits</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">nper</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">deposits</span><span class="p">)</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="p">[</span><span class="n">rate</span><span class="p">]</span> <span class="o">*</span> <span class="n">nper</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">nper</span><span class="p">:</span>
+        <span class="n">rate</span> <span class="o">+=</span> <span class="p">[</span><span class="n">rate</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="p">(</span><span class="n">nper</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rate</span><span class="p">))</span>
+        <span class="c1"># raise ValueError(&#39;len(rate) &lt; nper&#39;)</span>
+
+    <span class="n">begbal</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nper</span>
+    <span class="n">interest</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nper</span>
+    <span class="n">endbal</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nper</span>
+
+
+    <span class="c1">##</span>
+    <span class="c1">## balance calculation</span>
+    <span class="c1">##</span>
+    <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nper</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">initbal</span>
+            <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">rate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="n">endbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="c1">#</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endbal</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">rate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+
+            <span class="k">if</span> <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="o">-</span><span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]:</span>
+                <span class="c1">#</span>
+                <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">])</span>
+                <span class="c1">#</span>
+
+            <span class="n">endbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="c1">#</span>
+
+    <span class="k">if</span> <span class="n">quiet</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">interest</span><span class="p">,</span> <span class="n">endbal</span><span class="p">)</span>
+
+    <span class="n">txt</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">txt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; t     Beginning      Deposit       Earned       Ending&#39;</span><span class="p">)</span>
+    <span class="n">txt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;         balance                  Interest      balance&#39;</span><span class="p">)</span>
+    <span class="n">txt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;------------------------------------------------------------&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deposits</span><span class="p">):</span>
+
+        <span class="n">fmt</span> <span class="o">=</span> <span class="s1">&#39; {:&lt;3d} {:12.2f} {:12.2f} {:12.2f} {:12.2f}&#39;</span>
+        <span class="n">txt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">,</span>
+                              <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">],</span>
+                              <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">],</span>
+                              <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">],</span>
+                              <span class="n">endbal</span><span class="p">[</span><span class="n">time</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span><span class="p">))</span></div>
+
+
+
+
+<span class="c1"># class Savings():</span>
+<span class="c1">#     &quot;&quot;&quot;Creates a Savings object.</span>
+<span class="c1">#</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#         deposits (Cashflow): Deposits to the account.</span>
+<span class="c1">#         rate (float, Rate): Interest rate.</span>
+<span class="c1">#         initbal (float): Initial balance of the account.</span>
+<span class="c1">#</span>
+<span class="c1">#     Returns:</span>
+<span class="c1">#         An Savigs object.</span>
+<span class="c1">#</span>
+<span class="c1">#     Member functions can be used to extract information of the object.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     def __init__(self, deposits, rate=0, initbal=0):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         Args:</span>
+<span class="c1">#             deposits (Cashflow): deposits to the account.</span>
+<span class="c1">#             rate (float, Rate): interest rate paid by the account.</span>
+<span class="c1">#             initbal (float): initial balance of the accout.</span>
+<span class="c1">#</span>
+<span class="c1">#         Return:</span>
+<span class="c1">#             A `Savings` object.</span>
+<span class="c1">#</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#         if not isinstance(deposits, Cashflow):</span>
+<span class="c1">#             raise ValueError(&#39;deposits must be a Cashflow instance&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         nper = len(deposits)</span>
+<span class="c1">#</span>
+<span class="c1">#         if isinstance(rate, (int, float)):</span>
+<span class="c1">#             rate = Rate(constValue=rate, nper=nper)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         begbal = Cashflow(nper=nper, constValue=0)</span>
+<span class="c1">#         interest = Cashflow(nper=nper, constValue=0)</span>
+<span class="c1">#         endbal = Cashflow(nper=nper, constValue=0)</span>
+<span class="c1">#</span>
+<span class="c1">#         ##</span>
+<span class="c1">#         ## balance calculation</span>
+<span class="c1">#         ##</span>
+<span class="c1">#         for time in range(nper):</span>
+<span class="c1">#</span>
+<span class="c1">#             if time == 0:</span>
+<span class="c1">#                 #</span>
+<span class="c1">#                 begbal[time] = initbal</span>
+<span class="c1">#                 interest[time] = 0</span>
+<span class="c1">#                 endbal[time] = begbal[time] + deposits[time] + interest[time]</span>
+<span class="c1">#                 #</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 #</span>
+<span class="c1">#                 begbal[time] = endbal[time - 1]</span>
+<span class="c1">#                 interest[time] = begbal[time] * rate[time]</span>
+<span class="c1">#</span>
+<span class="c1">#                 if deposits[time] &lt; 0 and -deposits[time] &gt; begbal[time] + interest[time]:</span>
+<span class="c1">#                     #</span>
+<span class="c1">#                     deposits[time] = -(begbal[time] + interest[time])</span>
+<span class="c1">#                     #</span>
+<span class="c1">#</span>
+<span class="c1">#                 endbal[time] = begbal[time] + deposits[time] + interest[time]</span>
+<span class="c1">#                 #</span>
+<span class="c1">#</span>
+<span class="c1">#         self._begbal = begbal</span>
+<span class="c1">#         self._deposits = deposits</span>
+<span class="c1">#         self._interest = interest</span>
+<span class="c1">#         self._endbal = endbal</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     ##</span>
+<span class="c1">#     ## accounts</span>
+<span class="c1">#     ##</span>
+<span class="c1">#     def interest(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the earned interest as a Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return self._interest.copy()</span>
+<span class="c1">#</span>
+<span class="c1">#     # def deposits(self):</span>
+<span class="c1">#     #     return self._deposits.copy()</span>
+<span class="c1">#</span>
+<span class="c1">#     def begbal(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the balance at the begining of each compounding period as a</span>
+<span class="c1">#         Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return self._begbal.copy()</span>
+<span class="c1">#</span>
+<span class="c1">#     def endbal(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the balance at the ending of each compounding period as a</span>
+<span class="c1">#         Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return self._endbal.copy()</span>
+<span class="c1">#</span>
+<span class="c1">#     ##</span>
+<span class="c1">#     ## conversion to generic cashflow object</span>
+<span class="c1">#     ##</span>
+<span class="c1">#     def to_cashflow(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Converts the object to a equivalent cashflow.&quot;&quot;&quot;</span>
+<span class="c1">#         nper = len(self._interest.tolist())</span>
+<span class="c1">#         cashflow = Cashflow(nper=nper)</span>
+<span class="c1">#         #</span>
+<span class="c1">#         for time in range(nper):</span>
+<span class="c1">#             #</span>
+<span class="c1">#             cashflow[time] = -self._deposits[time]</span>
+<span class="c1">#             #</span>
+<span class="c1">#         cashflow[0] = -self._endbal[0]</span>
+<span class="c1">#         cashflow[-1] = cashflow[-1] + self._endbal[-1]</span>
+<span class="c1">#         return cashflow</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def __repr__(self):</span>
+<span class="c1">#</span>
+<span class="c1">#         txt = [&#39;&#39;]</span>
+<span class="c1">#         txt.append(&#39;&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         txt.append(&#39;   t     Beginning      Deposit       Earned       Ending&#39;)</span>
+<span class="c1">#         txt.append(&#39;           balance                  Interest      balance&#39;)</span>
+<span class="c1">#         txt.append(&#39;------------------------------------------------------------&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#         for time in range(len(self._deposits)):</span>
+<span class="c1">#</span>
+<span class="c1">#             fmt = &#39;  {:&lt;3d} {:12.2f} {:12.2f} {:12.2f} {:12.2f}&#39;</span>
+<span class="c1">#             txt.append(fmt.format(time,</span>
+<span class="c1">#                                   self._begbal[time],</span>
+<span class="c1">#                                   self._deposits[time],</span>
+<span class="c1">#                                   self._interest[time],</span>
+<span class="c1">#                                   self._endbal[time]))</span>
+<span class="c1">#</span>
+<span class="c1">#         return &#39;\n&#39;.join(txt)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Juan D. Velasquez &amp; Ibeth K. Vergara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>

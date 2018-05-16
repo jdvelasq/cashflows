@@ -1,0 +1,996 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>cashflows.loan &#8212; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cashflows.loan</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Loan analysis</span>
+<span class="sd">==============================================================================</span>
+
+<span class="sd">Computes the amorization schedule for the following types of loans:</span>
+
+<span class="sd">* ``fixed_rate_loan``: In this loan, the interest rate is fixed and the total</span>
+<span class="sd">  payments are equal during the life of the loan.</span>
+
+<span class="sd">* ``buydown_loan``: the interest rate changes during the life of the loan;</span>
+<span class="sd">  the value of the payments are calculated using the current value of the</span>
+<span class="sd">  interest rate. When the interest rate is constant during the life of the loan,</span>
+<span class="sd">  the results are equals to the function ``fixed_rate_loan``.</span>
+
+<span class="sd">* ``fixed_ppal_loan``: the payments to the principal are constant during the life</span>
+<span class="sd">  of loan.</span>
+
+<span class="sd">* ``bullet_loan``: the principal is payed at the end of the life of the loan.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># cashflows.</span>
+<span class="kn">from</span> <span class="nn">cashflows.analysis</span> <span class="k">import</span> <span class="n">timevalue</span><span class="p">,</span> <span class="n">irr</span>
+<span class="kn">from</span> <span class="nn">cashflows.tvmm</span> <span class="k">import</span> <span class="n">pvpmt</span>
+<span class="kn">from</span> <span class="nn">cashflows.timeseries</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">cashflows.common</span> <span class="k">import</span> <span class="n">getpyr</span>
+
+<span class="c1">##</span>
+<span class="c1">## base class for computations</span>
+<span class="c1">##</span>
+<div class="viewcode-block" id="Loan"><a class="viewcode-back" href="../../loan.html#cashflows.loan.Loan">[docs]</a><span class="k">class</span> <span class="nc">Loan</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">life</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">grace</span><span class="p">,</span> <span class="n">nrate</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">life</span> <span class="o">=</span> <span class="n">life</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grace</span> <span class="o">=</span> <span class="n">grace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nrate</span> <span class="o">=</span> <span class="n">nrate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dispoints</span> <span class="o">=</span> <span class="n">dispoints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orgpoints</span> <span class="o">=</span> <span class="n">orgpoints</span>
+
+<div class="viewcode-block" id="Loan.tocashflow"><a class="viewcode-back" href="../../loan.html#cashflows.loan.Loan.tocashflow">[docs]</a>    <span class="k">def</span> <span class="nf">tocashflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tax_rate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">cflo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">cflo</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">tax_rate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tax_rate</span> <span class="o">=</span> <span class="n">cflo</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">tax_rate</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1">#</span>
+        <span class="c1"># descuenta todos los pagos adicionales</span>
+        <span class="c1">#</span>
+        <span class="n">cflo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span>
+        <span class="n">cflo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">orgpoints</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">cflo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispoints</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">cflo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispoints</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">tax_rate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">cflo</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ppal_Payment</span>
+        <span class="n">cflo</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Int_Payment</span>
+        <span class="n">cflo</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Int_Payment</span> <span class="o">*</span> <span class="n">tax_rate</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="k">return</span> <span class="n">cflo</span></div>
+
+<div class="viewcode-block" id="Loan.true_rate"><a class="viewcode-back" href="../../loan.html#cashflows.loan.Loan.true_rate">[docs]</a>    <span class="k">def</span> <span class="nf">true_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tax_rate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">cflo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tocashflow</span><span class="p">(</span><span class="n">tax_rate</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">irr</span><span class="p">(</span><span class="n">cflo</span><span class="p">)</span> <span class="o">*</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">cflo</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="nb">str</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Amount:             </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span><span class="p">))</span>
+        <span class="nb">str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Total interest:     </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Int_Payment</span><span class="p">)))</span>
+        <span class="nb">str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Total payment:      </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Tot_Payment</span><span class="p">)))</span>
+        <span class="nb">str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Discount points:    </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dispoints</span><span class="p">))</span>
+        <span class="nb">str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Origination points: </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orgpoints</span><span class="p">))</span>
+        <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+        <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">+</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="fixed_ppal_loan"><a class="viewcode-back" href="../../loan.html#cashflows.loan.fixed_ppal_loan">[docs]</a><span class="k">def</span> <span class="nf">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+               <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Loan with fixed principal payment.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        amount (float): Loan amount.</span>
+<span class="sd">        nrate (float, TimeSeries): nominal interest rate per year.</span>
+<span class="sd">        grace (int): number of grace periiods without paying principal.</span>
+<span class="sd">        dispoints (float): Discount points of the loan.</span>
+<span class="sd">        orgpoints (float): Origination points of the loan.</span>
+<span class="sd">        prepmt (TimeSeries): generic cashflow representing prepayments.</span>
+<span class="sd">        balloonpmt (TimeSeries): generic cashflow representing balloon payments.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">       A object of the class ``Loan``.</span>
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=[10]*11, start=&#39;2018Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; tax_rate = interest_rate(const_value=[35]*11, start=&#39;2018Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; fixed_ppal_loan(amount=1000, nrate=nrate, grace=0, dispoints=0, orgpoints=0,</span>
+<span class="sd">    ...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     137.50</span>
+<span class="sd">    Total payment:      1137.50</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2018Q1              0.0      10.0          0.0          0.0           0.0</span>
+<span class="sd">    2018Q2           1000.0      10.0        125.0         25.0         100.0</span>
+<span class="sd">    2018Q3            900.0      10.0        122.5         22.5         100.0</span>
+<span class="sd">    2018Q4            800.0      10.0        120.0         20.0         100.0</span>
+<span class="sd">    2019Q1            700.0      10.0        117.5         17.5         100.0</span>
+<span class="sd">    2019Q2            600.0      10.0        115.0         15.0         100.0</span>
+<span class="sd">    2019Q3            500.0      10.0        112.5         12.5         100.0</span>
+<span class="sd">    2019Q4            400.0      10.0        110.0         10.0         100.0</span>
+<span class="sd">    2020Q1            300.0      10.0        107.5          7.5         100.0</span>
+<span class="sd">    2020Q2            200.0      10.0        105.0          5.0         100.0</span>
+<span class="sd">    2020Q3            100.0      10.0        102.5          2.5         100.0</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2018Q1           1000.0</span>
+<span class="sd">    2018Q2            900.0</span>
+<span class="sd">    2018Q3            800.0</span>
+<span class="sd">    2018Q4            700.0</span>
+<span class="sd">    2019Q1            600.0</span>
+<span class="sd">    2019Q2            500.0</span>
+<span class="sd">    2019Q3            400.0</span>
+<span class="sd">    2019Q4            300.0</span>
+<span class="sd">    2020Q1            200.0</span>
+<span class="sd">    2020Q2            100.0</span>
+<span class="sd">    2020Q3              0.0</span>
+
+<span class="sd">    &gt;&gt;&gt; fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,</span>
+<span class="sd">    ...                prepmt=None, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     162.50</span>
+<span class="sd">    Total payment:      1162.50</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2018Q1              0.0      10.0        0.000        0.000           0.0</span>
+<span class="sd">    2018Q2           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="sd">    2018Q3           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="sd">    2018Q4           1000.0      10.0      150.000       25.000         125.0</span>
+<span class="sd">    2019Q1            875.0      10.0      146.875       21.875         125.0</span>
+<span class="sd">    2019Q2            750.0      10.0      143.750       18.750         125.0</span>
+<span class="sd">    2019Q3            625.0      10.0      140.625       15.625         125.0</span>
+<span class="sd">    2019Q4            500.0      10.0      137.500       12.500         125.0</span>
+<span class="sd">    2020Q1            375.0      10.0      134.375        9.375         125.0</span>
+<span class="sd">    2020Q2            250.0      10.0      131.250        6.250         125.0</span>
+<span class="sd">    2020Q3            125.0      10.0      128.125        3.125         125.0</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2018Q1           1000.0</span>
+<span class="sd">    2018Q2           1000.0</span>
+<span class="sd">    2018Q3           1000.0</span>
+<span class="sd">    2018Q4            875.0</span>
+<span class="sd">    2019Q1            750.0</span>
+<span class="sd">    2019Q2            625.0</span>
+<span class="sd">    2019Q3            500.0</span>
+<span class="sd">    2019Q4            375.0</span>
+<span class="sd">    2020Q1            250.0</span>
+<span class="sd">    2020Q2            125.0</span>
+<span class="sd">    2020Q3              0.0</span>
+
+<span class="sd">    &gt;&gt;&gt; pmt = cashflow(const_value=[0]*11, start=&#39;2018Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; pmt[&#39;2019Q4&#39;] = 200</span>
+<span class="sd">    &gt;&gt;&gt; fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,</span>
+<span class="sd">    ...                prepmt=pmt, balloonpmt=None)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     149.38</span>
+<span class="sd">    Total payment:      1149.38</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2018Q1              0.0      10.0        0.000        0.000           0.0</span>
+<span class="sd">    2018Q2           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="sd">    2018Q3           1000.0      10.0       25.000       25.000           0.0</span>
+<span class="sd">    2018Q4           1000.0      10.0      150.000       25.000         125.0</span>
+<span class="sd">    2019Q1            875.0      10.0      146.875       21.875         125.0</span>
+<span class="sd">    2019Q2            750.0      10.0      143.750       18.750         125.0</span>
+<span class="sd">    2019Q3            625.0      10.0      140.625       15.625         125.0</span>
+<span class="sd">    2019Q4            500.0      10.0      337.500       12.500         325.0</span>
+<span class="sd">    2020Q1            175.0      10.0      129.375        4.375         125.0</span>
+<span class="sd">    2020Q2             50.0      10.0       51.250        1.250          50.0</span>
+<span class="sd">    2020Q3              0.0      10.0        0.000        0.000           0.0</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2018Q1           1000.0</span>
+<span class="sd">    2018Q2           1000.0</span>
+<span class="sd">    2018Q3           1000.0</span>
+<span class="sd">    2018Q4            875.0</span>
+<span class="sd">    2019Q1            750.0</span>
+<span class="sd">    2019Q2            625.0</span>
+<span class="sd">    2019Q3            500.0</span>
+<span class="sd">    2019Q4            175.0</span>
+<span class="sd">    2020Q1             50.0</span>
+<span class="sd">    2020Q2              0.0</span>
+<span class="sd">    2020Q3              0.0</span>
+
+<span class="sd">    &gt;&gt;&gt; fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,</span>
+<span class="sd">    ...                prepmt=None, balloonpmt=pmt)  # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     165.00</span>
+<span class="sd">    Total payment:      1165.00</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2018Q1              0.0      10.0          0.0          0.0           0.0</span>
+<span class="sd">    2018Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2018Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2018Q4           1000.0      10.0        125.0         25.0         100.0</span>
+<span class="sd">    2019Q1            900.0      10.0        122.5         22.5         100.0</span>
+<span class="sd">    2019Q2            800.0      10.0        120.0         20.0         100.0</span>
+<span class="sd">    2019Q3            700.0      10.0        117.5         17.5         100.0</span>
+<span class="sd">    2019Q4            600.0      10.0        315.0         15.0         300.0</span>
+<span class="sd">    2020Q1            300.0      10.0        107.5          7.5         100.0</span>
+<span class="sd">    2020Q2            200.0      10.0        105.0          5.0         100.0</span>
+<span class="sd">    2020Q3            100.0      10.0        102.5          2.5         100.0</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2018Q1           1000.0</span>
+<span class="sd">    2018Q2           1000.0</span>
+<span class="sd">    2018Q3           1000.0</span>
+<span class="sd">    2018Q4            900.0</span>
+<span class="sd">    2019Q1            800.0</span>
+<span class="sd">    2019Q2            700.0</span>
+<span class="sd">    2019Q3            600.0</span>
+<span class="sd">    2019Q4            300.0</span>
+<span class="sd">    2020Q1            200.0</span>
+<span class="sd">    2020Q2            100.0</span>
+<span class="sd">    2020Q3              0.0</span>
+
+
+<span class="sd">    &gt;&gt;&gt; x = fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=0,</span>
+<span class="sd">    ...                     prepmt=None, balloonpmt=pmt)</span>
+<span class="sd">    &gt;&gt;&gt; x.true_rate() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    10.00...</span>
+
+<span class="sd">    &gt;&gt;&gt; x.true_rate(tax_rate) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    6.50...</span>
+
+<span class="sd">    &gt;&gt;&gt; x.tocashflow()</span>
+<span class="sd">    2018Q1    1000.0</span>
+<span class="sd">    2018Q2     -25.0</span>
+<span class="sd">    2018Q3     -25.0</span>
+<span class="sd">    2018Q4    -125.0</span>
+<span class="sd">    2019Q1    -122.5</span>
+<span class="sd">    2019Q2    -120.0</span>
+<span class="sd">    2019Q3    -117.5</span>
+<span class="sd">    2019Q4    -315.0</span>
+<span class="sd">    2020Q1    -107.5</span>
+<span class="sd">    2020Q2    -105.0</span>
+<span class="sd">    2020Q3    -102.5</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; x.tocashflow(tax_rate)</span>
+<span class="sd">    2018Q1    1000.000</span>
+<span class="sd">    2018Q2     -16.250</span>
+<span class="sd">    2018Q3     -16.250</span>
+<span class="sd">    2018Q4    -116.250</span>
+<span class="sd">    2019Q1    -114.625</span>
+<span class="sd">    2019Q2    -113.000</span>
+<span class="sd">    2019Q3    -111.375</span>
+<span class="sd">    2019Q4    -309.750</span>
+<span class="sd">    2020Q1    -104.875</span>
+<span class="sd">    2020Q2    -103.250</span>
+<span class="sd">    2020Q3    -101.625</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+
+<span class="sd">    &gt;&gt;&gt; x = fixed_ppal_loan(amount=1000, nrate=nrate, grace=2, dispoints=0, orgpoints=10,</span>
+<span class="sd">    ...                     prepmt=None, balloonpmt=pmt)</span>
+<span class="sd">    &gt;&gt;&gt; x # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     165.00</span>
+<span class="sd">    Total payment:      1265.00</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 10.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2018Q1              0.0      10.0        100.0          0.0           0.0</span>
+<span class="sd">    2018Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2018Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2018Q4           1000.0      10.0        125.0         25.0         100.0</span>
+<span class="sd">    2019Q1            900.0      10.0        122.5         22.5         100.0</span>
+<span class="sd">    2019Q2            800.0      10.0        120.0         20.0         100.0</span>
+<span class="sd">    2019Q3            700.0      10.0        117.5         17.5         100.0</span>
+<span class="sd">    2019Q4            600.0      10.0        315.0         15.0         300.0</span>
+<span class="sd">    2020Q1            300.0      10.0        107.5          7.5         100.0</span>
+<span class="sd">    2020Q2            200.0      10.0        105.0          5.0         100.0</span>
+<span class="sd">    2020Q3            100.0      10.0        102.5          2.5         100.0</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2018Q1           1000.0</span>
+<span class="sd">    2018Q2           1000.0</span>
+<span class="sd">    2018Q3           1000.0</span>
+<span class="sd">    2018Q4            900.0</span>
+<span class="sd">    2019Q1            800.0</span>
+<span class="sd">    2019Q2            700.0</span>
+<span class="sd">    2019Q3            600.0</span>
+<span class="sd">    2019Q4            300.0</span>
+<span class="sd">    2020Q1            200.0</span>
+<span class="sd">    2020Q2            100.0</span>
+<span class="sd">    2020Q3              0.0</span>
+
+<span class="sd">    &gt;&gt;&gt; x.true_rate() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    17.1725...</span>
+
+<span class="sd">    &gt;&gt;&gt; x.tocashflow() # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    2018Q1    900.0</span>
+<span class="sd">    2018Q2    -25.0</span>
+<span class="sd">    2018Q3    -25.0</span>
+<span class="sd">    2018Q4   -125.0</span>
+<span class="sd">    2019Q1   -122.5</span>
+<span class="sd">    2019Q2   -120.0</span>
+<span class="sd">    2019Q3   -117.5</span>
+<span class="sd">    2019Q4   -315.0</span>
+<span class="sd">    2020Q1   -107.5</span>
+<span class="sd">    2020Q2   -105.0</span>
+<span class="sd">    2020Q3   -102.5</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; x.true_rate(tax_rate) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    13.4232...</span>
+
+<span class="sd">    &gt;&gt;&gt; x.tocashflow(tax_rate) # doctest: +NORMALIZE_WHITESPACE +ELLIPSIS</span>
+<span class="sd">    2018Q1    900.000</span>
+<span class="sd">    2018Q2    -16.250</span>
+<span class="sd">    2018Q3    -16.250</span>
+<span class="sd">    2018Q4   -116.250</span>
+<span class="sd">    2019Q1   -114.625</span>
+<span class="sd">    2019Q2   -113.000</span>
+<span class="sd">    2019Q3   -111.375</span>
+<span class="sd">    2019Q4   -309.750</span>
+<span class="sd">    2020Q1   -104.875</span>
+<span class="sd">    2020Q2   -103.250</span>
+<span class="sd">    2020Q3   -101.625</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#pylint: disable-msg=too-many-arguments</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;nrate must be a pandas.Series object.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prepmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prepmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">prepmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">nrate</span><span class="p">,</span> <span class="n">prepmt</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">balloonpmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">balloonpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">balloonpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">nrate</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="p">])</span>
+
+    <span class="c1"># present value of the balloon payments</span>
+    <span class="n">balloonpv</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">balloonpmt</span><span class="p">)</span>
+
+    <span class="n">life</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span> <span class="o">-</span> <span class="n">grace</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">begppalbal</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">intpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">ppalpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">totpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endppalbal</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">begppalbal</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">intpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ppalpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">totpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">endppalbal</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">pmt</span> <span class="o">=</span> <span class="p">(</span><span class="n">amount</span> <span class="o">-</span> <span class="n">balloonpv</span><span class="p">)</span> <span class="o">/</span> <span class="n">life</span> <span class="c1"># periodic ppal payment</span>
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+
+    <span class="c1"># balance calculation</span>
+    <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grace</span> <span class="o">+</span> <span class="n">life</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span> <span class="o">-</span> <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span> <span class="o">*</span> <span class="p">(</span><span class="n">dispoints</span> <span class="o">+</span> <span class="n">orgpoints</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="c1">### intpmt[time] = amount * dispoints / 100</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">grace</span><span class="p">:</span>
+                <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">balloonpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">pmt</span> <span class="o">+</span> <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">balloonpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">pmt</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Beg_Ppal_Amount&#39;</span><span class="p">:</span><span class="n">begppalbal</span><span class="p">}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Loan</span><span class="p">(</span><span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span>
+                  <span class="n">dispoints</span><span class="o">=</span><span class="n">dispoints</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="n">orgpoints</span><span class="p">,</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Nom_Rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nrate</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Tot_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Int_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Ppal_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ppalpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;End_Ppal_Amount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="bullet_loan"><a class="viewcode-back" href="../../loan.html#cashflows.loan.bullet_loan">[docs]</a><span class="k">def</span> <span class="nf">bullet_loan</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">nrate</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    In this type of loan, the principal is payed at the end for the life of the</span>
+<span class="sd">    loan. Periodic payments correspond only to interests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        amount (float): Loan amount.</span>
+<span class="sd">        nrate (float, TimeSeries): nominal interest rate per year.</span>
+<span class="sd">        dispoints (float): Discount points of the loan.</span>
+<span class="sd">        orgpoints (float): Origination points of the loan.</span>
+<span class="sd">        prepmt (TimeSeries): generic cashflow representing prepayments.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">       A object of the class ``Loan``.</span>
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=[10]*11, start=&#39;2018Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; bullet_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     250.00</span>
+<span class="sd">    Total payment:      1250.00</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2018Q1              0.0      10.0          0.0          0.0           0.0</span>
+<span class="sd">    2018Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2018Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2018Q4           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2019Q1           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2019Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2019Q3           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2019Q4           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2020Q1           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2020Q2           1000.0      10.0         25.0         25.0           0.0</span>
+<span class="sd">    2020Q3           1000.0      10.0       1025.0         25.0        1000.0</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2018Q1           1000.0</span>
+<span class="sd">    2018Q2           1000.0</span>
+<span class="sd">    2018Q3           1000.0</span>
+<span class="sd">    2018Q4           1000.0</span>
+<span class="sd">    2019Q1           1000.0</span>
+<span class="sd">    2019Q2           1000.0</span>
+<span class="sd">    2019Q3           1000.0</span>
+<span class="sd">    2019Q4           1000.0</span>
+<span class="sd">    2020Q1           1000.0</span>
+<span class="sd">    2020Q2           1000.0</span>
+<span class="sd">    2020Q3              0.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;nrate must be a pandas.Series object&quot;</span><span class="p">)</span>
+
+    <span class="n">balloonpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">balloonpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">balloonpmt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span>
+    <span class="k">return</span> <span class="n">fixed_ppal_loan</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="n">dispoints</span><span class="p">,</span>
+                           <span class="n">orgpoints</span><span class="o">=</span><span class="n">orgpoints</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="n">prepmt</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="n">balloonpmt</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="fixed_rate_loan"><a class="viewcode-back" href="../../loan.html#cashflows.loan.fixed_rate_loan">[docs]</a><span class="k">def</span> <span class="nf">fixed_rate_loan</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">nrate</span><span class="p">,</span> <span class="n">life</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fixed rate loan.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        amount (float): Loan amount.</span>
+<span class="sd">        nrate (float): nominal interest rate per year.</span>
+<span class="sd">        life (float): life of the loan.</span>
+<span class="sd">        start (int, tuple): init period for the loan.</span>
+<span class="sd">        pyr (int): number of compounding periods per year.</span>
+<span class="sd">        grace (int): number of periods of grace (without payment of the principal)</span>
+<span class="sd">        dispoints (float): Discount points of the loan.</span>
+<span class="sd">        orgpoints (float): Origination points of the loan.</span>
+<span class="sd">        prepmt (TimeSeries): generic cashflow representing prepayments.</span>
+<span class="sd">        balloonpmt (TimeSeries): generic cashflow representing balloon payments.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">       A object of the class ``Loan``.</span>
+
+<span class="sd">    &gt;&gt;&gt; pmt = cashflow(const_value=0, start=&#39;2016Q1&#39;, periods=11, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; pmt[&#39;2017Q4&#39;] = 200</span>
+<span class="sd">    &gt;&gt;&gt; fixed_rate_loan(amount=1000, nrate=10, life=10, start=&#39;2016Q1&#39;, freq=&#39;Q&#39;,</span>
+<span class="sd">    ...                 grace=0, dispoints=0,</span>
+<span class="sd">    ...                 orgpoints=0, prepmt=pmt, balloonpmt=None) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     129.68</span>
+<span class="sd">    Total payment:      1129.68</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="sd">    2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763</span>
+<span class="sd">    2016Q3       910.741237      10.0   114.258763    22.768531     91.490232</span>
+<span class="sd">    2016Q4       819.251005      10.0   114.258763    20.481275     93.777488</span>
+<span class="sd">    2017Q1       725.473517      10.0   114.258763    18.136838     96.121925</span>
+<span class="sd">    2017Q2       629.351591      10.0   114.258763    15.733790     98.524973</span>
+<span class="sd">    2017Q3       530.826618      10.0   114.258763    13.270665    100.988098</span>
+<span class="sd">    2017Q4       429.838520      10.0   314.258763    10.745963    303.512800</span>
+<span class="sd">    2018Q1       126.325720      10.0   114.258763     3.158143    111.100620</span>
+<span class="sd">    2018Q2        15.225100      10.0    15.605727     0.380627     15.225100</span>
+<span class="sd">    2018Q3         0.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2016Q1      1000.000000</span>
+<span class="sd">    2016Q2       910.741237</span>
+<span class="sd">    2016Q3       819.251005</span>
+<span class="sd">    2016Q4       725.473517</span>
+<span class="sd">    2017Q1       629.351591</span>
+<span class="sd">    2017Q2       530.826618</span>
+<span class="sd">    2017Q3       429.838520</span>
+<span class="sd">    2017Q4       126.325720</span>
+<span class="sd">    2018Q1        15.225100</span>
+<span class="sd">    2018Q2         0.000000</span>
+<span class="sd">    2018Q3         0.000000</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">nrate</span><span class="p">),</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;nrate must be a float.&#39;</span><span class="p">)</span>
+
+    <span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">life</span><span class="o">+</span><span class="n">grace</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prepmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prepmt</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">),</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">nrate</span><span class="p">,</span> <span class="n">prepmt</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">balloonpmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">balloonpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">balloonpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">nrate</span><span class="p">,</span> <span class="n">balloonpmt</span><span class="p">])</span>
+
+    <span class="c1"># present value of the balloon payments</span>
+    <span class="k">if</span> <span class="n">balloonpmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">balloonpv</span> <span class="o">=</span> <span class="n">timevalue</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">balloonpmt</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="n">grace</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">balloonpv</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+    <span class="n">pmt</span> <span class="o">=</span> <span class="n">pvpmt</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pval</span><span class="o">=-</span><span class="n">amount</span><span class="o">+</span><span class="n">balloonpv</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nper</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="n">pyr</span><span class="p">)</span>
+    <span class="n">pmts</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">pmts</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">life</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">pmts</span><span class="p">[</span><span class="n">grace</span> <span class="o">+</span> <span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">pmt</span>
+
+    <span class="c1"># balance</span>
+    <span class="n">begppalbal</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">intpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">ppalpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">totpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endppalbal</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">begppalbal</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">intpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ppalpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">totpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">endppalbal</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># payments per period</span>
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">totpmt</span><span class="p">):</span>
+        <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">pmts</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">balloonpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="c1"># balance calculation</span>
+    <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grace</span> <span class="o">+</span> <span class="n">life</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">begppalbal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span>
+            <span class="n">endppalbal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span>
+            <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span> <span class="o">*</span> <span class="p">(</span><span class="n">dispoints</span> <span class="o">+</span> <span class="n">orgpoints</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="c1">### intpmt[time] = amount * dispoints / 100</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">grace</span><span class="p">:</span>
+                <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span> <span class="o">/</span> <span class="mi">100</span>
+                <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span> <span class="o">/</span> <span class="mi">100</span>
+                <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">capint</span> <span class="o">=</span> <span class="o">-</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                    <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">capint</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">capint</span>
+                <span class="k">if</span> <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                    <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                    <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                    <span class="n">pmts</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Beg_Ppal_Amount&#39;</span><span class="p">:</span><span class="n">begppalbal</span><span class="p">}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Loan</span><span class="p">(</span><span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span>
+                  <span class="n">dispoints</span><span class="o">=</span><span class="n">dispoints</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="n">orgpoints</span><span class="p">,</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Nom_Rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nrate</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Tot_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Int_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Ppal_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ppalpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;End_Ppal_Amount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="buydown_loan"><a class="viewcode-back" href="../../loan.html#cashflows.loan.buydown_loan">[docs]</a><span class="k">def</span> <span class="nf">buydown_loan</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">nrate</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dispoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prepmt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    In this loan, the periodic payments are recalculated when there are changes</span>
+<span class="sd">    in the value of the interest rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        amount (float): Loan amount.</span>
+<span class="sd">        nrate (float, TimeSeries): nominal interest rate per year.</span>
+<span class="sd">        grace (int): numner of grace periods without paying the principal.</span>
+<span class="sd">        dispoints (float): Discount points of the loan.</span>
+<span class="sd">        orgpoints (float): Origination points of the loan.</span>
+<span class="sd">        prepmt (TimeSeries): generic cashflow representing prepayments.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">       A object of the class ``Loan``.</span>
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=10, start=&#39;2016Q1&#39;, periods=11, freq=&#39;Q&#39;, chgpts={&#39;2017Q2&#39;:20})</span>
+<span class="sd">    &gt;&gt;&gt; buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=None)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     200.99</span>
+<span class="sd">    Total payment:      1200.99</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="sd">    2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763</span>
+<span class="sd">    2016Q3       910.741237      10.0   114.258763    22.768531     91.490232</span>
+<span class="sd">    2016Q4       819.251005      10.0   114.258763    20.481275     93.777488</span>
+<span class="sd">    2017Q1       725.473517      10.0   114.258763    18.136838     96.121925</span>
+<span class="sd">    2017Q2       629.351591      20.0   123.993257    31.467580     92.525677</span>
+<span class="sd">    2017Q3       536.825914      20.0   123.993257    26.841296     97.151961</span>
+<span class="sd">    2017Q4       439.673952      20.0   123.993257    21.983698    102.009559</span>
+<span class="sd">    2018Q1       337.664393      20.0   123.993257    16.883220    107.110037</span>
+<span class="sd">    2018Q2       230.554356      20.0   123.993257    11.527718    112.465539</span>
+<span class="sd">    2018Q3       118.088816      20.0   123.993257     5.904441    118.088816</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2016Q1     1.000000e+03</span>
+<span class="sd">    2016Q2     9.107412e+02</span>
+<span class="sd">    2016Q3     8.192510e+02</span>
+<span class="sd">    2016Q4     7.254735e+02</span>
+<span class="sd">    2017Q1     6.293516e+02</span>
+<span class="sd">    2017Q2     5.368259e+02</span>
+<span class="sd">    2017Q3     4.396740e+02</span>
+<span class="sd">    2017Q4     3.376644e+02</span>
+<span class="sd">    2018Q1     2.305544e+02</span>
+<span class="sd">    2018Q2     1.180888e+02</span>
+<span class="sd">    2018Q3     1.136868e-13</span>
+
+<span class="sd">    &gt;&gt;&gt; pmt = cashflow(const_value=0, start=&#39;2016Q1&#39;, periods=11, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; pmt[&#39;2017Q4&#39;] = 200</span>
+<span class="sd">    &gt;&gt;&gt; buydown_loan(amount=1000, nrate=nrate, dispoints=0, orgpoints=0, prepmt=pmt)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    Amount:             1000.00</span>
+<span class="sd">    Total interest:     180.67</span>
+<span class="sd">    Total payment:      1180.67</span>
+<span class="sd">    Discount points:    0.00</span>
+<span class="sd">    Origination points: 0.00</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Beg_Ppal_Amount  Nom_Rate  Tot_Payment  Int_Payment  Ppal_Payment  \\</span>
+<span class="sd">    2016Q1      1000.000000      10.0     0.000000     0.000000      0.000000</span>
+<span class="sd">    2016Q2      1000.000000      10.0   114.258763    25.000000     89.258763</span>
+<span class="sd">    2016Q3       910.741237      10.0   114.258763    22.768531     91.490232</span>
+<span class="sd">    2016Q4       819.251005      10.0   114.258763    20.481275     93.777488</span>
+<span class="sd">    2017Q1       725.473517      10.0   114.258763    18.136838     96.121925</span>
+<span class="sd">    2017Q2       629.351591      20.0   123.993257    31.467580     92.525677</span>
+<span class="sd">    2017Q3       536.825914      20.0   123.993257    26.841296     97.151961</span>
+<span class="sd">    2017Q4       439.673952      20.0   323.993257    21.983698    302.009559</span>
+<span class="sd">    2018Q1       137.664393      20.0    50.551544     6.883220     43.668324</span>
+<span class="sd">    2018Q2        93.996068      20.0    50.551544     4.699803     45.851741</span>
+<span class="sd">    2018Q3        48.144328      20.0    50.551544     2.407216     48.144328</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            End_Ppal_Amount</span>
+<span class="sd">    2016Q1     1.000000e+03</span>
+<span class="sd">    2016Q2     9.107412e+02</span>
+<span class="sd">    2016Q3     8.192510e+02</span>
+<span class="sd">    2016Q4     7.254735e+02</span>
+<span class="sd">    2017Q1     6.293516e+02</span>
+<span class="sd">    2017Q2     5.368259e+02</span>
+<span class="sd">    2017Q3     4.396740e+02</span>
+<span class="sd">    2017Q4     1.376644e+02</span>
+<span class="sd">    2018Q1     9.399607e+01</span>
+<span class="sd">    2018Q2     4.814433e+01</span>
+<span class="sd">    2018Q3     4.263256e-14</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;nrate must be a pandas.Series object.&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prepmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prepmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">prepmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">nrate</span><span class="p">,</span> <span class="n">prepmt</span><span class="p">])</span>
+
+    <span class="n">life</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span> <span class="o">-</span> <span class="n">grace</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">begppalbal</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">intpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">ppalpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">totpmt</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endppalbal</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">begppalbal</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">intpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ppalpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">totpmt</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">endppalbal</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+    <span class="c1">##</span>
+    <span class="c1">## balance calculation</span>
+    <span class="c1">##</span>
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">grace</span> <span class="o">+</span> <span class="n">life</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span>
+            <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span>
+            <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span> <span class="o">*</span> <span class="p">(</span><span class="n">dispoints</span> <span class="o">+</span> <span class="n">orgpoints</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+            <span class="c1">### intpmt[time] = amount * dispoints / 100</span>
+            <span class="c1">#</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="c1"># periodic payment per period</span>
+            <span class="c1">#</span>
+            <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">grace</span><span class="p">:</span>
+
+                <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span> <span class="o">/</span> <span class="mi">100</span>
+                <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">pmt</span> <span class="o">=</span> <span class="o">-</span><span class="n">pvpmt</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">],</span> <span class="n">nper</span><span class="o">=</span><span class="n">grace</span><span class="o">+</span><span class="n">life</span><span class="o">-</span><span class="n">time</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">pval</span><span class="o">=</span><span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">pmt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="n">pyr</span><span class="p">)</span>
+
+                <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">pmt</span> <span class="o">+</span> <span class="n">prepmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+                <span class="c1"># balance</span>
+                <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span> <span class="o">/</span> <span class="mi">100</span>
+                <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">totpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">intpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">endppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begppalbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">ppalpmt</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Beg_Ppal_Amount&#39;</span><span class="p">:</span><span class="n">begppalbal</span><span class="p">}</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Loan</span><span class="p">(</span><span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">grace</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span>
+                  <span class="n">dispoints</span><span class="o">=</span><span class="n">dispoints</span><span class="p">,</span> <span class="n">orgpoints</span><span class="o">=</span><span class="n">orgpoints</span><span class="p">,</span>
+                  <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Nom_Rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nrate</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Tot_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Int_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Ppal_Payment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ppalpmt</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;End_Ppal_Amount&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">endppalbal</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1"># class xLoan():</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Class for representing loans</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#     # pylint: disable=too-many-instance-attributes</span>
+<span class="c1">#</span>
+<span class="c1">#     def __init__(self):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         self.life = self.amount = self.grace = self.df = None</span>
+<span class="c1">#         # self.intpmt = self.endppalbal = self.begppalbal = None</span>
+<span class="c1">#         # self.totpmt = None</span>
+<span class="c1">#</span>
+<span class="c1">#     def to_cashflow(self, tax_rate=0):</span>
+<span class="c1">#         &quot;&quot;&quot;Converts the loan to the equivalent cashflow.</span>
+<span class="c1">#</span>
+<span class="c1">#         For the conversion, origination points are considered as exogenous costs</span>
+<span class="c1">#         and they are not taking in to account in the computation. In oposition,</span>
+<span class="c1">#         discount points are considered as prepaid interest and included in the</span>
+<span class="c1">#         cashflow.</span>
+<span class="c1">#</span>
+<span class="c1">#         When tax_rate is different from zero, tax benefits are considered.&quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         if isinstance(tax_rate, (int, float)):</span>
+<span class="c1">#             tax_rate = interest_rate(const_value = [tax_rate] * (self.life + self.grace + 1))</span>
+<span class="c1">#</span>
+<span class="c1">#         cflo = cashflow(const_value= [0] * (self.grace + self.life + 1))</span>
+<span class="c1">#</span>
+<span class="c1">#         ##</span>
+<span class="c1">#         ## payments per period</span>
+<span class="c1">#         ##</span>
+<span class="c1">#         for time in range(self.grace + self.life + 1):</span>
+<span class="c1">#             if time == 0:</span>
+<span class="c1">#                 cflo[0] = self.amount</span>
+<span class="c1">#             cflo[time] += -self.totpmt[time] + self.intpmt[time] * tax_rate[time] / 100</span>
+<span class="c1">#</span>
+<span class="c1">#         return cflo</span>
+<span class="c1">#</span>
+<span class="c1">#     def true_rate(self, tax_rate=0):</span>
+<span class="c1">#         &quot;&quot;&quot;Computes the true interest rate for the loan.</span>
+<span class="c1">#</span>
+<span class="c1">#         For the computation, the loan is converted to the equivalent cashflow,</span>
+<span class="c1">#         taking in to account the following aspects:</span>
+<span class="c1">#</span>
+<span class="c1">#         * Origination points are considered as non deducible costs and they \</span>
+<span class="c1">#         are ignored in the computation.</span>
+<span class="c1">#</span>
+<span class="c1">#         * Discount points are prepaid interest and they are considered as \</span>
+<span class="c1">#         deducibles in the computation.</span>
+<span class="c1">#</span>
+<span class="c1">#         * When `tax_rate` is different from zero, the After-Tax true interest \</span>
+<span class="c1">#         rate is calculated. This is, only the (1 - `tax_rate`) of paid interests \</span>
+<span class="c1">#         (including discount points) are used in the computation.</span>
+<span class="c1">#</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         return irr(self.to_cashflow(tax_rate))</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     def __repr__(self):</span>
+<span class="c1">#</span>
+<span class="c1">#         return self.df.__repr__()</span>
+<span class="c1">#         # return repr_table(cols=[self.begppalbal,</span>
+<span class="c1">#         #                         self.nrate,</span>
+<span class="c1">#         #                         self.totpmt,</span>
+<span class="c1">#         #                         self.intpmt,</span>
+<span class="c1">#         #                         self.ppalpmt,</span>
+<span class="c1">#         #                         self.endppalbal],</span>
+<span class="c1">#         #                header=[[&#39;Beg.&#39;, &#39;Per.&#39;, &#39;Total&#39;, &#39;Int.&#39;, &#39;Ppal&#39;, &#39;Ending&#39;],</span>
+<span class="c1">#         #                        [&#39;Ppal&#39;, &#39;Rate&#39;, &#39;Pmt&#39;, &#39;Pmt&#39;, &#39;Pmt&#39;, &#39;Ppal&#39;]])</span>
+<span class="c1">#</span>
+<span class="c1"># #    def x__repr__(self):</span>
+<span class="c1"># #        txt = [&#39;&#39;]</span>
+<span class="c1"># #        txt.append(&#39;  t          Beginning  Periodic      Total     Interest    Principal       Ending&#39;)</span>
+<span class="c1"># #        txt.append(&#39;             Principal  Rate     Payment      Payment      Payment    Principal&#39;)</span>
+<span class="c1"># #        txt.append(&#39;--------------------------------------------------------------------------&#39;)</span>
+<span class="c1"># #</span>
+<span class="c1"># #        for time in range(self.grace + self.life + 1):</span>
+<span class="c1"># #            fmt = &#39; {:3d}       {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}&#39;</span>
+<span class="c1"># #            txt.append(fmt.format(time,</span>
+<span class="c1"># #                                  self.begppalbal[time],</span>
+<span class="c1"># #                                  self.totpmt[time],</span>
+<span class="c1"># #                                  self.intpmt[time],</span>
+<span class="c1"># #                                  self.ppalpmt[time],</span>
+<span class="c1"># #                                  self.endppalbal[time]))</span>
+<span class="c1"># #        return &#39;\n&#39;.join(txt)</span>
+<span class="c1">#</span>
+<span class="c1">#     def interest(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the interest paid as a Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return Cashflow(constValue=self.intpmt.tolist())</span>
+<span class="c1">#</span>
+<span class="c1">#     def begbal(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the balance at the begining of each period as</span>
+<span class="c1">#         a Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return Cashflow(constValue=self.begppalbal.tolist())</span>
+<span class="c1">#</span>
+<span class="c1">#     def endbal(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the balance at the ending of each period as</span>
+<span class="c1">#         a Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return Cashflow(constValue=self.endppalbal.tolist())</span>
+<span class="c1">#</span>
+<span class="c1">#     def ppalpmt(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Returns the principal payment for each period as</span>
+<span class="c1">#         a Cashflow object.&quot;&quot;&quot;</span>
+<span class="c1">#         return Cashflow(constValue=self.ppalpmt.tolist())</span>
+
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Juan D. Velasquez &amp; Ibeth K. Vergara.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

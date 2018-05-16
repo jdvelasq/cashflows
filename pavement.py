@@ -32,8 +32,8 @@ def local():
 @task
 def sphinx():
     """Document creation using Shinx"""
-    sh('cd docs; make html; cd ..')
-
+    sh('cd docs-source; make html; cp -R _build/html/*  ../docs/; cd ..')
+  
 @needs('nosetests', 'pylint', 'sphinx')
 @task
 def default():

@@ -17,6 +17,7 @@ from cashflows.tvmm import tvmm
 def bond(maturity_date=None, freq='A', face_value=None,
          coupon_rate=None, coupon_value=None, num_coupons=None, value=None, ytm=None):
     """
+    Evaluation of bond investments.
 
     Args:
         face_value (float, list): bond’s value at maturity.

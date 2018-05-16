@@ -12,16 +12,17 @@ Contents:
    :maxdepth: 4
 
    tvmm
-   rate
-   taxing
-   currency
-   inflation
-   analysis
-   bond
-   depreciation
-   loan
-   savings
-   utilityfun
+   
+rate
+taxing
+currency
+inflation
+analysis
+bond
+depreciation
+loan
+savings
+utilityfun
 
 
 Indices and tables

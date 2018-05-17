@@ -665,7 +665,7 @@ def equivalent_rate(nrate=None, erate=None, prate=None):
 
 #=====================================================================================
 
-def xiconv(nrate=None, erate=None, prate=None, pyr=1):
+def iconv(nrate=None, erate=None, prate=None, pyr=1):
     """The function `iconv` computes the conversion among periodic, nominal
     and effective interest rates. Only an interest rate (periodic, nominal or
     effective) must be specified and the other two are computed. The periodic

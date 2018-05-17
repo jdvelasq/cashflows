@@ -44,7 +44,6 @@ This module contains functions for computing the time value of the money.
 
 import numpy
 from cashflows.common import _vars2list
-from cashflows.rate import iconv
 
 
 def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):

@@ -8,9 +8,9 @@ Interest rate transformations
 import numpy as np
 import pandas as pd
 
-# cashflows.
+
 from cashflows.timeseries import *
-from cashflows.common import getpyr
+from cashflows.common import *
 
 def effrate(nrate=None, prate=None, pyr=1):
     """

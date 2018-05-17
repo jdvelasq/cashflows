@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='cashflows',
-      version='0.0.3',
+      version='0.0.4',
       description='Investment modeling and advanced engineering economics using Python',
       long_description='Investment modeling and advanced engineering economics using Python',
       classifiers=[

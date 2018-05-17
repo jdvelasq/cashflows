@@ -514,6 +514,73 @@ def perrate(nrate=None, erate=None, pyr=1):
             prate = prate[0]
         return prate
 
+def to_discount_factor(nrate=None, erate=None, prate=None, base_date=None):
+    """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
+
+    Args:
+        nrate (TimeSeries): Nominal interest rate per year.
+        nrate (TimeSeries): Effective interest rate per year.
+        prate (TimeSeries): Periodic interest rate.
+        base_date (string): basis time.
+
+    Returns:
+        TimeSeries of float values.
+
+    Only one of the interest rates must be supplied for the computation.
+
+    >>> nrate = interest_rate(const_value=4, periods=10, start='2016Q1', freq='Q')
+    >>> erate = effrate(nrate=nrate)
+    >>> prate = perrate(nrate=nrate)
+    >>> to_discount_factor(nrate=nrate, base_date='2016Q3') # doctest: +ELLIPSIS
+    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+
+    >>> to_discount_factor(erate=erate, base_date='2016Q3') # doctest: +ELLIPSIS
+    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+
+    >>> to_discount_factor(prate=prate, base_date='2016Q3') # doctest: +ELLIPSIS
+    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+    """
+    numnone = 0
+    if nrate is None:
+        numnone += 1
+    if erate is None:
+        numnone += 1
+    if prate is None:
+        numnone += 1
+    if numnone != 2:
+        raise ValueError('Two of the rates must be set to `None`')
+
+    if nrate is not None:
+        pyr = getpyr(nrate)
+        prate = nrate.copy()
+        for i,_ in enumerate(nrate):
+            prate[i] = nrate[i] / pyr  # periodic rate
+
+    if erate is not None:
+        pyr = getpyr(erate)
+        prate = erate.copy()
+        for i,_ in enumerate(erate):
+            prate[i] = 100 * (np.power(1 + erate[i]/100, 1. / pyr) - 1) # periodic rate
+
+    pyr = getpyr(prate)
+
+    factor = [x/100 for x in prate]
+
+    for index, _ in enumerate(factor):
+        if index == 0:
+            factor[0] = 1 / (1 + factor[0])
+        else:
+            factor[index] = factor[index-1] / (1 + factor[index])
+
+    if isinstance(base_date, str):
+        base_date = pd.Period(base_date, freq=prate.axes[0].freq)
+        base_date = period2pos(prate.axes[0], base_date)
+
+    div = factor[base_date]
+    for index, _ in enumerate(factor):
+        factor[index] = factor[index] / div
+    return factor
+
 
 #=====================================================================================
 
@@ -738,59 +805,59 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
             nrate = nrate[0]
         return (nrate, erate)
 
-def to_discount_factor(nrate=None, erate=None, prate=None, base_date=0):
-    """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
-
-    Args:
-        nrate (TimeSeries): Nominal interest rate per year.
-        nrate (TimeSeries): Effective interest rate per year.
-        prate (TimeSeries): Periodic interest rate.
-        base_date (int, tuple): basis time.
-
-    Returns:
-        List of float values
-
-    Only one of the interest rates must be supplied for the computation.
-
-    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
-    >>> erate, prate = iconv(nrate=nrate)
-    >>> to_discount_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
-    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
-
-    >>> to_discount_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
-    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
-
-    >>> to_discount_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
-    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
-    """
-    numnone = 0
-    if nrate is None:
-        numnone += 1
-    if erate is None:
-        numnone += 1
-    if prate is None:
-        numnone += 1
-    if numnone != 2:
-        raise ValueError('Two of the rates must be set to `None`')
-
-    if nrate is not None:
-        prate = nrate.copy()
-        prate.data = [x/nrate.pyr for x in nrate.data]  # periodic rate
-    if erate is not None:
-        prate = erate.copy()
-        prate.data = [100 * (numpy.power(1 + x/100, 1. / erate.pyr) - 1)  for x in erate.data] # periodic rate
-    factor = [x/100 for x in prate.data]
-    for index, _ in enumerate(factor):
-        if index == 0:
-            factor[0] = 1 / (1 + factor[0])
-        else:
-            factor[index] = factor[index-1] / (1 + factor[index])
-    if isinstance(base_date, tuple):
-        base_date = _timeid2index(base_date, basis=prate.start, pyr=prate.pyr)
-    div = factor[base_date]
-    for index, _ in enumerate(factor):
-        factor[index] = factor[index] / div
-    return factor
+#def to_discount_factor(nrate=None, erate=None, prate=None, base_date=0):
+#    """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
+#
+#    Args:
+#        nrate (TimeSeries): Nominal interest rate per year.
+#        nrate (TimeSeries): Effective interest rate per year.
+#        prate (TimeSeries): Periodic interest rate.
+#        base_date (int, tuple): basis time.
+#
+#    Returns:
+#        List of float values
+#
+#    Only one of the interest rates must be supplied for the computation.
+#
+#    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
+#    >>> erate, prate = iconv(nrate=nrate)
+#    >>> to_discount_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
+#    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+#
+#    >>> to_discount_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
+#    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+#
+#    >>> to_discount_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
+#    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]
+#    """
+#    numnone = 0
+#    if nrate is None:
+#        numnone += 1
+#    if erate is None:
+#        numnone += 1
+#    if prate is None:
+#        numnone += 1
+#    if numnone != 2:
+#        raise ValueError('Two of the rates must be set to `None`')
+#
+#    if nrate is not None:
+#        prate = nrate.copy()
+#        prate.data = [x/nrate.pyr for x in nrate.data]  # periodic rate
+#    if erate is not None:
+#        prate = erate.copy()
+#        prate.data = [100 * (numpy.power(1 + x/100, 1. / erate.pyr) - 1)  for x in erate.data] # periodic rate
+#    factor = [x/100 for x in prate.data]
+#    for index, _ in enumerate(factor):
+#        if index == 0:
+#            factor[0] = 1 / (1 + factor[0])
+#        else:
+#            factor[index] = factor[index-1] / (1 + factor[index])
+#    if isinstance(base_date, tuple):
+#        base_date = _timeid2index(base_date, basis=prate.start, pyr=prate.pyr)
+#    div = factor[base_date]
+#    for index, _ in enumerate(factor):
+#        factor[index] = factor[index] / div
+#    return factor
 
 
 def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):

@@ -6,11 +6,11 @@ Interest rate transformations
 """
 
 
-import numpy
-from cashflows.gtimeseries import _timeid2index
-from cashflows.gtimeseries import *
+import numpy as np
+import pandas as pd
 
-
+from cashflows.timeseries import *
+from cashflows.common import *
 
 
 def iconv(nrate=None, erate=None, prate=None, pyr=1):

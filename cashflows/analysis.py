@@ -24,13 +24,15 @@ cashflows:
 
 """
 
-import numpy as np
+mport numpy as np
+import pandas as pd
 
-from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
-from cashflows.rate import to_discount_factor, equivalent_rate
+# cashflows.
+from cashflows.timeseries import *
+from cashflows.rate import *
 from cashflows.common import _vars2list
 from cashflows.tvmm import tvmm
-from cashflows.utilityfun import exp_utility_fun, log_utility_fun, sqrt_utility_fun
+# from cashflows.utilityfun import exp_utility_fun, log_utility_fun, sqrt_utility_fun
 
 
 def timevalue(cflo, prate, base_date=0, utility=None):

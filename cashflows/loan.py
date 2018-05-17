@@ -22,7 +22,6 @@ Computes the amorization schedule for the following types of loans:
 import numpy as np
 import pandas as pd
 
-# cashflows.
 from cashflows.analysis import *
 from cashflows.tvmm import *
 from cashflows.timeseries import *
@@ -39,9 +38,9 @@ class Loan(pd.DataFrame):
         self.life = life
         self.amount = amount
         self.grace = grace
-        self.nrate = nrate
         self.dispoints = dispoints
         self.orgpoints = orgpoints
+        self.nrate = nrate
 
     def tocashflow(self, tax_rate=None):
         cflo = self.nrate.copy()
@@ -67,7 +66,6 @@ class Loan(pd.DataFrame):
 
 
     def __str__(self):
-
         str = []
         str.append("Amount:             {:.2f}".format(self.amount))
         str.append("Total interest:     {:.2f}".format(sum(self.Int_Payment)))

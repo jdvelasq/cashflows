@@ -4,7 +4,6 @@ from cashflows.bond import *
 from cashflows.common import *
 from cashflows.currency import *
 from cashflows.depreciation import *
-from cashflows.gtimeseries import *
 from cashflows.rate import *
 from cashflows.inflation import *
 from cashflows.loan import *

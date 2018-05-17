@@ -179,6 +179,174 @@ def effrate(nrate=None, prate=None, pyr=1):
             erate = erate[0]
         return erate
 
+def nomrate(erate=None, prate=None, pyr=1):
+    """
+    Computes the nominal interest rate given the nominal interest rate or the periodic interest rate.
+
+    Args:
+        erate (float, TimeSeries): Effective interest rate.
+        prate (float, TimeSeries): Periodic interest rate.
+        pyr(int): Number of compounding periods per year.
+
+    Returns:
+        Nominal interest rate(float, TimeSeries).
+
+    >>> nomrate(prate=1, pyr=12) # doctest: +ELLIPSIS
+    12.0
+
+    >>> nomrate(erate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    0    9.684035
+    1    9.607121
+    2    9.568969
+    dtype: float64
+
+    >>> nomrate(erate=10, pyr=12) # doctest: +ELLIPSIS
+    9.5689...
+
+    >>> nomrate(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    0     3.0
+    1     6.0
+    2    12.0
+    dtype: float64
+
+    >>> nomrate(erate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS
+    0     9.568969
+    1    11.386552
+    2    13.174622
+    dtype: float64
+
+    >>> nomrate(prate=[1, 2, 3], pyr=12) # doctest: +ELLIPSIS
+    0    12.0
+    1    24.0
+    2    36.0
+    dtype: float64
+
+    When a rate and the number of compounding periods (`pyr`) are vectors, they
+    must have the same length. Computations are executed using the first rate
+    with the first compounding and so on.
+
+    >>> nomrate(erate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    0     9.684035
+    1    11.440574
+    2    13.174622
+    dtype: float64
+
+    >>> nomrate(prate=[1, 2, 3], pyr=[3, 6, 12]) # doctest: +ELLIPSIS
+    0     3.0
+    1    12.0
+    2    36.0
+    dtype: float64
+
+    >>> prate = interest_rate(const_value=6.00, start='2000-06', periods=12, freq='6M')
+    >>> erate = effrate(prate=prate)
+    >>> nomrate(erate=erate)
+    2000-06    12.0
+    2000-12    12.0
+    2001-06    12.0
+    2001-12    12.0
+    2002-06    12.0
+    2002-12    12.0
+    2003-06    12.0
+    2003-12    12.0
+    2004-06    12.0
+    2004-12    12.0
+    2005-06    12.0
+    2005-12    12.0
+    Freq: 6M, dtype: float64
+
+
+    >>> nomrate(prate=prate)
+    2000-06    12.0
+    2000-12    12.0
+    2001-06    12.0
+    2001-12    12.0
+    2002-06    12.0
+    2002-12    12.0
+    2003-06    12.0
+    2003-12    12.0
+    2004-06    12.0
+    2004-12    12.0
+    2005-06    12.0
+    2005-12    12.0
+    Freq: 6M, dtype: float64
+
+
+    """
+    numnone = 0
+    if erate is None:
+        numnone += 1
+    if prate is None:
+        numnone += 1
+    if numnone != 1:
+        raise ValueError('One of the rates must be set to `None`')
+
+    if isinstance(erate, pd.Series):
+        pyr = getpyr(erate)
+        nrate = erate.copy()
+        for index in range(len(erate)):
+            nrate[index] = 100 * pyr * (np.power(1 + erate[index]/100, 1. / pyr) - 1)
+        return nrate
+
+    if isinstance(prate, pd.Series):
+        pyr = getpyr(prate)
+        nrate = prate.copy()
+        for index in range(len(prate)):
+            nrate[index] = prate[index] * pyr
+        return nrate
+
+
+    if erate is not None:
+        ##
+        ##
+        maxlen = 1
+        if isinstance(erate, (list, type(np.array), type(pd.Series))):
+            maxlen = max(maxlen, len(erate))
+        if isinstance(pyr, (list, type(np.array), type(pd.Series))):
+            maxlen = max(maxlen, len(pyr))
+        #
+        if isinstance(erate, (int, float)):
+            erate = [erate] * maxlen
+        erate = pd.Series(erate, dtype=np.float64)
+        #
+        if isinstance(pyr, (int, float)):
+            pyr = [pyr] * maxlen
+        pyr = pd.Series(pyr)
+        #
+        if len(erate) != len(pyr):
+            raise ValueError('Lists must have the same length')
+        ##
+        ##
+        prate = 100 * (np.power(1 + erate / 100, 1 / pyr) - 1)
+        nrate = pyr * prate
+        if maxlen == 1:
+            nrate = nrate[0]
+        return nrate
+
+    if prate is not None:
+        ##
+        ##
+        maxlen = 1
+        if isinstance(prate, (list, type(np.array), type(pd.Series))):
+            maxlen = max(maxlen, len(prate))
+        if isinstance(pyr, (list, type(np.array), type(pd.Series))):
+            maxlen = max(maxlen, len(pyr))
+        #
+        if isinstance(prate, (int, float)):
+            prate = [prate] * maxlen
+        prate = pd.Series(prate, dtype=np.float64)
+        if isinstance(pyr, (int, float)):
+            pyr = [pyr] * maxlen
+        pyr = pd.Series(pyr)
+        #
+        if len(prate) != len(pyr):
+            raise ValueError('Lists must have the same length')
+        ##
+        ##
+        nrate = pyr * prate
+        if maxlen == 1:
+            nrate = nrate[0]
+        return nrate
+
 
 #=====================================================================================
 

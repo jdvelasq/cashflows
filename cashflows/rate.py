@@ -614,6 +614,54 @@ def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
         factor[time] = 1 / factor[time]
     return factor
 
+def equivalent_rate(nrate=None, erate=None, prate=None):
+    """Returns the equivalent interest rate over a time period.
+
+    Args:
+        nrate (TimeSeries): Nominal interest rate per year.
+        erate (TimeSeries): Effective interest rate per year.
+        prate (TimeSeries): Periodic interest rate.
+
+    Returns:
+        float value.
+
+    Only one of the interest rate must be supplied for the computation.
+
+    >>> equivalent_rate(prate=interest_rate([10]*5, start='2000Q1', freq='Q')) # doctest: +ELLIPSIS
+    10.0...
+
+
+    """
+    numnone = 0
+    if nrate is None:
+        numnone += 1
+    if erate is None:
+        numnone += 1
+    if prate is None:
+        numnone += 1
+    if numnone != 2:
+        raise ValueError('Two of the rates must be set to `None`')
+
+    if nrate is not None:
+        pyr = getpyr(nrate)
+        factor = 1
+        for element in nrate[1:]:
+            factor *= (1 + element / 100 / pyr)
+        return 100 * pyr * (factor**(1/(len(nrate) - 1)) - 1)
+
+    if prate is not None:
+        pyr = getpyr(prate)
+        factor = 1
+        for element in prate[1:]:
+            factor *= (1 + element / 100)
+        return 100  * (factor**(1/(len(prate) - 1)) - 1)
+
+    if erate is not None:
+        pyr = getpyr(erate)
+        factor = 1
+        for element in erate[1:]:
+            factor *= (1 + (numpy.power(1 + element/100, 1. / pyr) - 1))
+        return 100  * (factor**(1/(len(value) - 1)) - 1)
 
 #=====================================================================================
 
@@ -927,54 +975,54 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 
 
 
-def equivalent_rate(nrate=None, erate=None, prate=None):
-    """Returns the equivalent interest rate over a time period.
-
-    Args:
-        nrate (TimeSeries): Nominal interest rate per year.
-        nrate (TimeSeries): Effective interest rate per year.
-        prate (TimeSeries): Periodic interest rate.
-
-    Returns:
-        float value.
-
-    Only one of the interest rate must be supplied for the computation.
-
-    >>> equivalent_rate(prate=interest_rate([10]*5)) # doctest: +ELLIPSIS
-    10.0...
-
-
-    """
-    numnone = 0
-    if nrate is None:
-        numnone += 1
-    if erate is None:
-        numnone += 1
-    if prate is None:
-        numnone += 1
-    if numnone != 2:
-        raise ValueError('Two of the rates must be set to `None`')
-
-    if nrate is not None:
-        value = nrate.tolist()
-        factor = 1
-        for element in value[1:]:
-            factor *= (1 + element / 100 / nrate.pyr)
-        return 100 * nrate.pyr * (factor**(1/(len(value) - 1)) - 1)
-
-    if prate is not None:
-        value = prate.tolist()
-        factor = 1
-        for element in value[1:]:
-            factor *= (1 + element / 100)
-        return 100  * (factor**(1/(len(value) - 1)) - 1)
-
-    if erate is not None:
-        value = erate.tolist()
-        factor = 1
-        for element in value[1:]:
-            factor *= (1 + (numpy.power(1 + element/100, 1. / erate.pyr) - 1))
-        return 100  * (factor**(1/(len(value) - 1)) - 1)
+#def equivalent_rate(nrate=None, erate=None, prate=None):
+#    """Returns the equivalent interest rate over a time period.
+#
+#    Args:
+#        nrate (TimeSeries): Nominal interest rate per year.
+#        nrate (TimeSeries): Effective interest rate per year.
+#        prate (TimeSeries): Periodic interest rate.
+#
+#    Returns:
+#        float value.
+#
+#    Only one of the interest rate must be supplied for the computation.
+#
+#    >>> equivalent_rate(prate=interest_rate([10]*5)) # doctest: +ELLIPSIS
+#    10.0...
+#
+#
+#    """
+#    numnone = 0
+#    if nrate is None:
+#        numnone += 1
+#    if erate is None:
+#        numnone += 1
+#    if prate is None:
+#        numnone += 1
+#    if numnone != 2:
+#        raise ValueError('Two of the rates must be set to `None`')
+#
+#    if nrate is not None:
+#        value = nrate.tolist()
+#        factor = 1
+#        for element in value[1:]:
+#            factor *= (1 + element / 100 / nrate.pyr)
+#        return 100 * nrate.pyr * (factor**(1/(len(value) - 1)) - 1)
+#
+#    if prate is not None:
+#        value = prate.tolist()
+#        factor = 1
+#        for element in value[1:]:
+#            factor *= (1 + element / 100)
+#        return 100  * (factor**(1/(len(value) - 1)) - 1)
+#
+#    if erate is not None:
+#        value = erate.tolist()
+#        factor = 1
+#        for element in value[1:]:
+#            factor *= (1 + (numpy.power(1 + element/100, 1. / erate.pyr) - 1))
+#        return 100  * (factor**(1/(len(value) - 1)) - 1)
 
 
 

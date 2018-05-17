@@ -581,6 +581,39 @@ def to_discount_factor(nrate=None, erate=None, prate=None, base_date=None):
         factor[index] = factor[index] / div
     return factor
 
+def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
+    """Returns a list of compounding factors calculated as (1 + r)^(t - t0).
+
+    Args:
+        nrate (TimeSeries): Nominal interest rate per year.
+        nrate (TimeSeries): Effective interest rate per year.
+        prate (TimeSeries): Periodic interest rate.
+        base_date (int, tuple): basis time.
+
+    Returns:
+        Compound factor (list)
+
+
+    **Examples**
+
+    >>> nrate = interest_rate(const_value=4, start='2000', periods=10, freq='Q')
+    >>> erate = effrate(nrate=nrate)
+    >>> prate = perrate(nrate=nrate)
+    >>> to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
+    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+
+    >>> to_compound_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
+    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+
+    >>> to_compound_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
+    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+
+    """
+    factor = to_discount_factor(nrate=nrate, erate=erate, prate=prate, base_date=base_date)
+    for time, _ in enumerate(factor):
+        factor[time] = 1 / factor[time]
+    return factor
+
 
 #=====================================================================================
 
@@ -860,37 +893,37 @@ def iconv(nrate=None, erate=None, prate=None, pyr=1):
 #    return factor
 
 
-def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
-    """Returns a list of compounding factors calculated as (1 + r)^(t - t0).
-
-    Args:
-        nrate (TimeSeries): Nominal interest rate per year.
-        nrate (TimeSeries): Effective interest rate per year.
-        prate (TimeSeries): Periodic interest rate.
-        base_date (int, tuple): basis time.
-
-    Returns:
-        Compound factor (list)
-
-
-    **Examples**
-
-    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
-    >>> erate, prate = iconv(nrate=nrate)
-    >>> to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
-    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
-
-    >>> to_compound_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
-    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
-
-    >>> to_compound_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
-    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
-
-    """
-    factor = to_discount_factor(nrate=nrate, erate=erate, prate=prate, base_date=base_date)
-    for time, _ in enumerate(factor):
-        factor[time] = 1 / factor[time]
-    return factor
+#def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
+#    """Returns a list of compounding factors calculated as (1 + r)^(t - t0).
+#
+#    Args:
+#        nrate (TimeSeries): Nominal interest rate per year.
+#        nrate (TimeSeries): Effective interest rate per year.
+#        prate (TimeSeries): Periodic interest rate.
+#        base_date (int, tuple): basis time.
+#
+#    Returns:
+#        Compound factor (list)
+#
+#
+#    **Examples**
+#
+#    >>> nrate = interest_rate(const_value=4,nper=10, pyr=4)
+#    >>> erate, prate = iconv(nrate=nrate)
+#    >>> to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS
+#    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+#
+#    >>> to_compound_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS
+#    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+#
+#    >>> to_compound_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS
+#    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]
+#
+#    """
+#    factor = to_discount_factor(nrate=nrate, erate=erate, prate=prate, base_date=base_date)
+#    for time, _ in enumerate(factor):
+#        factor[time] = 1 / factor[time]
+#    return factor
 
 
 

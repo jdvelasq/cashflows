@@ -50,6 +50,7 @@ For convenience of the user, this module implements the following simplified fun
     :width: 650px
     :align: center
 
+In addition, the function ``amortize`` computes and returns the amortization schedule of a loan.
 
 Functions in this module
 -----------------------------------------------------------------
@@ -61,8 +62,9 @@ from cashflows.common import _vars2list
 
 
 def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, noprint=True):
-    """Computes present and future values, periodic payments, nominal interest
-    rate or number of periods.
+    """Computes the missing argument (set to ``None``) in a model relating the
+    present value, the future value, the periodic payment, the number of
+    compounding periods and the nominal interest rate in a cashflow.
 
     Args:
         pval (float, list): Present value.
@@ -83,8 +85,8 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     The ``tvmmm`` function computes and returns the missing value (``pmt``, ``fval``,
     ``pval``, ``nper``, ``nrate``) in a model relating a finite sequence  of payments
     made at the beginning or at the end of each period, a present value, a future value,
-    and a nomial interest rate. The time intervals between consecutive payments are
-    assumed to be equial. For internal computations, the effective interest rate per
+    and a nominal interest rate. The time intervals between consecutive payments are
+    assumed to be equal. For internal computations, the effective interest rate per
     period is calculated as ``nrate / pyr``.
 
 
@@ -272,7 +274,9 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
 
 def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """
+    """Computes the missing argument (set to ``None``) in a model relating the
+    present value, the future value, the number of compoundig periods
+    and the nominal interest rate in a cashflow.
 
     Args:
         pval (float, list): Present value.
@@ -283,7 +287,7 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
         noprint (bool): prints enhanced output
 
     Returns:
-        The value of the parameter set to None in the function call.
+        The value of the parameter set to ``None`` in the function call.
 
     **Details**
 
@@ -303,7 +307,9 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
 
 
 def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """CComputes the missing argument (set to None) in the function call.
+    """Computes the missing argument (set to ``None``) in a model relating the
+    the future value, the periodic payment, the number of
+    compounding periods and the nominal interest rate in a cashflow.
 
     Args:
         pmt (float, list): Periodic payment.
@@ -334,7 +340,9 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
 
 
 def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """Computes the missing argument (set to None) in the function call.
+    """Computes the missing argument (set to ``None``) in a model relating the
+    present value, the periodic payment, the number of
+    compounding periods and the nominal interest rate in a cashflow.
 
     Args:
         pmt (float, list): Periodic payment.

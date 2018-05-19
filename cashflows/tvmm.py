@@ -90,7 +90,9 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
 
     Details.
+    --------------------------
 
+    text text text
 
 
     Examples

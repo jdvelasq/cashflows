@@ -294,6 +294,7 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     period is calculated as ``nrate / pyr``.
 
     This function is used to simplify the call to the ``tvmm`` function.
+    See the ``tvmm`` function for details.
 
 
 
@@ -324,6 +325,9 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     assumed to be equial. For internal computations, the effective interest rate per
     period is calculated as ``nrate / pyr``.
 
+    This function is used to simplify the call to the ``tvmm`` function.
+    See the ``tvmm`` function for details.
+
 
     """
     return tvmm(pval=0, fval=fval, pmt=pmt, nrate=nrate, nper=nper, due=1, pyr=pyr, noprint=noprint)
@@ -351,6 +355,9 @@ def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
     and a nominal interest rate. The time intervals between consecutive payments are
     assumed to be equial. For internal computations, the effective interest rate per
     period is calculated as ``nrate / pyr``.
+
+    This function is used to simplify the call to the ``tvmm`` function.
+    See the ``tvmm`` function for details.
 
     """
     return tvmm(pval=pval, fval=0, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)

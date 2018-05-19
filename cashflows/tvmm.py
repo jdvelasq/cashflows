@@ -92,7 +92,11 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     Details
     --------------------------
 
-    Details of th functon
+    In this example shows how to find different values for a loan of 5000, with a
+    monthly payment of 130 at the end of the month, a life of 48 periods, and a
+    interest rate of 0.94 per month (equivalent to 11.32% nominal)
+
+
 
     Examples
     ---------------------

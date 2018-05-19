@@ -2,6 +2,10 @@
 Constant dollar transformations
 ===============================================================================
 
+Overview
+--------------------------
+
+
 The function `const2curr` computes the equivalent generic cashflow in current
 dollars from a generic cashflow in constant dollars of the date given by
 `base_date`. `inflation` is the inflation rate per compounding period.

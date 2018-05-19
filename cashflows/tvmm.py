@@ -52,9 +52,6 @@ For convenience of the user, this module implements the following simplified fun
 
 
 
-
-
-
 Details
 --------------------------
 
@@ -73,6 +70,8 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     """Computes present and future values, periodic payments, nominal interest
     rate or number of periods.
 
+
+
     Args:
         pval (float, list): Present value.
         fval (float, list): Future value.
@@ -90,7 +89,12 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     Effective interest rate per period is calculated as `nrate` / `pyr`.
 
 
-    **Examples.**
+    Details
+    --------------------------
+
+
+    Examples
+    ---------------------
 
     In this example shows how to find different values for a loan of 5000, with a
     monthly payment of 130 at the end of the month, a life of 48 periods, and a

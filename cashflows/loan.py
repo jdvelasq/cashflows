@@ -2,6 +2,9 @@
 Loan analysis
 ==============================================================================
 
+Overview
+--------------------------
+
 Computes the amorization schedule for the following types of loans:
 
 * ``fixed_rate_loan``: In this loan, the interest rate is fixed and the total

@@ -2,6 +2,9 @@
 Analysis of cashflows
 ===============================================================================
 
+Overview
+--------------------------
+
 This module implements the following functions for financial analysis of
 cashflows:
 

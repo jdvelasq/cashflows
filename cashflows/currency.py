@@ -2,6 +2,9 @@
 Currency conversion
 ===============================================================================
 
+Overview
+--------------------------
+
 The function `currency_conversion` allows the user to convert an cashflow in a
 currency to the equivalent flow in other currency using the specified
 `exchange_rate`. In addition, it is possible to include the devaluation of the

@@ -51,14 +51,8 @@ For convenience of the user, this module implements the following simplified fun
     :align: center
 
 
-
-Details
---------------------------
-
-
-Syntax
---------------------------
-
+Functions in this module
+-----------------------------------------------------------------
 
 """
 
@@ -70,8 +64,6 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     """Computes present and future values, periodic payments, nominal interest
     rate or number of periods.
 
-
-
     Args:
         pval (float, list): Present value.
         fval (float, list): Future value.
@@ -82,61 +74,35 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
         pyr (int, list): number of periods per year.
         noprint (bool): prints enhanced output
 
-
     Returns:
         Argument set to None in the function call.
-
-    Effective interest rate per period is calculated as ``nrate / pyr``.
 
 
     **Details**
 
-
-    text text text
+    The ``tvmmm`` function computes and returns the missing value (``pmt``, ``fval``,
+    ``pval``, ``nper``, ``nrate``) in a model relating a finite sequence  of payments
+    made at the beginning or at the end of each period, a present value, a future value,
+    and a nomial interest rate. The time intervals between consecutive payments are
+    assumed to be equial. For internal computations, the effective interest rate per
+    period is calculated as ``nrate / pyr``.
 
 
     **Examples**
-    
 
-    In this example shows how to find different values for a loan of 5000, with a
+    This example shows how to find different values for a loan of 5000, with a
     monthly payment of 130 at the end of the month, a life of 48 periods, and a
-    interest rate of 0.94 per month (equivalent to 11.32% nominal)
+    interest rate of 0.94 per month (equivalent to a nominal interest
+    rate of 11.32%). For a loan, the future value is 0.
 
-    * Periodic payment:
-
-    >>> pmt = tvmm(pval=5000, nrate=11.32/12, nper=48, fval=0)
-    >>> pmt # doctest: +ELLIPSIS
-    -130.00...
-
-    * Future value:
-
-    >>> tvmm(pval=5000, nrate=11.32/12, nper=48, pmt=pmt) # doctest: +ELLIPSIS
-    -0.0...
-
-    * Present value:
-
-    >>> tvmm(nrate=11.32/12, nper=48, pmt=pmt, fval = 0.0) # doctest: +ELLIPSIS
-    5000...
-
-    * Rate:
-
-    >>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0) # doctest: +ELLIPSIS
-    0.94...
-
-    * Number of periods:
-
-    >>> tvmm(pval=5000, nrate=11.32/12, pmt=pmt, fval=0.0) # doctest: +ELLIPSIS
-    48.0...
-
-    * Periodic paymnts:
+    * Monthly payments: Note that the parameter ``pmt`` is set to ``None``.
 
     >>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12) # doctest: +ELLIPSIS
     -130.00...
 
-    * Nominal rate:
 
-    >>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0, pyr=12) # doctest: +ELLIPSIS
-    11.32...
+    When the parameter ``noprint`` is set to ``False``, a user friendly table with
+    the data computed by the function is print.
 
     >>> tvmm(pval=5000, nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
     Present Value: .......  5000.00
@@ -149,12 +115,39 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     Effective Rate: .....     11.93
     Periodic Rate: ......      0.94
 
+
+    * Future value:
+
+    >>> tvmm(pval=5000, nrate=11.32, nper=48, pmt=pmt, fval=None, pyr=12) # doctest: +ELLIPSIS
+    -0.0...
+
+    * Present value:
+
+    >>> tvmm(nrate=11.32, nper=48, pmt=pmt, fval = 0.0, pval=None, pyr=12) # doctest: +ELLIPSIS
+    5000...
+
+    All the arguments support lists as inputs. When a argument is a list and the
+    ``noprint`` is set to ``False``, a table with the data is print.
+
     >>> tvmm(pval=[5, 500, 5], nrate=11.32, nper=48, fval=0, pyr=12, noprint=False) # doctest: +ELLIPSIS
     #   pval   fval    pmt   nper  nrate  erate  prate due
     ------------------------------------------------------
     0   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
     1 500.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
     2   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END
+
+
+    * Interest rate:
+
+    >>> tvmm(pval=5000, nper=48, pmt=pmt, fval = 0.0, pyr=12) # doctest: +ELLIPSIS
+    11.32...
+
+    * Number of periods:
+
+    >>> tvmm(pval=5000, nrate=11.32/12, pmt=pmt, fval=0.0) # doctest: +ELLIPSIS
+    48.0...
+
+
     """
 
     #pylint: disable=too-many-arguments
@@ -279,7 +272,7 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
 
 def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
-    """Computes the missing argument (set to None) in the function call.
+    """
 
     Args:
         pval (float, list): Present value.
@@ -292,7 +285,17 @@ def pvfv(pval=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     Returns:
         The value of the parameter set to None in the function call.
 
-    Effective interest rate per period is calculated as `nrate` / `pyr`.
+    **Details**
+
+    The ``pvfv`` function computes and returns the missing value (``fval``,
+    ``pval``, ``nper``, ``nrate``) in a model relating these variables.
+    The time intervals between consecutive payments are
+    assumed to be equial. For internal computations, the effective interest rate per
+    period is calculated as ``nrate / pyr``.
+
+    This function is used to simplify the call to the ``tvmm`` function.
+
+
 
     """
     return tvmm(pval=pval, fval=fval, pmt=0, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)
@@ -312,7 +315,15 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     Returns:
         The value of the parameter set to None in the function call.
 
-    Effective interest rate per period is calculated as `nrate` / `pyr`.
+    **Details**
+
+    The ``pmtfv`` function computes and returns the missing value (``pmt``, ``fval``,
+     ``nper``, ``nrate``) in a model relating a finite sequence  of payments
+    made at the beginning or at the end of each period, a future value,
+    and a nominal interest rate. The time intervals between consecutive payments are
+    assumed to be equial. For internal computations, the effective interest rate per
+    period is calculated as ``nrate / pyr``.
+
 
     """
     return tvmm(pval=0, fval=fval, pmt=pmt, nrate=nrate, nper=nper, due=1, pyr=pyr, noprint=noprint)
@@ -332,7 +343,14 @@ def pvpmt(pmt=None, pval=None, nrate=None, nper=None, pyr=1, noprint=True):
     Returns:
         The value of the parameter set to None in the function call.
 
-    Effective interest rate per period is calculated as `nrate` / `pyr`.
+    **Details**
+
+    The ``pvpmt`` function computes and returns the missing value (``pmt``,
+    ``pval``, ``nper``, ``nrate``) in a model relating a finite sequence  of payments
+    made at the beginning or at the end of each period, a present value,
+    and a nominal interest rate. The time intervals between consecutive payments are
+    assumed to be equial. For internal computations, the effective interest rate per
+    period is calculated as ``nrate / pyr``.
 
     """
     return tvmm(pval=pval, fval=0, pmt=pmt, nrate=nrate, nper=nper, due=0, pyr=pyr, noprint=noprint)
@@ -354,8 +372,18 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     Returns:
         A tuple: (principal, interest, payment, balance)
 
+    **Details**
 
-    **Examples.**
+    The ``amortize`` function computes and returns the columns of a amortization
+    schedule of a loan. The function returns the interest payment, the
+    principal repayment, the periodic payment and the balance at the
+    end of each period.
+
+
+    **Examples**
+
+    The amortization schedule for a loan of 100, at a interest rate of 10%,
+    and a life of 5 periods, can be computed as:
 
     >>> pmt = tvmm(pval=100, nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
     >>> amortize(pval=100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
@@ -371,7 +399,6 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     5          23.98       -26.38         2.40       -23.98         0.00
 
 
-
     >>> amortize(pval=-100, nrate=10, nper=5, fval=0, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     t      Beginning     Periodic     Interest    Principal        Final
            Principal      Payment      Payment    Repayment    Principal
@@ -383,6 +410,10 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     3         -65.60        26.38        -6.56        19.82       -45.78
     4         -45.78        26.38        -4.58        21.80       -23.98
     5         -23.98        26.38        -2.40        23.98        -0.00
+
+
+    In the next example, the argument ``due`` is used to indicate that the
+    periodic payment occurs at the begining of period.
 
     >>> amortize(pval=100, nrate=10, nper=5, fval=0, due=1, noprint=False) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
     t      Beginning     Periodic     Interest    Principal        Final
@@ -409,6 +440,8 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
     5          -0.00         0.00        -0.00        -0.00        -0.00
 
 
+    The function returns a tuple with the columns of the amortization schedule.
+
     >>> principal, interest, payment, balance = amortize(pval=100,
     ... nrate=10, nper=5, fval=0) # doctest: +ELLIPSIS
 
@@ -423,6 +456,9 @@ def amortize(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1
 
     >>> balance  # doctest: +ELLIPSIS
     [100, 83.62..., 65.60..., 45.78..., 23.98..., 1...]
+
+    In the following examples, the ``sum`` function is used to sum of
+    different columns of the amortization schedule.
 
     >>> principal, interest, payment, balance = amortize(pval=100,
     ... nrate=10, nper=5, pmt=pmt) # doctest: +ELLIPSIS

@@ -318,7 +318,7 @@ def pmtfv(pmt=None, fval=None, nrate=None, nper=None, pyr=1, noprint=True):
     **Details**
 
     The ``pmtfv`` function computes and returns the missing value (``pmt``, ``fval``,
-     ``nper``, ``nrate``) in a model relating a finite sequence  of payments
+    ``nper``, ``nrate``) in a model relating a finite sequence  of payments
     made at the beginning or at the end of each period, a future value,
     and a nominal interest rate. The time intervals between consecutive payments are
     assumed to be equial. For internal computations, the effective interest rate per

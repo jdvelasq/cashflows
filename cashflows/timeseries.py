@@ -1,3 +1,22 @@
+"""
+Representation of cashflows and interest rates
+===============================================================================
+
+
+
+
+Details
+--------------------------
+
+
+Syntax
+--------------------------
+
+
+
+
+
+"""
 
 import numpy as np
 import pandas as pd

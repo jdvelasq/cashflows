@@ -7,6 +7,15 @@ expected cashflow of a bond. Also,it is possible to make a sensibility analysis
 for different values for the yield-to-maturity and one present value of
 the bond.
 
+Details
+--------------------------
+
+
+Syntax
+--------------------------
+
+
+
 """
 
 import numpy as np

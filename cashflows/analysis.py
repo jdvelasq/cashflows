@@ -22,6 +22,16 @@ cashflows:
 * ``list_as_table``: prints a list as a table. This function is useful for
   comparing financial indicators for different alternatives.
 
+
+Details
+--------------------------
+
+
+Syntax
+--------------------------
+
+
+
 """
 
 import numpy as np

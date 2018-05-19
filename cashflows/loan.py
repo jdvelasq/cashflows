@@ -17,6 +17,16 @@ Computes the amorization schedule for the following types of loans:
 
 * ``bullet_loan``: the principal is payed at the end of the life of the loan.
 
+
+Details
+--------------------------
+
+
+Syntax
+--------------------------
+
+
+
 """
 
 import numpy as np

@@ -7,6 +7,17 @@ currency to the equivalent flow in other currency using the specified
 `exchange_rate`. In addition, it is possible to include the devaluation of the
 foreign exchange rate.
 
+
+Details
+--------------------------
+
+
+Syntax
+--------------------------
+
+
+
+
 """
 
 import pandas

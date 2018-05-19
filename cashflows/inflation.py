@@ -7,6 +7,15 @@ dollars from a generic cashflow in constant dollars of the date given by
 `base_date`. `inflation` is the inflation rate per compounding period.
 `curr2const` computes the inverse transformation.
 
+Details
+--------------------------
+
+
+Syntax
+--------------------------
+
+
+
 """
 import pandas as pd
 

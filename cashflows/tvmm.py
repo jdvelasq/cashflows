@@ -2,7 +2,18 @@
 Time value of money models
 ===============================================================================
 
-This module contains functions for computing the time value of the money.
+Overview
+-----------------------
+
+The functions in this module are used for certain compound interest calculations
+for a cashflow under the following restrictions:
+
+* Payment periods coincide with the compounding periods.
+* Payments occur at regular intervals.
+* Payments are a constant amount.
+* Interest rate is the same over all analysis period.
+
+For convenience of the user, this module implements the following simplified functions:
 
 * ``pvfv``: computes the missing value in the equation
   ``fval = pval * (1 + rate) ** nper``, that represents the following
@@ -38,6 +49,18 @@ This module contains functions for computing the time value of the money.
 .. image:: ./images/tvmm.png
     :width: 650px
     :align: center
+
+
+
+
+
+
+Details
+--------------------------
+
+
+Syntax
+--------------------------
 
 
 """

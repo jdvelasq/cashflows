@@ -187,6 +187,9 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     2001Q4    1.0
     Freq: Q-DEC, dtype: float64
 
+    In the following example, the cashflow function returns a time series object
+    using a list for the ``const_value`` and a timestamp for the parameter ``start``.
+
 
     >>> cashflow(const_value=[10]*10, start='2000Q1', freq='Q') # doctest: +NORMALIZE_WHITESPACE
     2000Q1    10.0

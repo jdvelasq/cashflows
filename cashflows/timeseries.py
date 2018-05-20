@@ -220,6 +220,7 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     >>> x[3]  # doctest: +NORMALIZE_WHITESPACE
     10.0
 
+    Indexes in the time series also can be specified using a valid timestamp.
 
     >>> x['2000Q4'] = 0
     >>> x # doctest: +NORMALIZE_WHITESPACE

@@ -247,6 +247,9 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     Freq: Q-DEC, dtype: float64
 
 
+    In the next examples, a change point is specified using a dictionary. The key
+    can be a integer or a valid timestamp.
+
     >>> cashflow(const_value=0, freq='Q', periods=6, start='2000Q1', chgpts={2:10}) # doctest: +NORMALIZE_WHITESPACE
     2000Q1     0.0
     2000Q2     0.0

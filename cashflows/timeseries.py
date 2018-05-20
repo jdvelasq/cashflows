@@ -247,7 +247,7 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     Freq: Q-DEC, dtype: float64
 
 
-    In the next examples, a change point is specified using a dictionary. The key
+    In the next examples, a change points are specified using a dictionary. The key
     can be a integer or a valid timestamp.
 
     >>> cashflow(const_value=0, freq='Q', periods=6, start='2000Q1', chgpts={2:10}) # doctest: +NORMALIZE_WHITESPACE
@@ -302,13 +302,20 @@ def interest_rate(const_value=0, start=None, end=None, periods=None, freq='A', c
         end (string):  Date as string using pandas convetion for dates.
         peridos (integer): Length of the time seriesself.
         freq (string): String indicating the period of time series. Valid values
-                      are `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`,
-                      `'6BM'` and `'6CMB'`. See https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
+                      are ``'A'``, ``'BA'``, ``'Q'``, ``'BQ'``, ``'M'``,
+                      ``'BM'``, ``'CBM'``, ``'SM'``, ``'6M'``, ``'6BM'`` and
+                      ``'6CMB'``. See
+                      https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
         chgpts (dict): Dictionary indicating point changes in the values of the time series.
 
     Returns:
-        A pandas time series object.
+        A `pandas.Series` object.
 
+    **Examples**
+
+    In the following examples, the argument ``chgpts`` is used to specify chnages
+    in the value of the interest rate. The keys in the dictionary can be integers
+    or valid timestamps.
 
     >>> chgpts = {'2000Q4':10}
     >>> interest_rate(const_value=1, start='2000Q1', periods=8, freq='Q', chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE

@@ -3,16 +3,17 @@ Representation of Cashflows and Interest Rates
 ===============================================================================
 
 Overview
------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-The functions in this module allow the user to create generic cashflows and interest rates
-as `pandas.Series` objects under the following restrictions:
+The functions in this module allow the user to create generic cashflows and
+interest rates as `pandas.Series` objects under the following restrictions:
 
 * Frequency of time series is restricted to the following values:
-  `A`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`, `'6BM'` and `'6CMB'`.
+  `A`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`, `'6BM'`
+  and `'6CMB'`.
 * Interest rates are represented as percentages (not as a fraction).
-* Appropriate values must be supplied for the arguments used to create the timestamps
-  of the time series.
+* Appropriate values must be supplied for the arguments used to create the
+  timestamps of the time series.
 
 Due to generic cashflows and interest rates are pandas.Series objects, all available
 functions for manipulating and transforming pandas time series can be used with this package.
@@ -169,7 +170,8 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
 
     **Examples**
 
-    A quarterly cashflow with a constant value 1.0 beginning in 2000Q1 can be expressed as:
+    A quarterly cashflow with a constant value 1.0 beginning in 2000Q1 can be
+    expressed as:
 
     >>> cashflow(const_value=1.0, start='2000Q1', periods=8, freq='Q') # doctest: +NORMALIZE_WHITESPACE
     2000Q1    1.0

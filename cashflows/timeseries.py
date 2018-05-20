@@ -2,40 +2,6 @@
 Representation of Cashflows and Interest Rates
 ===============================================================================
 
-Overview
--------------------------------------------------------------------------------
-
-The functions in this module allow the user to create generic cashflows and
-interest rates as `pandas.Series` objects under the following restrictions:
-
-* Frequency of time series is restricted to the following values:
-  `A`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`, `'6BM'`
-  and `'6CMB'`.
-* Interest rates are represented as percentages (not as a fraction).
-* Appropriate values must be supplied for the arguments used to create the
-  timestamps of the time series.
-
-Due to generic cashflows and interest rates are pandas.Series objects, all
-available functions for manipulating and transforming pandas time series can be
-used with this package.
-
-
-The ``cashflow`` function returns a `pandas.Series` object that represents a
-generic cashflow. The user must supply two of the following arguments ``start``,
-``end`` and ``periods`` in order to create the corresponding timestamps for the
-time series. The generic cashflow is set to the value specified by the argument
-``const_value``. In addition, when the value of the argument ``const_value`` is
-a list, only is necessary to specify the ``start`` or the ``end`` dates.
-
-For convenience of the user, point values of the time series can be changed
-using the argument ``chgpts``.  In this case, the value passed to this argument
-is a dictionary where the keys are valid dates and the values are the new values
-specified for the generic cashflow in these dates.
-
-The ``interest_rate`` function returns a `pandas.Series` object in the same way
-as the ``cashflow`` function. The only difference is that the dictionary passed
-to the argument ``chgpts`` specifies change points in the time series, where
-the value of the interest rate changes for all points ahead.
 
 
 Functions in this module
@@ -169,10 +135,6 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
         A pandas time series object.
 
 
-    **Examples**
-
-    A quarterly cashflow with a constant value 1.0 beginning in 2000Q1 can be
-    expressed as:
 
     >>> cashflow(const_value=1.0, start='2000Q1', periods=8, freq='Q') # doctest: +NORMALIZE_WHITESPACE
     2000Q1    1.0
@@ -185,8 +147,6 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     2001Q4    1.0
     Freq: Q-DEC, dtype: float64
 
-    In the following example, the cashflow function returns a time series object
-    using a list for the ``const_value`` and a timestamp for the parameter ``start``.
 
     >>> cashflow(const_value=[10]*10, start='2000Q1', freq='Q') # doctest: +NORMALIZE_WHITESPACE
     2000Q1    10.0
@@ -201,8 +161,6 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     2002Q2    10.0
     Freq: Q-DEC, dtype: float64
 
-    The following example uses the operator ``[]`` to modify the value with
-    index equal to 3
 
     >>> x = cashflow(const_value=[0, 1, 2, 3], start='2000Q1', freq='Q')
     >>> x[3] = 10
@@ -218,8 +176,6 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     10.0
 
 
-    Indexes in the time series also can be specified using a valid timestamp.
-
     >>> x['2000Q4'] = 0
     >>> x # doctest: +NORMALIZE_WHITESPACE
     2000Q1    0.0
@@ -231,8 +187,6 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     >>> x['2000Q3']  # doctest: +NORMALIZE_WHITESPACE
     2.0
 
-    The following example uses the member function ``cumsum()`` for computing
-    the cumulative sum of the original time series.
 
     >>> cashflow(const_value=[0, 1, 2, 3, 4, 5], freq='Q', start='2000Q1').cumsum() # doctest: +NORMALIZE_WHITESPACE
     2000Q1     0.0
@@ -243,8 +197,6 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     2001Q2    15.0
     Freq: Q-DEC, dtype: float64
 
-    In the next examples, a change point is specified using a dictionary. The key
-    can be a integer or a valid timestamp.
 
     >>> cashflow(const_value=0, freq='Q', periods=6, start='2000Q1', chgpts={2:10}) # doctest: +NORMALIZE_WHITESPACE
     2000Q1     0.0
@@ -305,11 +257,6 @@ def interest_rate(const_value=0, start=None, end=None, periods=None, freq='A', c
     Returns:
         A pandas time series object.
 
-    **Examples**
-
-    In the following examples, the argument ``chgpts`` is used to specify chnages
-    in the value of the interest rate. The keys in the dictionary can be integers
-    or valid timestamps.
 
     >>> chgpts = {'2000Q4':10}
     >>> interest_rate(const_value=1, start='2000Q1', periods=8, freq='Q', chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE
@@ -359,8 +306,6 @@ def interest_rate(const_value=0, start=None, end=None, periods=None, freq='A', c
     2001Q4    20.0
     Freq: Q-DEC, dtype: float64
 
-    The parameter ``const_value`` can be a list of numbers. In this case, only is
-    necesary to specify the ``start`` or ``end`` arguments.
 
     >>> interest_rate(const_value=[10]*12, start='2000-1', freq='M')  # doctest: +NORMALIZE_WHITESPACE
     2000-01    10.0

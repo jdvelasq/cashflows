@@ -170,6 +170,11 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
         A pandas time series object.
 
 
+    **Examples**
+
+    A quarterly cashflow with a constant value 1.0 beginning in 2000Q1 can be
+    expressed as:
+
 
     >>> cashflow(const_value=1.0, start='2000Q1', periods=8, freq='Q') # doctest: +NORMALIZE_WHITESPACE
     2000Q1    1.0

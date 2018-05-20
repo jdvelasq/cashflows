@@ -8,13 +8,11 @@ Overview
 The functions in this module allow the user to create generic cashflows and interest rates
 as `pandas.Series` objects under the following restrictions:
 
-* Frequency of time series is restricted to the following values:  `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`, `'6BM'` and `'6CMB'`.
-
-
+* Frequency of time series is restricted to the following values:
+  `A`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`, `'6BM'` and `'6CMB'`.
 * Interest rates are represented as percentages (not as a fraction).
-
-
-* Appropriate values must be supplied for the arguments used to create the timestamps of the time series.
+* Appropriate values must be supplied for the arguments used to create the timestamps
+  of the time series.
 
 Due to generic cashflows and interest rates are pandas.Series objects, all available
 functions for manipulating and transforming pandas time series can be used with this package.

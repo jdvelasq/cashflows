@@ -5,7 +5,7 @@ Savings
 Overview
 -------------------------------------------------------------------------------
 
-The function ``savings `` computes the final balance for a savings account
+The function ``savings`` computes the final balance for a savings account
 with arbitrary deposits and withdrawls and variable interset rate.
 
 

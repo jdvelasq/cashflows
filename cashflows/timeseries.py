@@ -49,12 +49,31 @@ import numpy as np
 import pandas as pd
 
 def period2pos(index, date):
+    """Returns the position (index) of a timestamp vector.
+
+    Args:
+        index (list): timestamp vector.
+        date (string): date to search.
+
+    Returns:
+        position (int): position of date in index.
+
+    """
     x = [i for i, elem in enumerate(index) if elem == date]
     if x == []:
         raise ValueError('Date does not exists: ' + date.__repr__())
     return x[0]
 
 def verify_period_range(x):
+    """ Verify is all time series in a list have the same timestamp.
+
+    Args:
+        x (list): list of `pandas.Series`.
+
+    Returns:
+        None.
+
+    """
     if not isinstance(x, list):
         raise ValueError('Argument must be a list: ' + x.__repr__())
     if len(x) == 1:

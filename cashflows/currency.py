@@ -11,12 +11,8 @@ currency to the equivalent flow in other currency using the specified
 foreign exchange rate.
 
 
-Details
---------------------------
-
-
-Syntax
---------------------------
+Functions in this module
+-----------------------------------------------------------------
 
 
 

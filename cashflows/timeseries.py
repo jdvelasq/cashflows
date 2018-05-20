@@ -366,6 +366,9 @@ def interest_rate(const_value=0, start=None, end=None, periods=None, freq='A', c
     Freq: Q-DEC, dtype: float64
 
 
+    The parameter ``const_value`` can be a list of numbers. In this case, only
+    is necessary to specify the ``start`` or ``end`` arguments.
+
     >>> interest_rate(const_value=[10]*12, start='2000-1', freq='M')  # doctest: +NORMALIZE_WHITESPACE
     2000-01    10.0
     2000-02    10.0

@@ -9,8 +9,8 @@ The functions in this module allow the user to create generic cashflows and
 interest rates as `pandas.Series` objects under the following restrictions:
 
 * Frequency of time series is restricted to the following values:
-  ``A``, ``'BA'``, ``'Q'``, ``'BQ'``, ``'M'``, ``'BM'``, ``'CBM'``, ``'SM'``,
-  ``'6M'``, ``'6BM'`` and `'6CMB'`.
+  ``'A'``, ``'BA'``, ``'Q'``, ``'BQ'``, ``'M'``, ``'BM'``, ``'CBM'``, ``'SM'``,
+  ``'6M'``, ``'6BM'`` and ``'6CMB'``.
 * Interest rates are represented as percentages (not as a fraction).
 * Appropriate values must be supplied for the arguments used to create the
   timestamps of the time series.
@@ -20,7 +20,6 @@ Due to generic cashflows and interest rates are `pandas.Series` objects, all
 available functions for manipulating and transforming pandas time series can be
 used with this package.
 
-
 The ``cashflow`` function returns a `pandas.Series` object that represents a
 generic cashflow. The user must supply two of the following arguments ``start``,
 ``end`` and ``periods`` in order to create the corresponding timestamps for the
@@ -28,6 +27,15 @@ time series. The generic cashflow is set to the value specified by the argument
 ``const_value``. In addition, when the value of the argument ``const_value`` is
 a list, only is necessary to specify the ``start`` or the ``end`` dates.
 
+For convenience of the user, point values of the time series can be changed
+using the argument ``chgpts``.  In this case, the value passed to this argument
+is a dictionary where the keys are valid dates and the values are the new values
+specified for the generic cashflow in these dates.
+
+The ``interest_rate`` function returns a `pandas.Series` object in the same way
+as the ``cashflow`` function. The only difference is that the dictionary passed
+to the argument ``chgpts`` specifies change points in the time series, where
+the value of the interest rate changes for all points ahead.
 
 Functions in this module
 -------------------------------------------------------------------------------

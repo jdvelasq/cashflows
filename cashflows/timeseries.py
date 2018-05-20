@@ -234,6 +234,9 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     2.0
 
 
+    The following example uses the member function ``cumsum()`` for computing
+    the cumulative sum of the original time series.
+
     >>> cashflow(const_value=[0, 1, 2, 3, 4, 5], freq='Q', start='2000Q1').cumsum() # doctest: +NORMALIZE_WHITESPACE
     2000Q1     0.0
     2000Q2     1.0

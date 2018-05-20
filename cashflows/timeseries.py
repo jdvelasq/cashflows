@@ -204,6 +204,8 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
     2002Q2    10.0
     Freq: Q-DEC, dtype: float64
 
+    The following example uses the operator ``[]`` to modify the value with
+    index equal to 3.
 
     >>> x = cashflow(const_value=[0, 1, 2, 3], start='2000Q1', freq='Q')
     >>> x[3] = 10

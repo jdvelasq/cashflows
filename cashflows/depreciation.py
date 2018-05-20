@@ -2,20 +2,24 @@
 Asset depreciation
 ===============================================================================
 
-
 Overview
---------------------------
+-------------------------------------------------------------------------------
+
+This module implements the following functions to compute the depreciation of an
+asset:
+
+* ``depreciation_sl``: Computes the depreciation of an asset using straight line
+  depreciation method.
+* ``depreciation_soyd``: Computes the depreciation of an asset using the
+  sum-of-year's-digits method.
+* ``depreciation_db``: Computes the depreciation of an asset using the declining
+  balance method.
 
 
 Functions in this module
 -----------------------------------------------------------------
 
-
-
 """
-
-
-# from cashflows.gtimeseries import TimeSeries, cashflow, interest_rate, verify_eq_time_range
 
 
 import pandas as pd
@@ -28,9 +32,9 @@ def depreciation_sl(costs, life, salvalue=None):
     method.
 
     Args:
-        costs (TimeSeries): the cost per period of the assets.
-        life (TimeSeries): number of depreciation periods for the asset.
-        salvalue (TimeSeries): salvage value as a percentage of cost.
+        costs (pandas.Series): the cost per period of the assets.
+        life (pandas.Series): number of depreciation periods for the asset.
+        salvalue (pandas.Series): salvage value as a percentage of cost.
 
     Returns:
         Returns a pandas DataFrame with the computations.
@@ -146,9 +150,9 @@ def depreciation_soyd(costs, life, salvalue=None):
     method.
 
     Args:
-        costs (TimeSeries): the cost per period of the assets.
-        life (TimeSeries): number of depreciation periods for the asset.
-        salvalue (TimeSeries): salvage value as a percentage of cost.
+        costs (pandas.Series): the cost per period of the assets.
+        life (pandas.Series): number of depreciation periods for the asset.
+        salvalue (pandas.Series): salvage value as a percentage of cost.
 
     Returns:
         Returns a pandas DataFrame with the computations.
@@ -262,9 +266,9 @@ def depreciation_db(costs, life, salvalue=None, factor=1, convert_to_sl=True, de
     method.
 
     Args:
-        costs (TimeSeries): the cost per period of the assets.
-        life (TimeSeries): number of depreciation periods for the asset.
-        salvalue (TimeSeries): salvage value as a percentage of cost.
+        costs (pandas.Series): the cost per period of the assets.
+        life (pandas.Series): number of depreciation periods for the asset.
+        salvalue (pandas.Series): salvage value as a percentage of cost.
         factor (float): acelerating factor for depreciation.
         convert_to_sl (bool): converts to straight line method?
         noprint (bool): when True, the procedure prints a depreciation table.

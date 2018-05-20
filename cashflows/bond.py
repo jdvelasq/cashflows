@@ -3,7 +3,7 @@ Bond Valuation
 ===============================================================================
 
 Overview
---------------------------
+-------------------------------------------------------------------------------
 
 This module computes the present value or the yield-to-maturity of of the
 expected cashflow of a bond. Also,it is possible to make a sensibility analysis
@@ -11,12 +11,8 @@ for different values for the yield-to-maturity and one present value of
 the bond.
 
 
-Details
---------------------------
-
-
-Syntax
---------------------------
+Functions in this module
+-------------------------------------------------------------------------------
 
 
 

@@ -2,13 +2,15 @@
 Savings
 ===============================================================================
 
-
 Overview
---------------------------
+-------------------------------------------------------------------------------
+
+The function ``savings `` computes the final balance for a savings account
+with arbitrary deposits and withdrawls and variable interset rate.
 
 
 Functions in this module
------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 
 
@@ -31,9 +33,9 @@ def savings(deposits, nrate, initbal=0):
     withdrawls and variable interset rate.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
-        deposits (TimeSeries): deposits to the account.
-        nrate (TimeSeries): nominal interest rate paid by the account.
+        cflo (pandas.Series): Generic cashflow.
+        deposits (pandas.Series): deposits to the account.
+        nrate (pandas.Series): nominal interest rate paid by the account.
         initbal (float): initial balance of the account.
 
     Return:

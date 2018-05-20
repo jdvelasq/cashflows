@@ -3,11 +3,14 @@ After tax cashflow calculation
 ===============================================================================
 
 Overview
---------------------------
+-------------------------------------------------------------------------------
 
+The function ``after_tax_cashflow`` returns a new cashflow object for which the
+values are taxed. The specified tax rate is only appled to positive values
+in the cashflow. Negative values are reemplazed by a zero value.
 
 Functions in this module
------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 
 
@@ -20,22 +23,15 @@ from cashflows.common import *
 
 
 def after_tax_cashflow(cflo, tax_rate):
-    """
-    The function `after_tax_cashflow` returns a new cashflow object for which the
-    values are taxed. The specified tax rate is only appled to positive values
-    in the cashflow. Negative values are reemplazed by a zero value. `cflo`
-    and `tax_rate` must have the same length and time specification.
-
-
-    Computes the after cashflow for a tax rate. Taxes are not computed
+    """Computes the after cashflow for a tax rate. Taxes are not computed
     for negative values in the cashflow.
 
     Args:
-        cflo (TimeSeries): generic cashflow.
-        tax_rate (TimeSeries): periodic income tax rate.
+        cflo (pandas.Series): generic cashflow.
+        tax_rate (pandas.Series): periodic income tax rate.
 
     Returns:
-        TimeSeries objects with taxed values
+        Taxed values (`pandas.Series`)
 
     **Example***
 
@@ -63,31 +59,7 @@ def after_tax_cashflow(cflo, tax_rate):
             result[time] = 0
     return result
 
-    ##
-    ## version vectorizada
-    ##
-
-    # params = _vars2list([cflo, tax_rate])
-    # cflo = params[0]
-    # tax_rate = params[1]
-    # retval = []
-    # for xcflo, xtax_rate in zip(cflo, tax_rate):
-    #     if not isinstance(xcflo, pd.Series):
-    #         raise TypeError("cashflow must be a TimeSeries")
-    #     verify_period_range([xcflo, xtax_rate])
-    #     result = xcflo.copy()
-    #     for time, _ in enumerate(xcflo):
-    #         if result[time] > 0:
-    #             result[time] *= xtax_rate[time] / 100
-    #         else:
-    #             result[time] = 0
-    #     retval.append(result)
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
-
-
+    
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

@@ -3,7 +3,7 @@ Time value of money models
 ===============================================================================
 
 Overview
------------------------
+-------------------------------------------------------------------------------
 
 The functions in this module are used for certain compound interest calculations
 for a cashflow under the following restrictions:
@@ -13,7 +13,8 @@ for a cashflow under the following restrictions:
 * Payments are a constant amount.
 * Interest rate is the same over all analysis period.
 
-For convenience of the user, this module implements the following simplified functions:
+For convenience of the user, this module implements the following simplified
+functions:
 
 * ``pvfv``: computes the missing value in the equation
   ``fval = pval * (1 + rate) ** nper``, that represents the following
@@ -50,10 +51,11 @@ For convenience of the user, this module implements the following simplified fun
     :width: 650px
     :align: center
 
-In addition, the function ``amortize`` computes and returns the amortization schedule of a loan.
+In addition, the function ``amortize`` computes and returns the amortization
+schedule of a loan.
 
 Functions in this module
------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 """
 

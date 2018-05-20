@@ -3,7 +3,7 @@ Analysis of cashflows
 ===============================================================================
 
 Overview
---------------------------
+-------------------------------------------------------------------------------
 
 This module implements the following functions for financial analysis of
 cashflows:
@@ -26,14 +26,8 @@ cashflows:
   comparing financial indicators for different alternatives.
 
 
-Details
---------------------------
-
-
-Syntax
---------------------------
-
-
+Functions in this module
+-------------------------------------------------------------------------------
 
 """
 
@@ -55,7 +49,7 @@ def irr(cflo):
     interest rate.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
+        cflo (pandas.Series): Generic cashflow.
 
     Returns:
         Float or list of floats.
@@ -72,30 +66,7 @@ def irr(cflo):
     dtype: float64
 
     """
-    # if isinstance(cflo, pd.Series):
-    #     cflo = [cflo]
-    # retval = []
-    # freq = []
-    # for xcflo in cflo:
-    #     retval.append(100 * np.irr(xcflo.tolist()))
-    #     freq.append(xcflo.index.freq.__repr__())
-    # if len(retval) == 1:
-    #     return retval[0]
-    # daux = {'<YearEnd: month=12>':'A',
-    #         '<BusinessYearEnd: month=12>':'BA',
-    #         '<QuarterEnd: startingMonth=12>':'Q',
-    #         '<BusinessQuarterEnd: startingMonth=12>':'BQ',
-    #         '<MonthEnd>':'M',
-    #         '<BusinessMonthEnd>':'BM',
-    #         '<CustomBusinessMonthEnd>':'CBM',
-    #         '<SemiMonthEnd: day_of_month=15>':'SM',
-    #         '<6 * MonthEnds>':'6M',
-    #         '<6 * BusinessMonthEnds>':'6BM',
-    #         '<6 * CustomBusinessMonthEnds>':'6CBM'}
-    # freq = [daux[i] for i in freq]
-    # retval = pd.DataFrame({'IRR':retval, 'Freq':freq})
-    # return retval
-
+    
 
     if isinstance(cflo, pd.Series):
         cflo = [cflo]
@@ -112,7 +83,7 @@ def mirr(cflo, finance_rate=0, reinvest_rate=0):
     as a periodic interest rate.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
+        cflo (pandas.Series): Generic cashflow.
         finance_rate (float): Periodic interest rate applied to negative values of the cashflow.
         reinvest_rate (float): Periodic interest rate applied to positive values of the cashflow.
 
@@ -156,8 +127,8 @@ def timevalue(cflo, prate, base_date=0, utility=None):
 
 
     Args:
-        cflo (TimeSeries, list of TimeSeries): Generic cashflow.
-        prate (TimeSeries): Periodic interest rate.
+        cflo (pandas.Series, list of pandas.Series): Generic cashflow.
+        prate (pandas.Series): Periodic interest rate.
         base_date (int, tuple): Time.
         utility (function): Utility function.
 
@@ -211,43 +182,14 @@ def timevalue(cflo, prate, base_date=0, utility=None):
         return retval[0]
     return retval
 
-
-    # params = _vars2list([cflo, prate, base_date])
-    # cflo = params[0]
-    # prate = params[1]
-    # base_date = params[2]
-    # retval = []
-    # for xcflo, xprate, xbase_date in zip(cflo, prate, base_date):
-    #     if not isinstance(xcflo, pd.Series):
-    #         raise TypeError("`cflo` must be a pandas.Series")
-    #     if not isinstance(xprate, pd.Series):
-    #         raise TypeError("`prate` must be a pandas.Series")
-    #     verify_period_range([xcflo, xprate])
-    #     netval = 0
-    #     factor = to_discount_factor(prate=xprate, base_date=xbase_date)
-    #     for time, _ in enumerate(xcflo):
-    #         if utility is None:
-    #             xcflo_aux = xcflo[time]
-    #         else:
-    #             xcflo_aux = utility(xcflo[time])
-    #         netval += xcflo_aux * factor[time]
-    #     if utility is not None:
-    #         netval = utility(netval, inverse=True)
-    #     retval.append(netval)
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
-
-
 def net_uniform_series(cflo, prate, nper=1):
     """Computes a net uniform series equivalent of a cashflow. This is,
     a fixed periodic payment during `nper` periods that is equivalent
     to the cashflow `cflo` at the periodic interest rate `prate`.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
-        prate (TimeSeries): Periodic interest rate.
+        cflo (pandas.Series): Generic cashflow.
+        prate (pandas.Series): Periodic interest rate.
         nper (int, list): Number of equivalent payment periods.
 
     Returns:
@@ -290,19 +232,6 @@ def net_uniform_series(cflo, prate, nper=1):
 
 
 
-    # params = _vars2list([cflo, prate, nper])
-    # cflo = params[0]
-    # prate = params[1]
-    # nper = params[2]
-    # retval = []
-    # for xcflo, xprate, xnper in zip(cflo, prate, nper):
-    #     netval = timevalue(cflo=xcflo, prate=xprate, base_date=0)
-    #     erate = equivalent_rate(prate=xprate)
-    #     retval.append(-tvmm(nrate=erate, nper=xnper, pval=netval, fval=0, pmt=None))
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
 
 def benefit_cost_ratio(cflo, prate, base_date=0):
     """
@@ -310,8 +239,8 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
     using the periodic interest rate `prate`.
 
     Args:
-        prate (int float, Rate): Periodic interest rate.
-        cflo (TimeSeries): Generic cashflow.
+        prate (float, pandas.Series): Periodic interest rate.
+        cflo (pandas.Series): Generic cashflow.
         base_date (int, list): Time.
 
     Returns:
@@ -358,81 +287,6 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
         return retval[0]
     return retval
 
-
-
-    # params = _vars2list([prate, cflo, base_date])
-    # prate = params[0]
-    # cflo = params[1]
-    # base_date = params[2]
-    #
-    # retval = []
-    # for xprate, xcflo, xbase_date in zip(prate, cflo, base_date):
-    #     verify_period_range([xcflo, xprate])
-    #     num = 0
-    #     den = 0
-    #     num = xcflo.copy()
-    #     den = xcflo.copy()
-    #     for time, _ in enumerate(xcflo):
-    #         if xcflo[time] >= 0.0:
-    #             den[time] = 0
-    #         else:
-    #             num[time] = 0
-    #     retval.append(-timevalue(num, xprate, xbase_date) / timevalue(den, xprate, xbase_date))
-    #
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
-
-
-
-
-##-------------------
-
-
-
-
-#
-#
-#
-# def list_as_table(data):
-#     """Prints the list `data` as a table. This function is used to produce a
-#     human-readable format of a table for comparing financial indicators.
-#
-#     Args:
-#         data (list): List of numeric values.
-#
-#     Returns:
-#         None
-#
-#     **Example.**
-#
-#     >>> list_as_table(data=[1, 2, 3, 4]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-#      #               Value
-#     ------------------------
-#      0              1.0000
-#      1              2.0000
-#      2              3.0000
-#      3              4.0000
-#
-#
-#     >>> prate = interest_rate([12]*5)
-#     >>> cflo = cashflow([-200] + [100]*4)
-#     >>> list_as_table(timevalue(cflo=[cflo, cflo, cflo], prate=prate)) # doctest: +NORMALIZE_WHITESPACE
-#      #               Value
-#     ------------------------
-#      0            103.7349
-#      1            103.7349
-#      2            103.7349
-#
-#     """
-#     print(' #               Value')
-#     print('------------------------')
-#     #
-#     data = [round(element, 4) for element in data]
-#
-#     for index, _ in enumerate(data):
-#         print(' {:<3d}    {:14.4f}'.format(index, data[index]))
 
 
 if __name__ == "__main__":

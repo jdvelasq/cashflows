@@ -3,7 +3,7 @@ Loan analysis
 ==============================================================================
 
 Overview
---------------------------
+-------------------------------------------------------------------------------
 
 Computes the amorization schedule for the following types of loans:
 
@@ -22,7 +22,7 @@ Computes the amorization schedule for the following types of loans:
 
 
 Functions in this module
------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 
 
@@ -93,16 +93,18 @@ def fixed_ppal_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0,
 
     Args:
         amount (float): Loan amount.
-        nrate (float, TimeSeries): nominal interest rate per year.
+        nrate (float, pandas.Series): nominal interest rate per year.
         grace (int): number of grace periiods without paying principal.
         dispoints (float): Discount points of the loan.
         orgpoints (float): Origination points of the loan.
-        prepmt (TimeSeries): generic cashflow representing prepayments.
-        balloonpmt (TimeSeries): generic cashflow representing balloon payments.
+        prepmt (pandas.Series): generic cashflow representing prepayments.
+        balloonpmt (pandas.Series): generic cashflow representing balloon payments.
 
 
     Returns:
        A object of the class ``Loan``.
+
+    **Examples**
 
     >>> nrate = interest_rate(const_value=[10]*11, start='2018Q1', freq='Q')
     >>> tax_rate = interest_rate(const_value=[35]*11, start='2018Q1', freq='Q')
@@ -436,10 +438,10 @@ def bullet_loan(amount, nrate, dispoints=0, orgpoints=0, prepmt=None):
 
     Args:
         amount (float): Loan amount.
-        nrate (float, TimeSeries): nominal interest rate per year.
+        nrate (float, pandas.Series): nominal interest rate per year.
         dispoints (float): Discount points of the loan.
         orgpoints (float): Origination points of the loan.
-        prepmt (TimeSeries): generic cashflow representing prepayments.
+        prepmt (pandas.Series): generic cashflow representing prepayments.
 
     Returns:
        A object of the class ``Loan``.
@@ -504,8 +506,8 @@ def fixed_rate_loan(amount, nrate, life, start, freq='A', grace=0,
         grace (int): number of periods of grace (without payment of the principal)
         dispoints (float): Discount points of the loan.
         orgpoints (float): Origination points of the loan.
-        prepmt (TimeSeries): generic cashflow representing prepayments.
-        balloonpmt (TimeSeries): generic cashflow representing balloon payments.
+        prepmt (pandas.Series): generic cashflow representing prepayments.
+        balloonpmt (pandas.Series): generic cashflow representing balloon payments.
 
     Returns:
        A object of the class ``Loan``.
@@ -644,11 +646,11 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
 
     Args:
         amount (float): Loan amount.
-        nrate (float, TimeSeries): nominal interest rate per year.
+        nrate (float, pandas.Series): nominal interest rate per year.
         grace (int): numner of grace periods without paying the principal.
         dispoints (float): Discount points of the loan.
         orgpoints (float): Origination points of the loan.
-        prepmt (TimeSeries): generic cashflow representing prepayments.
+        prepmt (pandas.Series): generic cashflow representing prepayments.
 
 
     Returns:
@@ -797,117 +799,6 @@ def buydown_loan(amount, nrate, grace=0, dispoints=0, orgpoints=0, prepmt=None):
     result['Ppal_Payment'] = ppalpmt
     result['End_Ppal_Amount'] = endppalbal
     return result
-
-
-# class xLoan():
-#     """
-#     Class for representing loans
-#     """
-#
-#     # pylint: disable=too-many-instance-attributes
-#
-#     def __init__(self):
-#         """
-#         """
-#         self.life = self.amount = self.grace = self.df = None
-#         # self.intpmt = self.endppalbal = self.begppalbal = None
-#         # self.totpmt = None
-#
-#     def to_cashflow(self, tax_rate=0):
-#         """Converts the loan to the equivalent cashflow.
-#
-#         For the conversion, origination points are considered as exogenous costs
-#         and they are not taking in to account in the computation. In oposition,
-#         discount points are considered as prepaid interest and included in the
-#         cashflow.
-#
-#         When tax_rate is different from zero, tax benefits are considered."""
-#
-#
-#         if isinstance(tax_rate, (int, float)):
-#             tax_rate = interest_rate(const_value = [tax_rate] * (self.life + self.grace + 1))
-#
-#         cflo = cashflow(const_value= [0] * (self.grace + self.life + 1))
-#
-#         ##
-#         ## payments per period
-#         ##
-#         for time in range(self.grace + self.life + 1):
-#             if time == 0:
-#                 cflo[0] = self.amount
-#             cflo[time] += -self.totpmt[time] + self.intpmt[time] * tax_rate[time] / 100
-#
-#         return cflo
-#
-#     def true_rate(self, tax_rate=0):
-#         """Computes the true interest rate for the loan.
-#
-#         For the computation, the loan is converted to the equivalent cashflow,
-#         taking in to account the following aspects:
-#
-#         * Origination points are considered as non deducible costs and they \
-#         are ignored in the computation.
-#
-#         * Discount points are prepaid interest and they are considered as \
-#         deducibles in the computation.
-#
-#         * When `tax_rate` is different from zero, the After-Tax true interest \
-#         rate is calculated. This is, only the (1 - `tax_rate`) of paid interests \
-#         (including discount points) are used in the computation.
-#
-#         """
-#         return irr(self.to_cashflow(tax_rate))
-#
-#
-#
-#     def __repr__(self):
-#
-#         return self.df.__repr__()
-#         # return repr_table(cols=[self.begppalbal,
-#         #                         self.nrate,
-#         #                         self.totpmt,
-#         #                         self.intpmt,
-#         #                         self.ppalpmt,
-#         #                         self.endppalbal],
-#         #                header=[['Beg.', 'Per.', 'Total', 'Int.', 'Ppal', 'Ending'],
-#         #                        ['Ppal', 'Rate', 'Pmt', 'Pmt', 'Pmt', 'Ppal']])
-#
-# #    def x__repr__(self):
-# #        txt = ['']
-# #        txt.append('  t          Beginning  Periodic      Total     Interest    Principal       Ending')
-# #        txt.append('             Principal  Rate     Payment      Payment      Payment    Principal')
-# #        txt.append('--------------------------------------------------------------------------')
-# #
-# #        for time in range(self.grace + self.life + 1):
-# #            fmt = ' {:3d}       {:12.2f} {:12.2f} {:12.2f} {:12.2f} {:12.2f}'
-# #            txt.append(fmt.format(time,
-# #                                  self.begppalbal[time],
-# #                                  self.totpmt[time],
-# #                                  self.intpmt[time],
-# #                                  self.ppalpmt[time],
-# #                                  self.endppalbal[time]))
-# #        return '\n'.join(txt)
-#
-#     def interest(self):
-#         """Returns the interest paid as a Cashflow object."""
-#         return Cashflow(constValue=self.intpmt.tolist())
-#
-#     def begbal(self):
-#         """Returns the balance at the begining of each period as
-#         a Cashflow object."""
-#         return Cashflow(constValue=self.begppalbal.tolist())
-#
-#     def endbal(self):
-#         """Returns the balance at the ending of each period as
-#         a Cashflow object."""
-#         return Cashflow(constValue=self.endppalbal.tolist())
-#
-#     def ppalpmt(self):
-#         """Returns the principal payment for each period as
-#         a Cashflow object."""
-#         return Cashflow(constValue=self.ppalpmt.tolist())
-
-
 
 
 

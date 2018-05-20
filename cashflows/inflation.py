@@ -3,17 +3,17 @@ Constant dollar transformations
 ===============================================================================
 
 Overview
---------------------------
+-------------------------------------------------------------------------------
 
 
-The function `const2curr` computes the equivalent generic cashflow in current
+The function ``const2curr`` computes the equivalent generic cashflow in current
 dollars from a generic cashflow in constant dollars of the date given by
-`base_date`. `inflation` is the inflation rate per compounding period.
-`curr2const` computes the inverse transformation.
+``base_date``. ``inflation`` is the inflation rate per compounding period.
+``curr2const`` computes the inverse transformation.
 
 
 Functions in this module
------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
 
 
@@ -31,8 +31,8 @@ def const2curr(cflo, inflation, base_date=0):
     of the time `base_date`.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
-        inflation (TimeSeries): Inflation rate per compounding period.
+        cflo (pandas.Series): Generic cashflow.
+        inflation (pandas.Series): Inflation rate per compounding period.
         base_date (int, str): base date.
 
     Returns:
@@ -97,68 +97,13 @@ def const2curr(cflo, inflation, base_date=0):
     return result
 
 
-    # if not isinstance(cflo, pd.Series):
-    #     raise TypeError("cflo must be a TimeSeries object")
-    # if not isinstance(inflation, pd.Series):
-    #     raise TypeError("inflation must be a TimeSeries object")
-    # if not isinstance(base_date, list):
-    #     base_date = [base_date]
-    # verify_period_range([cflo, inflation])
-    # index = cflo.index.copy().to_series().astype(str)
-    # retval = None
-    # for xbase_date in base_date:
-    #     factor = to_compound_factor(prate=inflation, base_date=xbase_date)
-    #     result = cflo.copy()
-    #     for time, _ in enumerate(result):
-    #         result[time] *= factor[time]
-    #     if isinstance(xbase_date, str):
-    #         current_date = xbase_date
-    #     else:
-    #         current_date = index[xbase_date]
-    #     if retval is None:
-    #         retval = {current_date:result}
-    #     else:
-    #         retval[current_date] = result
-    # retval = pd.DataFrame(retval)
-    # if len(retval.columns) == 1:
-    #     return retval[retval.columns[0]]
-    # return retval
-
-
-
-    ##
-    ## version inicial
-    ##
-
-    # params = _vars2list([cflo, inflation, base_date])
-    # cflo = params[0]
-    # inflation = params[1]
-    # base_date = params[2]
-    # retval = []
-    # for xcflo, xinflation, xbase_date in zip(cflo, inflation, base_date):
-    #     if not isinstance(xcflo, pd.Series):
-    #         raise TypeError("cflo must be a TimeSeries object")
-    #     if not isinstance(xinflation, pd.Series):
-    #         raise TypeError("inflation must be a TimeSeries object")
-    #     verify_period_range([xcflo, xinflation])
-    #     factor = to_compound_factor(prate=xinflation, base_date=xbase_date)
-    #     result = xcflo.copy()
-    #     for time, _ in enumerate(result):
-    #         result[time] *= factor[time]
-    #     retval.append(result)
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
-
-
 def curr2const(cflo, inflation, base_date=0):
     """Converts a cashflow of current dollars to constant dollars of
     the date `base_date`.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
-        inflation_rate (float, Rate): Inflation rate per compounding period.
+        cflo (pandas.Series): Generic cashflow.
+        inflation_rate (float, pandas.Series): Inflation rate per compounding period.
         base_date (int): base time..
 
     Returns:
@@ -201,63 +146,6 @@ def curr2const(cflo, inflation, base_date=0):
     for time, _ in enumerate(result):
         result[time] *= factor[time]
     return result
-
-
-    # if not isinstance(cflo, pd.Series):
-    #     raise TypeError("cflo must be a TimeSeries object")
-    # if not isinstance(inflation, pd.Series):
-    #     raise TypeError("inflation must be a TimeSeries object")
-    # if not isinstance(base_date, list):
-    #     base_date = [base_date]
-    # verify_period_range([cflo, inflation])
-    # index = cflo.index.copy().to_series().astype(str)
-    # retval = None
-    # for xbase_date in base_date:
-    #     factor = to_discount_factor(prate=inflation, base_date=xbase_date)
-    #     result = cflo.copy()
-    #     for time, _ in enumerate(result):
-    #         result[time] *= factor[time]
-    #     if isinstance(xbase_date, str):
-    #         current_date = xbase_date
-    #     else:
-    #         current_date = index[xbase_date]
-    #     if retval is None:
-    #         retval = {current_date:result}
-    #     else:
-    #         retval[current_date] = result
-    # retval = pd.DataFrame(retval)
-    # if len(retval.columns) == 1:
-    #     return retval[retval.columns[0]]
-    # return retval
-
-
-
-    ##
-    ## version inicial
-    ##
-
-
-
-    # params = _vars2list([cflo, inflation, base_date])
-    # cflo = params[0]
-    # inflation = params[1]
-    # base_date = params[2]
-    # retval = []
-    # for xcflo, xinflation, xbase_date in zip(cflo, inflation, base_date):
-    #     if not isinstance(xcflo, pd.Series):
-    #         raise TypeError("cflo must be a TimeSeries object")
-    #     if not isinstance(xinflation, pd.Series):
-    #         raise TypeError("inflation must be a TimeSeries object")
-    #     verify_period_range([xcflo, xinflation])
-    #     factor = to_discount_factor(prate=xinflation, base_date=xbase_date)
-    #     result = xcflo.copy()
-    #     for time, _ in enumerate(result):
-    #         result[time] *= factor[time]
-    #     retval.append(result)
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
-
 
 
 if __name__ == "__main__":

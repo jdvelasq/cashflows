@@ -3,18 +3,16 @@ Currency conversion
 ===============================================================================
 
 Overview
---------------------------
+-------------------------------------------------------------------------------
 
-The function `currency_conversion` allows the user to convert an cashflow in a
-currency to the equivalent flow in other currency using the specified
-`exchange_rate`. In addition, it is possible to include the devaluation of the
+The function ``currency_conversion`` allows the user to convert an cashflow in a
+currency to the equivalent cashflow in other currency using the specified
+``exchange_rate``. In addition, it is possible to include the devaluation of the
 foreign exchange rate.
 
 
 Functions in this module
------------------------------------------------------------------
-
-
+-------------------------------------------------------------------------------
 
 
 """
@@ -31,9 +29,9 @@ def currency_conversion(cflo, exchange_rate=1, devaluation=None, base_date=0):
     """Converts a cashflow of dollars to another currency.
 
     Args:
-        cflo (TimeSeries): Generic cashflow.
+        cflo (pandas.Series): Generic cashflow.
         exchange_rate (float): Exchange rate at time `base_date`.
-        devaluation (TimeSeries): Devaluation rate per compounding period.
+        devaluation (pandas.Series): Devaluation rate per compounding period.
         base_date (int): Time index for the `exchange_rate` in current dollars.
 
     Returns:
@@ -85,35 +83,6 @@ def currency_conversion(cflo, exchange_rate=1, devaluation=None, base_date=0):
             result[time] *= exchange_rate * factor[time]
     return result
 
-    ##
-    ## version vectorizada
-    ##
-
-    # params = _vars2list([cflo, exchange_rate, devaluation, base_date])
-    # cflo = params[0]
-    # exchange_rate = params[1]
-    # devaluation = params[2]
-    # base_date = params[3]
-    # retval = []
-    # for xcflo, xexchange_rate, xdevaluation, xbase_date in zip(cflo, exchange_rate, devaluation, base_date):
-    #     if not isinstance(xcflo, pandas.Series):
-    #         raise TypeError("`cashflow` must be a pandas.Series object")
-    #     if xdevaluation is None:
-    #         result = xcflo.copy()
-    #         for time, _ in enumerate(result):
-    #             result[time] *= xexchange_rate
-    #     else:
-    #         if not isinstance(xdevaluation, pandas.Series):
-    #             raise TypeError("`devaluation` must be a pandas.Series object")
-    #         verify_period_range([xcflo, xdevaluation])
-    #         factor = to_compound_factor(prate=xdevaluation, base_date=xbase_date)
-    #         result = xcflo.copy()
-    #         for time, _ in enumerate(result):
-    #             result[time] *= xexchange_rate * factor[time]
-    #     retval.append(result)
-    # if len(retval) == 1:
-    #     return retval[0]
-    # return retval
 
 
 if __name__ == "__main__":

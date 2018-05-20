@@ -9,11 +9,24 @@ The functions in this module allow the user to create generic cashflows and
 interest rates as `pandas.Series` objects under the following restrictions:
 
 * Frequency of time series is restricted to the following values:
-  ``A``, ``'BA'```, ``'Q'``, ``'BQ'``, ``'M'``, ``'BM'``, ``'CBM'``, ``'SM'``,
+  ``A``, ``'BA'``, ``'Q'``, ``'BQ'``, ``'M'``, ``'BM'``, ``'CBM'``, ``'SM'``,
   ``'6M'``, ``'6BM'`` and `'6CMB'`.
 * Interest rates are represented as percentages (not as a fraction).
 * Appropriate values must be supplied for the arguments used to create the
   timestamps of the time series.
+
+
+Due to generic cashflows and interest rates are `pandas.Series` objects, all
+available functions for manipulating and transforming pandas time series can be
+used with this package.
+
+
+The ``cashflow`` function returns a `pandas.Series` object that represents a
+generic cashflow. The user must supply two of the following arguments ``start``,
+``end`` and ``periods`` in order to create the corresponding timestamps for the
+time series. The generic cashflow is set to the value specified by the argument
+``const_value``. In addition, when the value of the argument ``const_value`` is
+a list, only is necessary to specify the ``start`` or the ``end`` dates.
 
 
 Functions in this module
@@ -139,8 +152,10 @@ def cashflow(const_value=0, start=None, end=None, periods=None, freq='A', chgpts
         end (string):  Date as string using pandas convetion for dates.
         peridos (integer): Length of the time seriesself.
         freq (string): String indicating the period of time series. Valid values
-                      are `'A'`, `'BA'`, `'Q'`, `'BQ'`, `'M'`, `'BM'`, `'CBM'`, `'SM'`, `'6M'`,
-                      `'6BM'` and `'6CMB'`. See https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
+                      are ``'A'``, ``'BA'``, ``'Q'``, ``'BQ'``, ``'M'``,
+                      ``'BM'``, ``'CBM'``, ``'SM'``, ``'6M'``, ``'6BM'`` and
+                      ``'6CMB'``. See
+                      https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases
         chgpts (dict): Dictionary indicating point changes in the values of the time series.
 
     Returns:

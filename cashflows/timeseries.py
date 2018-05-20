@@ -65,7 +65,7 @@ def period2pos(index, date):
     return x[0]
 
 def verify_period_range(x):
-    """ Verify is all time series in a list have the same timestamp.
+    """ Verify if all time series in a list have the same timestamp.
 
     Args:
         x (list): list of `pandas.Series`.

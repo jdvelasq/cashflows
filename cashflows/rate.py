@@ -50,11 +50,22 @@ def effrate(nrate=None, prate=None, pyr=1):
     Returns:
         Effective interest rate(float, pandas.Series).
 
+    **Examples**
+
+    In this example, the equivalent effective interest rate for a periodic
+    monthly interest rate of 1% is computed.
+
     >>> effrate(prate=1, pyr=12) # doctest: +ELLIPSIS
     12.68...
 
+    This example shows hot to compute the effective interes rate equivalent to
+    a nominal interest rate of 10% with montlhy compounding.
+
     >>> effrate(nrate=10, pyr=12) # doctest: +ELLIPSIS
     10.4713...
+
+    Also it is possible to use list for some arguments of the functions as
+    it is shown bellow.
 
     >>> effrate(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS
     0     3.030100
@@ -80,7 +91,7 @@ def effrate(nrate=None, prate=None, pyr=1):
     2    14.934203
     dtype: float64
 
-    When a rate and the number of compounding periods (`pyr`) are vectors, they
+    When a rate and the number of compounding periods (``pyr``) are vectors, they
     must have the same length. Computations are executed using the first rate
     with the first compounding and so on.
 
@@ -96,6 +107,7 @@ def effrate(nrate=None, prate=None, pyr=1):
     2    42.576089
     dtype: float64
 
+    Also it is possible to transform interest rate time series.
 
     >>> nrate = interest_rate(const_value=12, start='2000-06', periods=12, freq='6M')
     >>> prate = perrate(nrate=nrate)
@@ -209,12 +221,15 @@ def nomrate(erate=None, prate=None, pyr=1):
     Computes the nominal interest rate given the nominal interest rate or the periodic interest rate.
 
     Args:
-        erate (float, TimeSeries): Effective interest rate.
-        prate (float, TimeSeries): Periodic interest rate.
+        erate (float, pandas.Series): Effective interest rate.
+        prate (float, pandas.Series): Periodic interest rate.
         pyr(int): Number of compounding periods per year.
 
     Returns:
-        Nominal interest rate(float, TimeSeries).
+        Nominal interest rate(float, pandas.Series).
+
+
+    **Examples**
 
     >>> nomrate(prate=1, pyr=12) # doctest: +ELLIPSIS
     12.0
@@ -377,13 +392,15 @@ def perrate(nrate=None, erate=None, pyr=1):
     Computes the periodic interest rate given the nominal interest rate or the effective interest rate.
 
     Args:
-        nrate (float, TimeSeries): Nominal interest rate.
-        erate (float, TimeSeries): Effective interest rate.
+        nrate (float, pandas.Series): Nominal interest rate.
+        erate (float, pandas.Series): Effective interest rate.
         pyr(int): Number of compounding periods per year.
 
 
     Returns:
-        Periodic interest rate(float, TimeSeries).
+        Periodic interest rate(float, pandas.Series).
+
+    **Examples**
 
     >>> perrate(nrate=10, pyr=12) # doctest: +ELLIPSIS
     0.8333...
@@ -415,7 +432,7 @@ def perrate(nrate=None, erate=None, pyr=1):
     2    1.166667
     dtype: float64
 
-    When a rate and the number of compounding periods (`pyr`) are vectors, they
+    When a rate and the number of compounding periods (``pyr``) are vectors, they
     must have the same length. Computations are executed using the first rate
     with the first compounding and so on.
 
@@ -543,15 +560,20 @@ def to_discount_factor(nrate=None, erate=None, prate=None, base_date=None):
     """Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).
 
     Args:
-        nrate (TimeSeries): Nominal interest rate per year.
-        nrate (TimeSeries): Effective interest rate per year.
-        prate (TimeSeries): Periodic interest rate.
+        nrate (pandas.Series): Nominal interest rate per year.
+        nrate (pandas.Series): Effective interest rate per year.
+        prate (pandas.Series): Periodic interest rate.
         base_date (string): basis time.
 
     Returns:
-        TimeSeries of float values.
+        `pandas.Series` of float values.
 
     Only one of the interest rates must be supplied for the computation.
+
+    **Example**
+
+    In this example, a discount factor is computed for a interest rate
+    expressed as nominal, periodic or effective interest rate.
 
     >>> nrate = interest_rate(const_value=4, periods=10, start='2016Q1', freq='Q')
     >>> erate = effrate(nrate=nrate)
@@ -619,7 +641,10 @@ def to_compound_factor(nrate=None, erate=None, prate=None, base_date=0):
         Compound factor (list)
 
 
-    **Examples**
+    **Example**
+
+    In this example, a compound factor is computed for a interest rate
+    expressed as nominal, periodic or effective interest rate.
 
     >>> nrate = interest_rate(const_value=4, start='2000', periods=10, freq='Q')
     >>> erate = effrate(nrate=nrate)
@@ -651,6 +676,11 @@ def equivalent_rate(nrate=None, erate=None, prate=None):
         float value.
 
     Only one of the interest rate must be supplied for the computation.
+
+    **Example**
+
+    In this example, the equivalent rate for a periodic interest rate of 10% is
+    computed.
 
     >>> equivalent_rate(prate=interest_rate([10]*5, start='2000Q1', freq='Q')) # doctest: +ELLIPSIS
     10.0...
@@ -687,11 +717,6 @@ def equivalent_rate(nrate=None, erate=None, prate=None):
         for element in erate[1:]:
             factor *= (1 + (numpy.power(1 + element/100, 1. / pyr) - 1))
         return 100  * (factor**(1/(len(value) - 1)) - 1)
-
-
-
-
-
 
 
 

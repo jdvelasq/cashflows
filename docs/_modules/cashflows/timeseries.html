@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cashflows.timeseries &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cashflows.timeseries</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cashflows.timeseries</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Representation of Cashflows and Interest Rates</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">Overview</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+<span class="sd">The functions in this module allow the user to create generic cashflows and</span>
+<span class="sd">interest rates as `pandas.Series` objects under the following restrictions:</span>
+
+<span class="sd">* Frequency of time series is restricted to the following values:</span>
+<span class="sd">  ``&#39;A&#39;``, ``&#39;BA&#39;``, ``&#39;Q&#39;``, ``&#39;BQ&#39;``, ``&#39;M&#39;``, ``&#39;BM&#39;``, ``&#39;CBM&#39;``, ``&#39;SM&#39;``,</span>
+<span class="sd">  ``&#39;6M&#39;``, ``&#39;6BM&#39;`` and ``&#39;6CMB&#39;``.</span>
+<span class="sd">* Interest rates are represented as percentages (not as a fraction).</span>
+<span class="sd">* Appropriate values must be supplied for the arguments used to create the</span>
+<span class="sd">  timestamps of the time series.</span>
+
+
+<span class="sd">Due to generic cashflows and interest rates are `pandas.Series` objects, all</span>
+<span class="sd">available functions for manipulating and transforming pandas time series can be</span>
+<span class="sd">used with this package.</span>
+
+<span class="sd">The ``cashflow`` function returns a `pandas.Series` object that represents a</span>
+<span class="sd">generic cashflow. The user must supply two of the following arguments ``start``,</span>
+<span class="sd">``end`` and ``periods`` in order to create the corresponding timestamps for the</span>
+<span class="sd">time series. The generic cashflow is set to the value specified by the argument</span>
+<span class="sd">``const_value``. In addition, when the value of the argument ``const_value`` is</span>
+<span class="sd">a list, only is necessary to specify the ``start`` or the ``end`` dates.</span>
+
+<span class="sd">For convenience of the user, point values of the time series can be changed</span>
+<span class="sd">using the argument ``chgpts``.  In this case, the value passed to this argument</span>
+<span class="sd">is a dictionary where the keys are valid dates and the values are the new values</span>
+<span class="sd">specified for the generic cashflow in these dates.</span>
+
+<span class="sd">The ``interest_rate`` function returns a `pandas.Series` object in the same way</span>
+<span class="sd">as the ``cashflow`` function. The only difference is that the dictionary passed</span>
+<span class="sd">to the argument ``chgpts`` specifies change points in the time series, where</span>
+<span class="sd">the value of the interest rate changes for all points ahead.</span>
+
+<span class="sd">Functions in this module</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="period2pos"><a class="viewcode-back" href="../../timeseries.html#cashflows.timeseries.period2pos">[docs]</a><span class="k">def</span> <span class="nf">period2pos</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the position (index) of a timestamp vector.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        index (list): timestamp vector.</span>
+<span class="sd">        date (string): date to search.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        position (int): position of date in index.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="k">if</span> <span class="n">elem</span> <span class="o">==</span> <span class="n">date</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Date does not exists: &#39;</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="verify_period_range"><a class="viewcode-back" href="../../timeseries.html#cashflows.timeseries.verify_period_range">[docs]</a><span class="k">def</span> <span class="nf">verify_period_range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Verify if all time series in a list have the same timestamp.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (list): list of `pandas.Series`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Argument must be a list: &#39;</span> <span class="o">+</span> <span class="n">x</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">x</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;pandas.Series expected: &#39;</span> <span class="o">+</span> <span class="n">elem</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+        <span class="n">allTrue</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">elem</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">allTrue</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Series with different period_range&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="textplot"><a class="viewcode-back" href="../../timeseries.html#cashflows.timeseries.textplot">[docs]</a><span class="k">def</span> <span class="nf">textplot</span><span class="p">(</span><span class="n">cflo</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Text plot of a generic cashflow.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cflo (pandas.Series): Generic cashflow.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    **Example**</span>
+
+<span class="sd">    &gt;&gt;&gt; cflo = cashflow(const_value=[-10, 5, 0, 20] * 3, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; textplot(cflo)# doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    time      value +------------------+------------------+</span>
+<span class="sd">    2000Q1   -10.00           **********</span>
+<span class="sd">    2000Q2     5.00                    *****</span>
+<span class="sd">    2000Q3     0.00                    *</span>
+<span class="sd">    2000Q4    20.00                    ********************</span>
+<span class="sd">    2001Q1   -10.00           **********</span>
+<span class="sd">    2001Q2     5.00                    *****</span>
+<span class="sd">    2001Q3     0.00                    *</span>
+<span class="sd">    2001Q4    20.00                    ********************</span>
+<span class="sd">    2002Q1   -10.00           **********</span>
+<span class="sd">    2002Q2     5.00                    *****</span>
+<span class="sd">    2002Q3     0.00                    *</span>
+<span class="sd">    2002Q4    20.00                    ********************</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">timeid</span> <span class="o">=</span> <span class="n">cflo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+
+    <span class="n">len_timeid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">timeid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">())</span>
+    <span class="n">fmt_timeid</span> <span class="o">=</span> <span class="s1">&#39;{:&lt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">len_timeid</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;s}&#39;</span>
+
+    <span class="n">len_number</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cflo</span><span class="p">:</span>
+        <span class="n">len_number</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">len_number</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:1.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+
+    <span class="n">fmt_number</span> <span class="o">=</span> <span class="s1">&#39; {:&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">len_number</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.2f}&#39;</span>
+    <span class="n">fmt_header</span> <span class="o">=</span> <span class="s1">&#39; {:&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">len_number</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;s}&#39;</span>
+
+    <span class="c1"># if cflo.pyr == 1:</span>
+    <span class="c1">#     xmajor, = cflo.start</span>
+    <span class="c1">#     xminor = 0</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     xmajor, xminor = cflo.start</span>
+
+    <span class="n">maxval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">cflo</span><span class="p">))</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="n">txt</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">txtrow</span> <span class="o">=</span> <span class="n">fmt_timeid</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">fmt_header</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="n">txtrow</span> <span class="o">+=</span> <span class="s2">&quot; +&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span>
+    <span class="n">txt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">txtrow</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">value</span><span class="p">,</span> <span class="n">timeid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">cflo</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)):</span>
+
+        <span class="c1"># if cflo.pyr == 1:</span>
+        <span class="c1">#     timeid = (xmajor,)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     timeid = (xmajor, xminor)</span>
+
+        <span class="n">txtrow</span> <span class="o">=</span> <span class="n">fmt_timeid</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeid</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+        <span class="n">txtrow</span> <span class="o">+=</span> <span class="n">fmt_number</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># fmt_row = &quot;                    *                    &quot;</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="n">maxval</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">txtrow</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">txtrow</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">txtrow</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span>
+
+        <span class="n">txt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">txtrow</span><span class="p">)</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span><span class="p">))</span></div>
+
+
+
+
+<div class="viewcode-block" id="cashflow"><a class="viewcode-back" href="../../timeseries.html#cashflows.timeseries.cashflow">[docs]</a><span class="k">def</span> <span class="nf">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a generic cashflow as a pandas.Series object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        const_value (number): constant value for all time series.</span>
+<span class="sd">        start (string): Date as string using pandas convetion for dates.</span>
+<span class="sd">        end (string):  Date as string using pandas convetion for dates.</span>
+<span class="sd">        peridos (integer): Length of the time seriesself.</span>
+<span class="sd">        freq (string): String indicating the period of time series. Valid values</span>
+<span class="sd">                      are ``&#39;A&#39;``, ``&#39;BA&#39;``, ``&#39;Q&#39;``, ``&#39;BQ&#39;``, ``&#39;M&#39;``,</span>
+<span class="sd">                      ``&#39;BM&#39;``, ``&#39;CBM&#39;``, ``&#39;SM&#39;``, ``&#39;6M&#39;``, ``&#39;6BM&#39;`` and</span>
+<span class="sd">                      ``&#39;6CMB&#39;``. See</span>
+<span class="sd">                      https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases</span>
+<span class="sd">        chgpts (dict): Dictionary indicating point changes in the values of the time series.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas time series object.</span>
+
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    A quarterly cashflow with a constant value 1.0 beginning in 2000Q1 can be</span>
+<span class="sd">    expressed as:</span>
+
+
+<span class="sd">    &gt;&gt;&gt; cashflow(const_value=1.0, start=&#39;2000Q1&#39;, periods=8, freq=&#39;Q&#39;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1    1.0</span>
+<span class="sd">    2000Q2    1.0</span>
+<span class="sd">    2000Q3    1.0</span>
+<span class="sd">    2000Q4    1.0</span>
+<span class="sd">    2001Q1    1.0</span>
+<span class="sd">    2001Q2    1.0</span>
+<span class="sd">    2001Q3    1.0</span>
+<span class="sd">    2001Q4    1.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    In the following example, the cashflow function returns a time series object</span>
+<span class="sd">    using a list for the ``const_value`` and a timestamp for the parameter ``start``.</span>
+
+
+<span class="sd">    &gt;&gt;&gt; cashflow(const_value=[10]*10, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1    10.0</span>
+<span class="sd">    2000Q2    10.0</span>
+<span class="sd">    2000Q3    10.0</span>
+<span class="sd">    2000Q4    10.0</span>
+<span class="sd">    2001Q1    10.0</span>
+<span class="sd">    2001Q2    10.0</span>
+<span class="sd">    2001Q3    10.0</span>
+<span class="sd">    2001Q4    10.0</span>
+<span class="sd">    2002Q1    10.0</span>
+<span class="sd">    2002Q2    10.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    The following example uses the operator ``[]`` to modify the value with</span>
+<span class="sd">    index equal to 3.</span>
+
+<span class="sd">    &gt;&gt;&gt; x = cashflow(const_value=[0, 1, 2, 3], start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; x[3] = 10</span>
+<span class="sd">    &gt;&gt;&gt; x  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     0.0</span>
+<span class="sd">    2000Q2     1.0</span>
+<span class="sd">    2000Q3     2.0</span>
+<span class="sd">    2000Q4    10.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+
+<span class="sd">    &gt;&gt;&gt; x[3]  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    10.0</span>
+
+<span class="sd">    Indexes in the time series also can be specified using a valid timestamp.</span>
+
+<span class="sd">    &gt;&gt;&gt; x[&#39;2000Q4&#39;] = 0</span>
+<span class="sd">    &gt;&gt;&gt; x # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1    0.0</span>
+<span class="sd">    2000Q2    1.0</span>
+<span class="sd">    2000Q3    2.0</span>
+<span class="sd">    2000Q4    0.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; x[&#39;2000Q3&#39;]  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2.0</span>
+
+
+<span class="sd">    The following example uses the member function ``cumsum()`` for computing</span>
+<span class="sd">    the cumulative sum of the original time series.</span>
+
+<span class="sd">    &gt;&gt;&gt; cashflow(const_value=[0, 1, 2, 3, 4, 5], freq=&#39;Q&#39;, start=&#39;2000Q1&#39;).cumsum() # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     0.0</span>
+<span class="sd">    2000Q2     1.0</span>
+<span class="sd">    2000Q3     3.0</span>
+<span class="sd">    2000Q4     6.0</span>
+<span class="sd">    2001Q1    10.0</span>
+<span class="sd">    2001Q2    15.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+
+<span class="sd">    In the next examples, a change points are specified using a dictionary. The key</span>
+<span class="sd">    can be a integer or a valid timestamp.</span>
+
+<span class="sd">    &gt;&gt;&gt; cashflow(const_value=0, freq=&#39;Q&#39;, periods=6, start=&#39;2000Q1&#39;, chgpts={2:10}) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     0.0</span>
+<span class="sd">    2000Q2     0.0</span>
+<span class="sd">    2000Q3    10.0</span>
+<span class="sd">    2000Q4     0.0</span>
+<span class="sd">    2001Q1     0.0</span>
+<span class="sd">    2001Q2     0.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; cashflow(const_value=0, freq=&#39;Q&#39;, periods=6, start=&#39;2000Q1&#39;, chgpts={&#39;2000Q3&#39;:10}) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     0.0</span>
+<span class="sd">    2000Q2     0.0</span>
+<span class="sd">    2000Q3    10.0</span>
+<span class="sd">    2000Q4     0.0</span>
+<span class="sd">    2001Q1     0.0</span>
+<span class="sd">    2001Q2     0.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">freq</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;BA&#39;</span><span class="p">,</span> <span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;BQ&#39;</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;BM&#39;</span><span class="p">,</span> <span class="s1">&#39;CBM&#39;</span><span class="p">,</span> <span class="s1">&#39;SM&#39;</span><span class="p">,</span> <span class="s1">&#39;6M&#39;</span><span class="p">,</span> <span class="s1">&#39;6BM&#39;</span><span class="p">,</span> <span class="s1">&#39;6CMB&#39;</span><span class="p">]:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Invalid freq value:  &#39;</span> <span class="o">+</span> <span class="n">freq</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">const_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">const_value</span><span class="p">)</span>
+    <span class="n">prng</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">periods</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="n">periods</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prng</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">const_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">const_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">const_value</span><span class="p">]</span> <span class="o">*</span> <span class="n">periods</span>
+    <span class="n">time_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">const_value</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">prng</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chgpts</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">chgpts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">time_series</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="n">time_series</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">chgpts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">time_series</span></div>
+
+
+<div class="viewcode-block" id="interest_rate"><a class="viewcode-back" href="../../timeseries.html#cashflows.timeseries.interest_rate">[docs]</a><span class="k">def</span> <span class="nf">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a time series object specified as a interest rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        const_value (number): constant value for all time series.</span>
+<span class="sd">        start (string): Date as string using pandas convetion for dates.</span>
+<span class="sd">        end (string):  Date as string using pandas convetion for dates.</span>
+<span class="sd">        peridos (integer): Length of the time seriesself.</span>
+<span class="sd">        freq (string): String indicating the period of time series. Valid values</span>
+<span class="sd">                      are ``&#39;A&#39;``, ``&#39;BA&#39;``, ``&#39;Q&#39;``, ``&#39;BQ&#39;``, ``&#39;M&#39;``,</span>
+<span class="sd">                      ``&#39;BM&#39;``, ``&#39;CBM&#39;``, ``&#39;SM&#39;``, ``&#39;6M&#39;``, ``&#39;6BM&#39;`` and</span>
+<span class="sd">                      ``&#39;6CMB&#39;``. See</span>
+<span class="sd">                      https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases</span>
+<span class="sd">        chgpts (dict): Dictionary indicating point changes in the values of the time series.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A `pandas.Series` object.</span>
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    In the following examples, the argument ``chgpts`` is used to specify chnages</span>
+<span class="sd">    in the value of the interest rate. The keys in the dictionary can be integers</span>
+<span class="sd">    or valid timestamps.</span>
+
+<span class="sd">    &gt;&gt;&gt; chgpts = {&#39;2000Q4&#39;:10}</span>
+<span class="sd">    &gt;&gt;&gt; interest_rate(const_value=1, start=&#39;2000Q1&#39;, periods=8, freq=&#39;Q&#39;, chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     1.0</span>
+<span class="sd">    2000Q2     1.0</span>
+<span class="sd">    2000Q3     1.0</span>
+<span class="sd">    2000Q4    10.0</span>
+<span class="sd">    2001Q1    10.0</span>
+<span class="sd">    2001Q2    10.0</span>
+<span class="sd">    2001Q3    10.0</span>
+<span class="sd">    2001Q4    10.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; chgpts = {&#39;2000Q4&#39;:10, &#39;2001Q2&#39;:20}</span>
+<span class="sd">    &gt;&gt;&gt; interest_rate(const_value=1, start=&#39;2000Q1&#39;, periods=8, freq=&#39;Q&#39;, chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     1.0</span>
+<span class="sd">    2000Q2     1.0</span>
+<span class="sd">    2000Q3     1.0</span>
+<span class="sd">    2000Q4    10.0</span>
+<span class="sd">    2001Q1    10.0</span>
+<span class="sd">    2001Q2    20.0</span>
+<span class="sd">    2001Q3    20.0</span>
+<span class="sd">    2001Q4    20.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; chgpts = {3:10}</span>
+<span class="sd">    &gt;&gt;&gt; interest_rate(const_value=1, start=&#39;2000Q1&#39;, periods=8, freq=&#39;Q&#39;, chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     1.0</span>
+<span class="sd">    2000Q2     1.0</span>
+<span class="sd">    2000Q3     1.0</span>
+<span class="sd">    2000Q4    10.0</span>
+<span class="sd">    2001Q1    10.0</span>
+<span class="sd">    2001Q2    10.0</span>
+<span class="sd">    2001Q3    10.0</span>
+<span class="sd">    2001Q4    10.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; chgpts = {3:10, 6:20}</span>
+<span class="sd">    &gt;&gt;&gt; interest_rate(const_value=1, start=&#39;2000Q1&#39;, periods=8, freq=&#39;Q&#39;, chgpts=chgpts) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000Q1     1.0</span>
+<span class="sd">    2000Q2     1.0</span>
+<span class="sd">    2000Q3     1.0</span>
+<span class="sd">    2000Q4    10.0</span>
+<span class="sd">    2001Q1    10.0</span>
+<span class="sd">    2001Q2    10.0</span>
+<span class="sd">    2001Q3    20.0</span>
+<span class="sd">    2001Q4    20.0</span>
+<span class="sd">    Freq: Q-DEC, dtype: float64</span>
+
+
+<span class="sd">    The parameter ``const_value`` can be a list of numbers. In this case, only</span>
+<span class="sd">    is necessary to specify the ``start`` or ``end`` arguments.</span>
+
+<span class="sd">    &gt;&gt;&gt; interest_rate(const_value=[10]*12, start=&#39;2000-1&#39;, freq=&#39;M&#39;)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000-01    10.0</span>
+<span class="sd">    2000-02    10.0</span>
+<span class="sd">    2000-03    10.0</span>
+<span class="sd">    2000-04    10.0</span>
+<span class="sd">    2000-05    10.0</span>
+<span class="sd">    2000-06    10.0</span>
+<span class="sd">    2000-07    10.0</span>
+<span class="sd">    2000-08    10.0</span>
+<span class="sd">    2000-09    10.0</span>
+<span class="sd">    2000-10    10.0</span>
+<span class="sd">    2000-11    10.0</span>
+<span class="sd">    2000-12    10.0</span>
+<span class="sd">    Freq: M, dtype: float64</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">time_series</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="n">const_value</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">periods</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chgpts</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">chgpts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">time_series</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_series</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Period</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">):</span>
+                    <span class="n">time_series</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">chgpts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">time_series</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cashflows.depreciation &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cashflows.depreciation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cashflows.depreciation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Asset depreciation</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">Overview</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+<span class="sd">This module implements the following functions to compute the depreciation of an</span>
+<span class="sd">asset:</span>
+
+<span class="sd">* ``depreciation_sl``: Computes the depreciation of an asset using straight line</span>
+<span class="sd">  depreciation method.</span>
+<span class="sd">* ``depreciation_soyd``: Computes the depreciation of an asset using the</span>
+<span class="sd">  sum-of-year&#39;s-digits method.</span>
+<span class="sd">* ``depreciation_db``: Computes the depreciation of an asset using the declining</span>
+<span class="sd">  balance method.</span>
+
+
+<span class="sd">Functions in this module</span>
+<span class="sd">-----------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">cashflows.timeseries</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="depreciation_sl"><a class="viewcode-back" href="../../depreciation.html#cashflows.depreciation.depreciation_sl">[docs]</a><span class="k">def</span> <span class="nf">depreciation_sl</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="p">,</span> <span class="n">salvalue</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the depreciation of an asset using straight line depreciation</span>
+<span class="sd">    method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        costs (pandas.Series): the cost per period of the assets.</span>
+<span class="sd">        life (pandas.Series): number of depreciation periods for the asset.</span>
+<span class="sd">        salvalue (pandas.Series): salvage value as a percentage of cost.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Returns a pandas DataFrame with the computations.</span>
+
+
+<span class="sd">    **Examples.**</span>
+
+<span class="sd">    &gt;&gt;&gt; costs = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; costs[0] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; life = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; life[0] = 4</span>
+<span class="sd">    &gt;&gt;&gt; depreciation_sl(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">               Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="sd">       2000Q1    1000.0  250.0       250.0     750.0</span>
+<span class="sd">       2000Q2     750.0  250.0       500.0     500.0</span>
+<span class="sd">       2000Q3     500.0  250.0       750.0     250.0</span>
+<span class="sd">       2000Q4     250.0  250.0      1000.0       0.0</span>
+<span class="sd">       2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q4       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q4       0.0    0.0      1000.0       0.0</span>
+
+
+<span class="sd">    &gt;&gt;&gt; costs = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; costs[0] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; costs[8] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; life = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; life[0] = 4</span>
+<span class="sd">    &gt;&gt;&gt; life[8] = 4</span>
+<span class="sd">    &gt;&gt;&gt; depreciation_sl(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">               Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="sd">       2000Q1    1000.0  250.0       250.0     750.0</span>
+<span class="sd">       2000Q2     750.0  250.0       500.0     500.0</span>
+<span class="sd">       2000Q3     500.0  250.0       750.0     250.0</span>
+<span class="sd">       2000Q4     250.0  250.0      1000.0       0.0</span>
+<span class="sd">       2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q1    1000.0  250.0      1250.0     750.0</span>
+<span class="sd">       2002Q2     750.0  250.0      1500.0     500.0</span>
+<span class="sd">       2002Q3     500.0  250.0      1750.0     250.0</span>
+<span class="sd">       2002Q4     250.0  250.0      2000.0       0.0</span>
+<span class="sd">       2003Q1       0.0    0.0      2000.0       0.0</span>
+<span class="sd">       2003Q2       0.0    0.0      2000.0       0.0</span>
+<span class="sd">       2003Q3       0.0    0.0      2000.0       0.0</span>
+<span class="sd">       2003Q4       0.0    0.0      2000.0       0.0</span>
+
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">salvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">salvalue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">salvalue</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
+
+    <span class="n">depr</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">adepr</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">begbook</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endbook</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">depr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">adepr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">begbook</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">endbook</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">costs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">xdepr</span> <span class="o">=</span> <span class="p">[(</span><span class="n">costs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">salvalue</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">+</span> <span class="n">time</span>  <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+                <span class="n">depr</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="n">time</span><span class="p">]</span> <span class="o">+=</span> <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">adepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">adepr</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">begbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endbook</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">costs</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begbook</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">endbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Beg_Book&#39;</span><span class="p">:</span> <span class="n">begbook</span><span class="p">,</span>
+                          <span class="s1">&#39;Depr&#39;</span><span class="p">:</span> <span class="n">depr</span><span class="p">,</span>
+                          <span class="s1">&#39;Accum_Depr&#39;</span><span class="p">:</span> <span class="n">adepr</span><span class="p">,</span>
+                          <span class="s1">&#39;End_Book&#39;</span><span class="p">:</span> <span class="n">endbook</span><span class="p">})</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[[</span><span class="s1">&#39;Beg_Book&#39;</span><span class="p">,</span> <span class="s1">&#39;Depr&#39;</span><span class="p">,</span> <span class="s1">&#39;Accum_Depr&#39;</span><span class="p">,</span> <span class="s1">&#39;End_Book&#39;</span><span class="p">]]</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">table</span></div>
+
+
+
+<div class="viewcode-block" id="depreciation_soyd"><a class="viewcode-back" href="../../depreciation.html#cashflows.depreciation.depreciation_soyd">[docs]</a><span class="k">def</span> <span class="nf">depreciation_soyd</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="p">,</span> <span class="n">salvalue</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the depreciation of an asset using the sum-of-year&#39;s-digits</span>
+<span class="sd">    method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        costs (pandas.Series): the cost per period of the assets.</span>
+<span class="sd">        life (pandas.Series): number of depreciation periods for the asset.</span>
+<span class="sd">        salvalue (pandas.Series): salvage value as a percentage of cost.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Returns a pandas DataFrame with the computations.</span>
+
+
+<span class="sd">    **Examples.**</span>
+
+<span class="sd">    &gt;&gt;&gt; costs = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; costs[0] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; life = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; life[0] = 4</span>
+<span class="sd">    &gt;&gt;&gt; depreciation_soyd(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">               Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="sd">       2000Q1    1000.0  400.0       400.0     600.0</span>
+<span class="sd">       2000Q2     600.0  300.0       700.0     300.0</span>
+<span class="sd">       2000Q3     300.0  200.0       900.0     100.0</span>
+<span class="sd">       2000Q4     100.0  100.0      1000.0       0.0</span>
+<span class="sd">       2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q4       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2003Q4       0.0    0.0      1000.0       0.0</span>
+
+
+<span class="sd">    &gt;&gt;&gt; costs = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; costs[0] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; costs[8] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; life = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; life[0] = 4</span>
+<span class="sd">    &gt;&gt;&gt; life[8] = 4</span>
+<span class="sd">    &gt;&gt;&gt; depreciation_soyd(costs=costs, life=life) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">               Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="sd">       2000Q1    1000.0  400.0       400.0     600.0</span>
+<span class="sd">       2000Q2     600.0  300.0       700.0     300.0</span>
+<span class="sd">       2000Q3     300.0  200.0       900.0     100.0</span>
+<span class="sd">       2000Q4     100.0  100.0      1000.0       0.0</span>
+<span class="sd">       2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="sd">       2002Q1    1000.0  400.0      1400.0     600.0</span>
+<span class="sd">       2002Q2     600.0  300.0      1700.0     300.0</span>
+<span class="sd">       2002Q3     300.0  200.0      1900.0     100.0</span>
+<span class="sd">       2002Q4     100.0  100.0      2000.0       0.0</span>
+<span class="sd">       2003Q1       0.0    0.0      2000.0       0.0</span>
+<span class="sd">       2003Q2       0.0    0.0      2000.0       0.0</span>
+<span class="sd">       2003Q3       0.0    0.0      2000.0       0.0</span>
+<span class="sd">       2003Q4       0.0    0.0      2000.0       0.0</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">salvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">salvalue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">salvalue</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
+
+    <span class="n">depr</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">adepr</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">begbook</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endbook</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">depr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">adepr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">begbook</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">endbook</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+        <span class="n">sumdig</span> <span class="o">=</span> <span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">xdepr</span> <span class="o">=</span> <span class="p">[(</span><span class="n">costs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">salvalue</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">-</span> <span class="n">time</span><span class="p">)</span> <span class="o">/</span> <span class="n">sumdig</span> <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">]))]</span>
+        <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">+</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+                <span class="n">depr</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="n">time</span><span class="p">]</span> <span class="o">+=</span> <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">adepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">adepr</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">begbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endbook</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">costs</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begbook</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">endbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Beg_Book&#39;</span><span class="p">:</span> <span class="n">begbook</span><span class="p">,</span>
+                          <span class="s1">&#39;Depr&#39;</span><span class="p">:</span> <span class="n">depr</span><span class="p">,</span>
+                          <span class="s1">&#39;Accum_Depr&#39;</span><span class="p">:</span> <span class="n">adepr</span><span class="p">,</span>
+                          <span class="s1">&#39;End_Book&#39;</span><span class="p">:</span> <span class="n">endbook</span><span class="p">})</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[[</span><span class="s1">&#39;Beg_Book&#39;</span><span class="p">,</span> <span class="s1">&#39;Depr&#39;</span><span class="p">,</span> <span class="s1">&#39;Accum_Depr&#39;</span><span class="p">,</span> <span class="s1">&#39;End_Book&#39;</span><span class="p">]]</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">table</span></div>
+
+
+
+
+<div class="viewcode-block" id="depreciation_db"><a class="viewcode-back" href="../../depreciation.html#cashflows.depreciation.depreciation_db">[docs]</a><span class="k">def</span> <span class="nf">depreciation_db</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="p">,</span> <span class="n">salvalue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">convert_to_sl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Computes the depreciation of an asset using the declining balance</span>
+<span class="sd">    method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        costs (pandas.Series): the cost per period of the assets.</span>
+<span class="sd">        life (pandas.Series): number of depreciation periods for the asset.</span>
+<span class="sd">        salvalue (pandas.Series): salvage value as a percentage of cost.</span>
+<span class="sd">        factor (float): acelerating factor for depreciation.</span>
+<span class="sd">        convert_to_sl (bool): converts to straight line method?</span>
+<span class="sd">        noprint (bool): when True, the procedure prints a depreciation table.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Returns a pandas DataFrame with the computations.</span>
+
+
+<span class="sd">    **Examples.**</span>
+
+<span class="sd">    &gt;&gt;&gt; costs = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; costs[0] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; life = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; life[0] = 4</span>
+<span class="sd">    &gt;&gt;&gt; depreciation_db(costs=costs, life=life, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">            Beg_Book    Depr  Accum_Depr  End_Book</span>
+<span class="sd">    2000Q1   1000.00  375.00      375.00    625.00</span>
+<span class="sd">    2000Q2    625.00  234.38      609.38    390.62</span>
+<span class="sd">    2000Q3    390.62  146.48      755.86    244.14</span>
+<span class="sd">    2000Q4    244.14   91.55      847.41    152.59</span>
+<span class="sd">    2001Q1    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2001Q2    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2001Q3    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2001Q4    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2002Q1    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2002Q2    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2002Q3    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2002Q4    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2003Q1    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2003Q2    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2003Q3    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2003Q4    152.59    0.00      847.41    152.59</span>
+
+<span class="sd">    &gt;&gt;&gt; costs = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; costs[0] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; costs[8] = 1000</span>
+<span class="sd">    &gt;&gt;&gt; life = cashflow(const_value=0, periods=16, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; life[0] = 4</span>
+<span class="sd">    &gt;&gt;&gt; life[8] = 4</span>
+<span class="sd">    &gt;&gt;&gt; depreciation_db(costs=costs, life=life, factor=1.5, convert_to_sl=False) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">            Beg_Book    Depr  Accum_Depr  End_Book</span>
+<span class="sd">    2000Q1   1000.00  375.00      375.00    625.00</span>
+<span class="sd">    2000Q2    625.00  234.38      609.38    390.62</span>
+<span class="sd">    2000Q3    390.62  146.48      755.86    244.14</span>
+<span class="sd">    2000Q4    244.14   91.55      847.41    152.59</span>
+<span class="sd">    2001Q1    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2001Q2    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2001Q3    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2001Q4    152.59    0.00      847.41    152.59</span>
+<span class="sd">    2002Q1   1152.59  375.00     1222.41    777.59</span>
+<span class="sd">    2002Q2    777.59  234.38     1456.79    543.21</span>
+<span class="sd">    2002Q3    543.21  146.48     1603.27    396.73</span>
+<span class="sd">    2002Q4    396.73   91.55     1694.82    305.18</span>
+<span class="sd">    2003Q1    305.18    0.00     1694.82    305.18</span>
+<span class="sd">    2003Q2    305.18    0.00     1694.82    305.18</span>
+<span class="sd">    2003Q3    305.18    0.00     1694.82    305.18</span>
+<span class="sd">    2003Q4    305.18    0.00     1694.82    305.18</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">salvalue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">salvalue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">salvalue</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">verify_period_range</span><span class="p">([</span><span class="n">costs</span><span class="p">,</span> <span class="n">delay</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">delay</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid type for `factor`&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">convert_to_sl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid type for `convert_to_sl`&#39;</span><span class="p">)</span>
+
+    <span class="n">depr</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">adepr</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">begbook</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endbook</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">depr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">adepr</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">begbook</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">endbook</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">costs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">xfactor</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">/</span> <span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="n">rem_cost</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">xdepr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+        <span class="n">sl_depr</span> <span class="o">=</span> <span class="p">(</span><span class="n">costs</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">-</span> <span class="n">salvalue</span><span class="p">[</span><span class="n">index</span><span class="p">])</span> <span class="o">/</span> <span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])):</span>
+            <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">rem_cost</span> <span class="o">*</span> <span class="n">xfactor</span>
+            <span class="k">if</span> <span class="n">convert_to_sl</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">sl_depr</span><span class="p">:</span>
+                <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">sl_depr</span>
+            <span class="n">rem_cost</span> <span class="o">-=</span> <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">rem_cost</span> <span class="o">&lt;</span> <span class="n">salvalue</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
+                <span class="n">rem_cost</span> <span class="o">+=</span> <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+                <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">rem_cost</span> <span class="o">-</span> <span class="n">salvalue</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="n">rem_cost</span> <span class="o">=</span> <span class="n">salvalue</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">life</span><span class="p">[</span><span class="n">index</span><span class="p">])):</span>
+            <span class="k">if</span> <span class="n">index</span> <span class="o">+</span> <span class="n">time</span>  <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">costs</span><span class="p">):</span>
+                <span class="n">depr</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="n">time</span><span class="p">]</span> <span class="o">+=</span> <span class="n">xdepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">adepr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">adepr</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adepr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">depr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">begbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endbook</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">costs</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begbook</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">endbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbook</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">-</span> <span class="n">depr</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Beg_Book&#39;</span><span class="p">:</span> <span class="n">begbook</span><span class="p">,</span>
+                          <span class="s1">&#39;Depr&#39;</span><span class="p">:</span> <span class="n">depr</span><span class="p">,</span>
+                          <span class="s1">&#39;Accum_Depr&#39;</span><span class="p">:</span> <span class="n">adepr</span><span class="p">,</span>
+                          <span class="s1">&#39;End_Book&#39;</span><span class="p">:</span> <span class="n">endbook</span><span class="p">})</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[[</span><span class="s1">&#39;Beg_Book&#39;</span><span class="p">,</span> <span class="s1">&#39;Depr&#39;</span><span class="p">,</span> <span class="s1">&#39;Accum_Depr&#39;</span><span class="p">,</span> <span class="s1">&#39;End_Book&#39;</span><span class="p">]]</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">table</span></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

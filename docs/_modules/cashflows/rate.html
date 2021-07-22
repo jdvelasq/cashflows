@@ -1,0 +1,942 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cashflows.rate &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cashflows.rate</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cashflows.rate</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Interest rate transformations</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">Overview</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+<span class="sd">Transformations between nominal, effective and periodic interest rates</span>
+<span class="sd">can be realized using **cashflows**. This module implements the</span>
+<span class="sd">following functions:</span>
+
+<span class="sd">* ``effrate``: computes the effective interest rate given the nominal interest</span>
+<span class="sd">  rate or the periodic interest rate.</span>
+<span class="sd">* ``nomrate``: computes the nominal interest rate given the effective interest</span>
+<span class="sd">  rate or the periodic interest rate.</span>
+<span class="sd">* ``perrate``: computes the periodic interest rate given the effective interest</span>
+<span class="sd">  rate or the nominal interest rate.</span>
+
+<span class="sd">In addition, it is possible to compute discount and compounidng factors.</span>
+
+<span class="sd">* ``to_discount_factor``: Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).</span>
+<span class="sd">* ``to_compound_factor``: Returns a list of compounding factors calculated as (1 + r)^(t - t0).</span>
+
+
+<span class="sd">Finally, also it is possible to compute a fixed equivalent rate given interest</span>
+<span class="sd">rate changing over time using ``equivalent_rate``.</span>
+
+
+<span class="sd">Functions in this module</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">cashflows.timeseries</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">cashflows.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="effrate"><a class="viewcode-back" href="../../rate.html#cashflows.rate.effrate">[docs]</a><span class="k">def</span> <span class="nf">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the effective interest rate given the nominal interest rate or the periodic interest rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (float, pandas.Series): Nominal interest rate.</span>
+<span class="sd">        prate (float, pandas.Series): Periodic interest rate.</span>
+<span class="sd">        pyr(int): Number of compounding periods per year.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Effective interest rate(float, pandas.Series).</span>
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    In this example, the equivalent effective interest rate for a periodic</span>
+<span class="sd">    monthly interest rate of 1% is computed.</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(prate=1, pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    12.68...</span>
+
+<span class="sd">    This example shows hot to compute the effective interes rate equivalent to</span>
+<span class="sd">    a nominal interest rate of 10% with montlhy compounding.</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(nrate=10, pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    10.4713...</span>
+
+<span class="sd">    Also it is possible to use list for some arguments of the functions as</span>
+<span class="sd">    it is shown bellow.</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0     3.030100</span>
+<span class="sd">    1     6.152015</span>
+<span class="sd">    2    12.682503</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(nrate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    10.337037</span>
+<span class="sd">    1    10.426042</span>
+<span class="sd">    2    10.471307</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(prate=[1, 2, 3], pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    12.682503</span>
+<span class="sd">    1    26.824179</span>
+<span class="sd">    2    42.576089</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(nrate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    10.471307</span>
+<span class="sd">    1    12.682503</span>
+<span class="sd">    2    14.934203</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    When a rate and the number of compounding periods (``pyr``) are vectors, they</span>
+<span class="sd">    must have the same length. Computations are executed using the first rate</span>
+<span class="sd">    with the first compounding and so on.</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(nrate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    10.337037</span>
+<span class="sd">    1    12.616242</span>
+<span class="sd">    2    14.934203</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(prate=[1, 2, 3], pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0     3.030100</span>
+<span class="sd">    1    12.616242</span>
+<span class="sd">    2    42.576089</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    Also it is possible to transform interest rate time series.</span>
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=12, start=&#39;2000-06&#39;, periods=12, freq=&#39;6M&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; prate = perrate(nrate=nrate)</span>
+<span class="sd">    &gt;&gt;&gt; effrate(nrate = nrate) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000-06    12.36</span>
+<span class="sd">    2000-12    12.36</span>
+<span class="sd">    2001-06    12.36</span>
+<span class="sd">    2001-12    12.36</span>
+<span class="sd">    2002-06    12.36</span>
+<span class="sd">    2002-12    12.36</span>
+<span class="sd">    2003-06    12.36</span>
+<span class="sd">    2003-12    12.36</span>
+<span class="sd">    2004-06    12.36</span>
+<span class="sd">    2004-12    12.36</span>
+<span class="sd">    2005-06    12.36</span>
+<span class="sd">    2005-12    12.36</span>
+<span class="sd">    Freq: 6M, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; effrate(prate = prate) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000-06    12.36</span>
+<span class="sd">    2000-12    12.36</span>
+<span class="sd">    2001-06    12.36</span>
+<span class="sd">    2001-12    12.36</span>
+<span class="sd">    2002-06    12.36</span>
+<span class="sd">    2002-12    12.36</span>
+<span class="sd">    2003-06    12.36</span>
+<span class="sd">    2003-12    12.36</span>
+<span class="sd">    2004-06    12.36</span>
+<span class="sd">    2004-12    12.36</span>
+<span class="sd">    2005-06    12.36</span>
+<span class="sd">    2005-12    12.36</span>
+<span class="sd">    Freq: 6M, dtype: float64</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numnone</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">numnone</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;One of the rates must be set to `None`&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+        <span class="n">erate</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)):</span>
+            <span class="n">erate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nrate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="o">/</span><span class="n">pyr</span><span class="p">,</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">erate</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span>
+        <span class="n">erate</span> <span class="o">=</span> <span class="n">prate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">)):</span>
+            <span class="n">erate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">prate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">erate</span>
+
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">nrate</span> <span class="o">=</span> <span class="p">[</span><span class="n">nrate</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">nrate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Lists must have the same length&#39;</span><span class="p">)</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">nrate</span> <span class="o">/</span> <span class="n">pyr</span>
+        <span class="n">erate</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">prate</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maxlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">erate</span> <span class="o">=</span> <span class="n">erate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">erate</span>
+
+
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">prate</span> <span class="o">=</span> <span class="p">[</span><span class="n">prate</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Lists must have the same length&#39;</span><span class="p">)</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">erate</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">prate</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maxlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">erate</span> <span class="o">=</span> <span class="n">erate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">erate</span></div>
+
+<div class="viewcode-block" id="nomrate"><a class="viewcode-back" href="../../rate.html#cashflows.rate.nomrate">[docs]</a><span class="k">def</span> <span class="nf">nomrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the nominal interest rate given the nominal interest rate or the periodic interest rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        erate (float, pandas.Series): Effective interest rate.</span>
+<span class="sd">        prate (float, pandas.Series): Periodic interest rate.</span>
+<span class="sd">        pyr(int): Number of compounding periods per year.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Nominal interest rate(float, pandas.Series).</span>
+
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(prate=1, pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    12.0</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(erate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    9.684035</span>
+<span class="sd">    1    9.607121</span>
+<span class="sd">    2    9.568969</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(erate=10, pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    9.5689...</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(prate=1, pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0     3.0</span>
+<span class="sd">    1     6.0</span>
+<span class="sd">    2    12.0</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(erate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0     9.568969</span>
+<span class="sd">    1    11.386552</span>
+<span class="sd">    2    13.174622</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(prate=[1, 2, 3], pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    12.0</span>
+<span class="sd">    1    24.0</span>
+<span class="sd">    2    36.0</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    When a rate and the number of compounding periods (`pyr`) are vectors, they</span>
+<span class="sd">    must have the same length. Computations are executed using the first rate</span>
+<span class="sd">    with the first compounding and so on.</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(erate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0     9.684035</span>
+<span class="sd">    1    11.440574</span>
+<span class="sd">    2    13.174622</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; nomrate(prate=[1, 2, 3], pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0     3.0</span>
+<span class="sd">    1    12.0</span>
+<span class="sd">    2    36.0</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; prate = interest_rate(const_value=6.00, start=&#39;2000-06&#39;, periods=12, freq=&#39;6M&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; erate = effrate(prate=prate)</span>
+<span class="sd">    &gt;&gt;&gt; nomrate(erate=erate)</span>
+<span class="sd">    2000-06    12.0</span>
+<span class="sd">    2000-12    12.0</span>
+<span class="sd">    2001-06    12.0</span>
+<span class="sd">    2001-12    12.0</span>
+<span class="sd">    2002-06    12.0</span>
+<span class="sd">    2002-12    12.0</span>
+<span class="sd">    2003-06    12.0</span>
+<span class="sd">    2003-12    12.0</span>
+<span class="sd">    2004-06    12.0</span>
+<span class="sd">    2004-12    12.0</span>
+<span class="sd">    2005-06    12.0</span>
+<span class="sd">    2005-12    12.0</span>
+<span class="sd">    Freq: 6M, dtype: float64</span>
+
+
+<span class="sd">    &gt;&gt;&gt; nomrate(prate=prate)</span>
+<span class="sd">    2000-06    12.0</span>
+<span class="sd">    2000-12    12.0</span>
+<span class="sd">    2001-06    12.0</span>
+<span class="sd">    2001-12    12.0</span>
+<span class="sd">    2002-06    12.0</span>
+<span class="sd">    2002-12    12.0</span>
+<span class="sd">    2003-06    12.0</span>
+<span class="sd">    2003-12    12.0</span>
+<span class="sd">    2004-06    12.0</span>
+<span class="sd">    2004-12    12.0</span>
+<span class="sd">    2005-06    12.0</span>
+<span class="sd">    2005-12    12.0</span>
+<span class="sd">    Freq: 6M, dtype: float64</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numnone</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">numnone</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;One of the rates must be set to `None`&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">erate</span><span class="p">)</span>
+        <span class="n">nrate</span> <span class="o">=</span> <span class="n">erate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">erate</span><span class="p">)):</span>
+            <span class="n">nrate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">pyr</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">erate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nrate</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span>
+        <span class="n">nrate</span> <span class="o">=</span> <span class="n">prate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">)):</span>
+            <span class="n">nrate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">prate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="n">pyr</span>
+        <span class="k">return</span> <span class="n">nrate</span>
+
+
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">erate</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">erate</span> <span class="o">=</span> <span class="p">[</span><span class="n">erate</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">erate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">erate</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Lists must have the same length&#39;</span><span class="p">)</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">erate</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">nrate</span> <span class="o">=</span> <span class="n">pyr</span> <span class="o">*</span> <span class="n">prate</span>
+        <span class="k">if</span> <span class="n">maxlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">nrate</span> <span class="o">=</span> <span class="n">nrate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">nrate</span>
+
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">prate</span> <span class="o">=</span> <span class="p">[</span><span class="n">prate</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">prate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Lists must have the same length&#39;</span><span class="p">)</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">nrate</span> <span class="o">=</span> <span class="n">pyr</span> <span class="o">*</span> <span class="n">prate</span>
+        <span class="k">if</span> <span class="n">maxlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">nrate</span> <span class="o">=</span> <span class="n">nrate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">nrate</span></div>
+
+<div class="viewcode-block" id="perrate"><a class="viewcode-back" href="../../rate.html#cashflows.rate.perrate">[docs]</a><span class="k">def</span> <span class="nf">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">erate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the periodic interest rate given the nominal interest rate or the effective interest rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (float, pandas.Series): Nominal interest rate.</span>
+<span class="sd">        erate (float, pandas.Series): Effective interest rate.</span>
+<span class="sd">        pyr(int): Number of compounding periods per year.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Periodic interest rate(float, pandas.Series).</span>
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(nrate=10, pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0.8333...</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(erate=10, pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0.7974...</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(erate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    3.228012</span>
+<span class="sd">    1    1.601187</span>
+<span class="sd">    2    0.797414</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(nrate=10, pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    3.333333</span>
+<span class="sd">    1    1.666667</span>
+<span class="sd">    2    0.833333</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(erate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    0.797414</span>
+<span class="sd">    1    0.948879</span>
+<span class="sd">    2    1.097885</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(nrate=[10, 12, 14], pyr=12) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    0.833333</span>
+<span class="sd">    1    1.000000</span>
+<span class="sd">    2    1.166667</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    When a rate and the number of compounding periods (``pyr``) are vectors, they</span>
+<span class="sd">    must have the same length. Computations are executed using the first rate</span>
+<span class="sd">    with the first compounding and so on.</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(erate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    3.228012</span>
+<span class="sd">    1    1.906762</span>
+<span class="sd">    2    1.097885</span>
+<span class="sd">    dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(nrate=[10, 12, 14], pyr=[3, 6, 12]) # doctest: +ELLIPSIS</span>
+<span class="sd">    0    3.333333</span>
+<span class="sd">    1    2.000000</span>
+<span class="sd">    2    1.166667</span>
+<span class="sd">    dtype: float64</span>
+
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=12.0,  start=&#39;2000-06&#39;, periods=12, freq=&#39;6M&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; erate = effrate(nrate=nrate)</span>
+<span class="sd">    &gt;&gt;&gt; perrate(erate=erate) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000-06    6.0</span>
+<span class="sd">    2000-12    6.0</span>
+<span class="sd">    2001-06    6.0</span>
+<span class="sd">    2001-12    6.0</span>
+<span class="sd">    2002-06    6.0</span>
+<span class="sd">    2002-12    6.0</span>
+<span class="sd">    2003-06    6.0</span>
+<span class="sd">    2003-12    6.0</span>
+<span class="sd">    2004-06    6.0</span>
+<span class="sd">    2004-12    6.0</span>
+<span class="sd">    2005-06    6.0</span>
+<span class="sd">    2005-12    6.0</span>
+<span class="sd">    Freq: 6M, dtype: float64</span>
+
+<span class="sd">    &gt;&gt;&gt; perrate(nrate=nrate) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    2000-06    6.0</span>
+<span class="sd">    2000-12    6.0</span>
+<span class="sd">    2001-06    6.0</span>
+<span class="sd">    2001-12    6.0</span>
+<span class="sd">    2002-06    6.0</span>
+<span class="sd">    2002-12    6.0</span>
+<span class="sd">    2003-06    6.0</span>
+<span class="sd">    2003-12    6.0</span>
+<span class="sd">    2004-06    6.0</span>
+<span class="sd">    2004-12    6.0</span>
+<span class="sd">    2005-06    6.0</span>
+<span class="sd">    2005-12    6.0</span>
+<span class="sd">    Freq: 6M, dtype: float64</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numnone</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">numnone</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;One of the rates must be set to `None`&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)):</span>
+            <span class="n">prate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">nrate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span>
+        <span class="k">return</span> <span class="n">prate</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">erate</span><span class="p">)</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">erate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">erate</span><span class="p">)):</span>
+            <span class="n">prate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">erate</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prate</span>
+
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">nrate</span> <span class="o">=</span> <span class="p">[</span><span class="n">nrate</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">nrate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">nrate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Lists must have the same length&#39;</span><span class="p">)</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">nrate</span> <span class="o">/</span> <span class="n">pyr</span>
+        <span class="k">if</span> <span class="n">maxlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">prate</span> <span class="o">=</span> <span class="n">prate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">prate</span>
+
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">erate</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">))):</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxlen</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">))</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">erate</span> <span class="o">=</span> <span class="p">[</span><span class="n">erate</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">erate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">erate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pyr</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">pyr</span> <span class="o">=</span> <span class="p">[</span><span class="n">pyr</span><span class="p">]</span> <span class="o">*</span> <span class="n">maxlen</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pyr</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">erate</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pyr</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Lists must have the same length&#39;</span><span class="p">)</span>
+        <span class="c1">##</span>
+        <span class="c1">##</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">erate</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maxlen</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">prate</span> <span class="o">=</span> <span class="n">prate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">prate</span></div>
+
+<div class="viewcode-block" id="to_discount_factor"><a class="viewcode-back" href="../../rate.html#cashflows.rate.to_discount_factor">[docs]</a><span class="k">def</span> <span class="nf">to_discount_factor</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">erate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (pandas.Series): Nominal interest rate per year.</span>
+<span class="sd">        nrate (pandas.Series): Effective interest rate per year.</span>
+<span class="sd">        prate (pandas.Series): Periodic interest rate.</span>
+<span class="sd">        base_date (string): basis time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        `pandas.Series` of float values.</span>
+
+<span class="sd">    Only one of the interest rates must be supplied for the computation.</span>
+
+<span class="sd">    **Example**</span>
+
+<span class="sd">    In this example, a discount factor is computed for a interest rate</span>
+<span class="sd">    expressed as nominal, periodic or effective interest rate.</span>
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=4, periods=10, start=&#39;2016Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; erate = effrate(nrate=nrate)</span>
+<span class="sd">    &gt;&gt;&gt; prate = perrate(nrate=nrate)</span>
+<span class="sd">    &gt;&gt;&gt; to_discount_factor(nrate=nrate, base_date=&#39;2016Q3&#39;) # doctest: +ELLIPSIS</span>
+<span class="sd">    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+
+<span class="sd">    &gt;&gt;&gt; to_discount_factor(erate=erate, base_date=&#39;2016Q3&#39;) # doctest: +ELLIPSIS</span>
+<span class="sd">    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+
+<span class="sd">    &gt;&gt;&gt; to_discount_factor(prate=prate, base_date=&#39;2016Q3&#39;) # doctest: +ELLIPSIS</span>
+<span class="sd">    [1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numnone</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">numnone</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Two of the rates must be set to `None`&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">nrate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nrate</span><span class="p">):</span>
+            <span class="n">prate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nrate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">pyr</span>  <span class="c1"># periodic rate</span>
+
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">erate</span><span class="p">)</span>
+        <span class="n">prate</span> <span class="o">=</span> <span class="n">erate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">erate</span><span class="p">):</span>
+            <span class="n">prate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">erate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># periodic rate</span>
+
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span>
+
+    <span class="n">factor</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">/</span><span class="mi">100</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">prate</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">factor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">factor</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">base_date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Period</span><span class="p">(</span><span class="n">base_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">prate</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">freq</span><span class="p">)</span>
+        <span class="n">base_date</span> <span class="o">=</span> <span class="n">period2pos</span><span class="p">(</span><span class="n">prate</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">base_date</span><span class="p">)</span>
+
+    <span class="n">div</span> <span class="o">=</span> <span class="n">factor</span><span class="p">[</span><span class="n">base_date</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+        <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">/</span> <span class="n">div</span>
+    <span class="k">return</span> <span class="n">factor</span></div>
+
+<div class="viewcode-block" id="to_compound_factor"><a class="viewcode-back" href="../../rate.html#cashflows.rate.to_compound_factor">[docs]</a><span class="k">def</span> <span class="nf">to_compound_factor</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">erate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of compounding factors calculated as (1 + r)^(t - t0).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (TimeSeries): Nominal interest rate per year.</span>
+<span class="sd">        nrate (TimeSeries): Effective interest rate per year.</span>
+<span class="sd">        prate (TimeSeries): Periodic interest rate.</span>
+<span class="sd">        base_date (int, tuple): basis time.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Compound factor (list)</span>
+
+
+<span class="sd">    **Example**</span>
+
+<span class="sd">    In this example, a compound factor is computed for a interest rate</span>
+<span class="sd">    expressed as nominal, periodic or effective interest rate.</span>
+
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate(const_value=4, start=&#39;2000&#39;, periods=10, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; erate = effrate(nrate=nrate)</span>
+<span class="sd">    &gt;&gt;&gt; prate = perrate(nrate=nrate)</span>
+<span class="sd">    &gt;&gt;&gt; to_compound_factor(prate=prate, base_date=2) # doctest: +ELLIPSIS</span>
+<span class="sd">    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+
+<span class="sd">    &gt;&gt;&gt; to_compound_factor(nrate=nrate, base_date=2) # doctest: +ELLIPSIS</span>
+<span class="sd">    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+
+<span class="sd">    &gt;&gt;&gt; to_compound_factor(erate=erate, base_date=2) # doctest: +ELLIPSIS</span>
+<span class="sd">    [0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="n">to_discount_factor</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">erate</span><span class="o">=</span><span class="n">erate</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="n">base_date</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">factor</span><span class="p">):</span>
+        <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">factor</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">factor</span></div>
+
+<div class="viewcode-block" id="equivalent_rate"><a class="viewcode-back" href="../../rate.html#cashflows.rate.equivalent_rate">[docs]</a><span class="k">def</span> <span class="nf">equivalent_rate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">erate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the equivalent interest rate over a time period.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nrate (TimeSeries): Nominal interest rate per year.</span>
+<span class="sd">        erate (TimeSeries): Effective interest rate per year.</span>
+<span class="sd">        prate (TimeSeries): Periodic interest rate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float value.</span>
+
+<span class="sd">    Only one of the interest rate must be supplied for the computation.</span>
+
+<span class="sd">    **Example**</span>
+
+<span class="sd">    In this example, the equivalent rate for a periodic interest rate of 10% is</span>
+<span class="sd">    computed.</span>
+
+<span class="sd">    &gt;&gt;&gt; equivalent_rate(prate=interest_rate([10]*5, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)) # doctest: +ELLIPSIS</span>
+<span class="sd">    10.0...</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numnone</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">numnone</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">numnone</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Two of the rates must be set to `None`&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nrate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">nrate</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">factor</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">element</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">pyr</span> <span class="o">*</span> <span class="p">(</span><span class="n">factor</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nrate</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">prate</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">factor</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">element</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">100</span>  <span class="o">*</span> <span class="p">(</span><span class="n">factor</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prate</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">erate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">erate</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">erate</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">factor</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">element</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">pyr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="mi">100</span>  <span class="o">*</span> <span class="p">(</span><span class="n">factor</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

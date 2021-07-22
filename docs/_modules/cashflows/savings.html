@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cashflows.savings &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cashflows.savings</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cashflows.savings</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Savings</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">Overview</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+<span class="sd">The function ``savings`` computes the final balance for a savings account</span>
+<span class="sd">with arbitrary deposits and withdrawls and variable interset rate.</span>
+
+
+<span class="sd">Functions in this module</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># import sys</span>
+<span class="c1"># import os</span>
+
+<span class="c1"># sys.path.insert(0, os.path.abspath(&#39;..&#39;))</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1">#cashflows.</span>
+<span class="kn">from</span> <span class="nn">cashflows.timeseries</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">cashflows.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="savings"><a class="viewcode-back" href="../../savings.html#cashflows.savings.savings">[docs]</a><span class="k">def</span> <span class="nf">savings</span><span class="p">(</span><span class="n">deposits</span><span class="p">,</span> <span class="n">nrate</span><span class="p">,</span> <span class="n">initbal</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the final balance for a savings account with arbitrary deposits and</span>
+<span class="sd">    withdrawls and variable interset rate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cflo (pandas.Series): Generic cashflow.</span>
+<span class="sd">        deposits (pandas.Series): deposits to the account.</span>
+<span class="sd">        nrate (pandas.Series): nominal interest rate paid by the account.</span>
+<span class="sd">        initbal (float): initial balance of the account.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        A pandas.DataFrame.</span>
+
+
+<span class="sd">    **Examples**</span>
+
+<span class="sd">    &gt;&gt;&gt; cflo = cashflow(const_value=[100]*12, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate([10]*12, start=&#39;2000Q1&#39;, freq=&#39;Q&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; savings(deposits=cflo, nrate=nrate, initbal=0) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">            Beginning_Balance  Deposits  Earned_Interest  Ending_Balance  \\</span>
+<span class="sd">    2000Q1           0.000000     100.0         0.000000      100.000000</span>
+<span class="sd">    2000Q2         100.000000     100.0         2.500000      202.500000</span>
+<span class="sd">    2000Q3         202.500000     100.0         5.062500      307.562500</span>
+<span class="sd">    2000Q4         307.562500     100.0         7.689063      415.251562</span>
+<span class="sd">    2001Q1         415.251562     100.0        10.381289      525.632852</span>
+<span class="sd">    2001Q2         525.632852     100.0        13.140821      638.773673</span>
+<span class="sd">    2001Q3         638.773673     100.0        15.969342      754.743015</span>
+<span class="sd">    2001Q4         754.743015     100.0        18.868575      873.611590</span>
+<span class="sd">    2002Q1         873.611590     100.0        21.840290      995.451880</span>
+<span class="sd">    2002Q2         995.451880     100.0        24.886297     1120.338177</span>
+<span class="sd">    2002Q3        1120.338177     100.0        28.008454     1248.346631</span>
+<span class="sd">    2002Q4        1248.346631     100.0        31.208666     1379.555297</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            Nominal_Rate</span>
+<span class="sd">    2000Q1          10.0</span>
+<span class="sd">    2000Q2          10.0</span>
+<span class="sd">    2000Q3          10.0</span>
+<span class="sd">    2000Q4          10.0</span>
+<span class="sd">    2001Q1          10.0</span>
+<span class="sd">    2001Q2          10.0</span>
+<span class="sd">    2001Q3          10.0</span>
+<span class="sd">    2001Q4          10.0</span>
+<span class="sd">    2002Q1          10.0</span>
+<span class="sd">    2002Q2          10.0</span>
+<span class="sd">    2002Q3          10.0</span>
+<span class="sd">    2002Q4          10.0</span>
+
+<span class="sd">    &gt;&gt;&gt; cflo = cashflow(const_value=[0, 100, 0, 100, 100], start=&#39;2000Q1&#39;, freq=&#39;A&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; nrate = interest_rate([0, 1, 2, 3, 4], start=&#39;2000Q1&#39;, freq=&#39;A&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; savings(deposits=cflo, nrate=nrate, initbal=1000) # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">          Beginning_Balance  Deposits  Earned_Interest  Ending_Balance  \\</span>
+<span class="sd">    2000           1000.000       0.0          0.00000      1000.00000</span>
+<span class="sd">    2001           1000.000     100.0         10.00000      1110.00000</span>
+<span class="sd">    2002           1110.000       0.0         22.20000      1132.20000</span>
+<span class="sd">    2003           1132.200     100.0         33.96600      1266.16600</span>
+<span class="sd">    2004           1266.166     100.0         50.64664      1416.81264</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">          Nominal_Rate</span>
+<span class="sd">    2000           0.0</span>
+<span class="sd">    2001           1.0</span>
+<span class="sd">    2002           2.0</span>
+<span class="sd">    2003           3.0</span>
+<span class="sd">    2004           4.0</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">verify_period_range</span><span class="p">([</span><span class="n">deposits</span><span class="p">,</span> <span class="n">nrate</span><span class="p">])</span>
+
+    <span class="n">begbal</span> <span class="o">=</span> <span class="n">deposits</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">interest</span> <span class="o">=</span> <span class="n">deposits</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">endbal</span> <span class="o">=</span> <span class="n">deposits</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">pyr</span> <span class="o">=</span> <span class="n">getpyr</span><span class="p">(</span><span class="n">deposits</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">deposits</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">begbal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">initbal</span>
+            <span class="n">interest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">pyr</span>
+            <span class="n">endbal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">deposits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">endbal</span><span class="p">[</span><span class="n">time</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">*</span> <span class="n">nrate</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">pyr</span>
+            <span class="k">if</span> <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="o">-</span><span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]:</span>
+                <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">])</span>
+            <span class="n">endbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">=</span> <span class="n">begbal</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">deposits</span><span class="p">[</span><span class="n">time</span><span class="p">]</span> <span class="o">+</span> <span class="n">interest</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Beginning_Balance&#39;</span> <span class="p">:</span> <span class="n">begbal</span><span class="p">,</span>
+                          <span class="s1">&#39;Deposits&#39;</span> <span class="p">:</span> <span class="n">deposits</span><span class="p">,</span>
+                          <span class="s1">&#39;Nominal_Rate&#39;</span><span class="p">:</span><span class="n">nrate</span><span class="p">,</span>
+                          <span class="s1">&#39;Earned_Interest&#39;</span><span class="p">:</span> <span class="n">interest</span><span class="p">,</span>
+                          <span class="s1">&#39;Ending_Balance&#39;</span><span class="p">:</span> <span class="n">endbal</span> <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">table</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

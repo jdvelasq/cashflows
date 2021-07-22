@@ -1,0 +1,379 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Constant dollar transformations &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Analysis of cashflows" href="analysis.html" />
+    <link rel="prev" title="Currency conversion" href="currency.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Constant dollar transformations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Constant dollar transformations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/inflation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.inflation"></span><div class="section" id="constant-dollar-transformations">
+<h1>Constant dollar transformations<a class="headerlink" href="#constant-dollar-transformations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The function <code class="docutils literal notranslate"><span class="pre">const2curr</span></code> computes the equivalent generic cashflow in current
+dollars from a generic cashflow in constant dollars of the date given by
+<code class="docutils literal notranslate"><span class="pre">base_date</span></code>. <code class="docutils literal notranslate"><span class="pre">inflation</span></code> is the inflation rate per compounding period.
+<code class="docutils literal notranslate"><span class="pre">curr2const</span></code> computes the inverse transformation.</p>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.inflation.const2curr">
+<span class="sig-prename descclassname"><span class="pre">cashflows.inflation.</span></span><span class="sig-name descname"><span class="pre">const2curr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/inflation.html#const2curr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.inflation.const2curr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a cashflow of constant dollars to current dollars
+of the time <cite>base_date</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>inflation</strong> (<em>pandas.Series</em>) – Inflation rate per compounding period.</p></li>
+<li><p><strong>base_date</strong> (<em>int</em><em>, </em><em>str</em>) – base date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A cashflow in current money (pandas.Series)</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span><span class="o">=</span><span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inflation</span><span class="o">=</span><span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">const2curr</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">)</span> 
+<span class="go">2000    100.00</span>
+<span class="go">2001    110.00</span>
+<span class="go">2002    132.00</span>
+<span class="go">2003    158.40</span>
+<span class="go">2004    190.08</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const2curr</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+<span class="go">2000    100.00</span>
+<span class="go">2001    110.00</span>
+<span class="go">2002    132.00</span>
+<span class="go">2003    158.40</span>
+<span class="go">2004    190.08</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const2curr</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="s1">&#39;2000&#39;</span><span class="p">)</span> 
+<span class="go">2000    100.00</span>
+<span class="go">2001    110.00</span>
+<span class="go">2002    132.00</span>
+<span class="go">2003    158.40</span>
+<span class="go">2004    190.08</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const2curr</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> 
+<span class="go">2000     52.609428</span>
+<span class="go">2001     57.870370</span>
+<span class="go">2002     69.444444</span>
+<span class="go">2003     83.333333</span>
+<span class="go">2004    100.000000</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">const2curr</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="s1">&#39;2004&#39;</span><span class="p">)</span> 
+<span class="go">2000     52.609428</span>
+<span class="go">2001     57.870370</span>
+<span class="go">2002     69.444444</span>
+<span class="go">2003     83.333333</span>
+<span class="go">2004    100.000000</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.inflation.curr2const">
+<span class="sig-prename descclassname"><span class="pre">cashflows.inflation.</span></span><span class="sig-name descname"><span class="pre">curr2const</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/inflation.html#curr2const"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.inflation.curr2const" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a cashflow of current dollars to constant dollars of
+the date <cite>base_date</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>inflation_rate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Inflation rate per compounding period.</p></li>
+<li><p><strong>base_date</strong> (<em>int</em>) – base time..</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A cashflow in constant dollars</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2015&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inflation</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2015&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">curr2const</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">)</span> 
+<span class="go">2015    100.000000</span>
+<span class="go">2016     90.909091</span>
+<span class="go">2017     75.757576</span>
+<span class="go">2018     63.131313</span>
+<span class="go">2019     52.609428</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">curr2const</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> 
+<span class="go">2015    190.08</span>
+<span class="go">2016    172.80</span>
+<span class="go">2017    144.00</span>
+<span class="go">2018    120.00</span>
+<span class="go">2019    100.00</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">curr2const</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="n">inflation</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="s1">&#39;2017&#39;</span><span class="p">)</span> 
+<span class="go">2015    132.000000</span>
+<span class="go">2016    120.000000</span>
+<span class="go">2017    100.000000</span>
+<span class="go">2018     83.333333</span>
+<span class="go">2019     69.444444</span>
+<span class="go">Freq: A-DEC, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="analysis.html" class="btn btn-neutral float-right" title="Analysis of cashflows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="currency.html" class="btn btn-neutral float-left" title="Currency conversion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

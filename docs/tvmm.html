@@ -1,0 +1,663 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Time value of money models &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Representation of Cashflows and Interest Rates" href="timeseries.html" />
+    <link rel="prev" title="Cashflows: A Package for Investment Modeling and Advanced Engineering Economics using Python" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Time value of money models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Time value of money models</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/tvmm.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.tvmm"></span><div class="section" id="time-value-of-money-models">
+<h1>Time value of money models<a class="headerlink" href="#time-value-of-money-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The functions in this module are used for certain compound interest calculations
+for a cashflow under the following restrictions:</p>
+<ul class="simple">
+<li><p>Payment periods coincide with the compounding periods.</p></li>
+<li><p>Payments occur at regular intervals.</p></li>
+<li><p>Payments are a constant amount.</p></li>
+<li><p>Interest rate is the same over all analysis period.</p></li>
+</ul>
+<p>For convenience of the user, this module implements the following simplified
+functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pvfv</span></code>: computes the missing value in the equation
+<code class="docutils literal notranslate"><span class="pre">fval</span> <span class="pre">=</span> <span class="pre">pval</span> <span class="pre">*</span> <span class="pre">(1</span> <span class="pre">+</span> <span class="pre">rate)</span> <span class="pre">**</span> <span class="pre">nper</span></code>, that represents the following
+cashflow.</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/pvfv.png"><img alt="_images/pvfv.png" class="align-center" src="_images/pvfv.png" style="width: 350px;" /></a>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pvpmt</span></code>: computes the missing value (<cite>pmt</cite>, <cite>pval</cite>, <cite>nper</cite>, <cite>nrate</cite>) in a
+model relating a present value and
+a finite sequence of payments made at the end of the period (payments
+in arrears, or ordinary annuities), as indicated in the following cashflow
+diagram:</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/pvpmt.png"><img alt="_images/pvpmt.png" class="align-center" src="_images/pvpmt.png" style="width: 350px;" /></a>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pmtfv</span></code>: computes the missing value (<cite>pmt</cite>, <cite>fval</cite>, <cite>nper</cite>, <cite>nrate</cite>) in a
+model relating a finite sequence  of payments in advance (annuities due)
+and a future value, as indicated in the following diagram:</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/pmtfv.png"><img alt="_images/pmtfv.png" class="align-center" src="_images/pmtfv.png" style="width: 350px;" /></a>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tvmm</span></code>: computes the missing value (<cite>pmt</cite>, <cite>fval</cite>, <cite>pval, `nper</cite>, <cite>nrate</cite>)
+in a model relating a finite sequence  of payments made at the beginning or at
+the end of the period, a present value, a future value, and an interest rate,
+as indicated in the following diagram:</p></li>
+</ul>
+<a class="reference internal image-reference" href="_images/tvmm.png"><img alt="_images/tvmm.png" class="align-center" src="_images/tvmm.png" style="width: 650px;" /></a>
+<p>In addition, the function <code class="docutils literal notranslate"><span class="pre">amortize</span></code> computes and returns the amortization
+schedule of a loan.</p>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.tvmm.amortize">
+<span class="sig-prename descclassname"><span class="pre">cashflows.tvmm.</span></span><span class="sig-name descname"><span class="pre">amortize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">due</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/tvmm.html#amortize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.tvmm.amortize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amortization schedule of a loan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pval</strong> (<em>float</em>) – present value.</p></li>
+<li><p><strong>fval</strong> (<em>float</em>) – Future value.</p></li>
+<li><p><strong>pmt</strong> (<em>float</em>) – periodic payment per period.</p></li>
+<li><p><strong>nrate</strong> (<em>float</em>) – nominal interest rate per year.</p></li>
+<li><p><strong>nper</strong> (<em>int</em>) – total number of compounding periods.</p></li>
+<li><p><strong>due</strong> (<em>int</em>) – When payments are due.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em><em>, </em><em>list</em>) – number of periods per year.</p></li>
+<li><p><strong>noprint</strong> (<em>bool</em>) – prints enhanced output</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(principal, interest, payment, balance)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A tuple</p>
+</dd>
+</dl>
+<p><strong>Details</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">amortize</span></code> function computes and returns the columns of a amortization
+schedule of a loan. The function returns the interest payment, the
+principal repayment, the periodic payment and the balance at the
+end of each period.</p>
+<p><strong>Examples</strong></p>
+<p>The amortization schedule for a loan of 100, at a interest rate of 10%,
+and a life of 5 periods, can be computed as:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pmt</span> <span class="o">=</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">t      Beginning     Periodic     Interest    Principal        Final</span>
+<span class="go">       Principal      Payment      Payment    Repayment    Principal</span>
+<span class="go">          Amount       Amount                                 Amount</span>
+<span class="go">--------------------------------------------------------------------</span>
+<span class="go">0         100.00         0.00         0.00         0.00       100.00</span>
+<span class="go">1         100.00       -26.38        10.00       -16.38        83.62</span>
+<span class="go">2          83.62       -26.38         8.36       -18.02        65.60</span>
+<span class="go">3          65.60       -26.38         6.56       -19.82        45.78</span>
+<span class="go">4          45.78       -26.38         4.58       -21.80        23.98</span>
+<span class="go">5          23.98       -26.38         2.40       -23.98         0.00</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">t      Beginning     Periodic     Interest    Principal        Final</span>
+<span class="go">       Principal      Payment      Payment    Repayment    Principal</span>
+<span class="go">          Amount       Amount                                 Amount</span>
+<span class="go">--------------------------------------------------------------------</span>
+<span class="go">0        -100.00         0.00         0.00         0.00      -100.00</span>
+<span class="go">1        -100.00        26.38       -10.00        16.38       -83.62</span>
+<span class="go">2         -83.62        26.38        -8.36        18.02       -65.60</span>
+<span class="go">3         -65.60        26.38        -6.56        19.82       -45.78</span>
+<span class="go">4         -45.78        26.38        -4.58        21.80       -23.98</span>
+<span class="go">5         -23.98        26.38        -2.40        23.98        -0.00</span>
+</pre></div>
+</div>
+<p>In the next example, the argument <code class="docutils literal notranslate"><span class="pre">due</span></code> is used to indicate that the
+periodic payment occurs at the begining of period.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">due</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">t      Beginning     Periodic     Interest    Principal        Final</span>
+<span class="go">       Principal      Payment      Payment    Repayment    Principal</span>
+<span class="go">          Amount       Amount                                 Amount</span>
+<span class="go">--------------------------------------------------------------------</span>
+<span class="go">0         100.00       -23.98         0.00       -23.98        76.02</span>
+<span class="go">1          76.02       -23.98         7.60       -16.38        59.64</span>
+<span class="go">2          59.64       -23.98         5.96       -18.02        41.62</span>
+<span class="go">3          41.62       -23.98         4.16       -19.82        21.80</span>
+<span class="go">4          21.80       -23.98         2.18       -21.80         0.00</span>
+<span class="go">5           0.00         0.00         0.00         0.00         0.00</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">due</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">t      Beginning     Periodic     Interest    Principal        Final</span>
+<span class="go">       Principal      Payment      Payment    Repayment    Principal</span>
+<span class="go">          Amount       Amount                                 Amount</span>
+<span class="go">--------------------------------------------------------------------</span>
+<span class="go">0        -100.00        23.98         0.00        23.98       -76.02</span>
+<span class="go">1         -76.02        23.98        -7.60        16.38       -59.64</span>
+<span class="go">2         -59.64        23.98        -5.96        18.02       -41.62</span>
+<span class="go">3         -41.62        23.98        -4.16        19.82       -21.80</span>
+<span class="go">4         -21.80        23.98        -2.18        21.80        -0.00</span>
+<span class="go">5          -0.00         0.00        -0.00        -0.00        -0.00</span>
+</pre></div>
+</div>
+<p>The function returns a tuple with the columns of the amortization schedule.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">principal</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">principal</span>  
+<span class="go">[0, -16.37..., -18.01..., -19.81..., -21.80..., -23.98...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">interest</span>  
+<span class="go">[0, 10.0, 8.36..., 6.56..., 4.57..., 2.39...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">payment</span>  
+<span class="go">[0, -26.37..., -26.37..., -26.37..., -26.37..., -26.37...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">balance</span>  
+<span class="go">[100, 83.62..., 65.60..., 45.78..., 23.98..., 1...]</span>
+</pre></div>
+</div>
+<p>In the following examples, the <code class="docutils literal notranslate"><span class="pre">sum</span></code> function is used to sum of
+different columns of the amortization schedule.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">principal</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span> 
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">interest</span><span class="p">)</span>  
+<span class="go">31.89...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">principal</span><span class="p">)</span>  
+<span class="go">-99.99...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">principal</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">amortize</span><span class="p">(</span><span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span> 
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">interest</span><span class="p">)</span>  
+<span class="go">31.89...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">principal</span><span class="p">)</span>  
+<span class="go">-99.99...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">principal</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span> 
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">interest</span><span class="p">)</span>  
+<span class="go">31.89...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">principal</span><span class="p">)</span>  
+<span class="go">-99.99...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">t      Beginning     Periodic     Interest    Principal        Final</span>
+<span class="go">       Principal      Payment      Payment    Repayment    Principal</span>
+<span class="go">          Amount       Amount                                 Amount</span>
+<span class="go">--------------------------------------------------------------------</span>
+<span class="go">0         100.00         0.00         0.00         0.00       100.00</span>
+<span class="go">1         100.00       -26.38        10.00       -16.38        83.62</span>
+<span class="go">2          83.62       -26.38         8.36       -18.02        65.60</span>
+<span class="go">3          65.60       -26.38         6.56       -19.82        45.78</span>
+<span class="go">4          45.78       -26.38         4.58       -21.80        23.98</span>
+<span class="go">5          23.98       -26.38         2.40       -23.98         0.00</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">principal</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">payment</span><span class="p">,</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">amortize</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">)</span> 
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">interest</span><span class="p">)</span>  
+<span class="go">31.89...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="n">principal</span><span class="p">)</span>  
+<span class="go">-99.99...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.tvmm.pmtfv">
+<span class="sig-prename descclassname"><span class="pre">cashflows.tvmm.</span></span><span class="sig-name descname"><span class="pre">pmtfv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/tvmm.html#pmtfv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.tvmm.pmtfv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the missing argument (set to <code class="docutils literal notranslate"><span class="pre">None</span></code>) in a model relating the
+the future value, the periodic payment, the number of
+compounding periods and the nominal interest rate in a cashflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pmt</strong> (<em>float</em><em>, </em><em>list</em>) – Periodic payment.</p></li>
+<li><p><strong>fval</strong> (<em>float</em><em>, </em><em>list</em>) – Future value.</p></li>
+<li><p><strong>nrate</strong> (<em>float</em><em>, </em><em>list</em>) – Nominal rate per year.</p></li>
+<li><p><strong>nper</strong> (<em>int</em><em>, </em><em>list</em>) – Number of compounding periods.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em><em>, </em><em>list</em>) – number of periods per year.</p></li>
+<li><p><strong>noprint</strong> (<em>bool</em>) – prints enhanced output</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the parameter set to None in the function call.</p>
+</dd>
+</dl>
+<p><strong>Details</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pmtfv</span></code> function computes and returns the missing value (<code class="docutils literal notranslate"><span class="pre">pmt</span></code>, <code class="docutils literal notranslate"><span class="pre">fval</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nper</span></code>, <code class="docutils literal notranslate"><span class="pre">nrate</span></code>) in a model relating a finite sequence  of payments
+made at the beginning or at the end of each period, a future value,
+and a nominal interest rate. The time intervals between consecutive payments are
+assumed to be equial. For internal computations, the effective interest rate per
+period is calculated as <code class="docutils literal notranslate"><span class="pre">nrate</span> <span class="pre">/</span> <span class="pre">pyr</span></code>.</p>
+<p>This function is used to simplify the call to the <code class="docutils literal notranslate"><span class="pre">tvmm</span></code> function.
+See the <code class="docutils literal notranslate"><span class="pre">tvmm</span></code> function for details.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.tvmm.pvfv">
+<span class="sig-prename descclassname"><span class="pre">cashflows.tvmm.</span></span><span class="sig-name descname"><span class="pre">pvfv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/tvmm.html#pvfv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.tvmm.pvfv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the missing argument (set to <code class="docutils literal notranslate"><span class="pre">None</span></code>) in a model relating the
+present value, the future value, the number of compoundig periods
+and the nominal interest rate in a cashflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pval</strong> (<em>float</em><em>, </em><em>list</em>) – Present value.</p></li>
+<li><p><strong>fval</strong> (<em>float</em><em>, </em><em>list</em>) – Future value.</p></li>
+<li><p><strong>nrate</strong> (<em>float</em><em>, </em><em>list</em>) – Nominal interest rate per year.</p></li>
+<li><p><strong>nper</strong> (<em>int</em><em>, </em><em>list</em>) – Number of compounding periods.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em><em>, </em><em>list</em>) – number of periods per year.</p></li>
+<li><p><strong>noprint</strong> (<em>bool</em>) – prints enhanced output</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the parameter set to <code class="docutils literal notranslate"><span class="pre">None</span></code> in the function call.</p>
+</dd>
+</dl>
+<p><strong>Details</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pvfv</span></code> function computes and returns the missing value (<code class="docutils literal notranslate"><span class="pre">fval</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pval</span></code>, <code class="docutils literal notranslate"><span class="pre">nper</span></code>, <code class="docutils literal notranslate"><span class="pre">nrate</span></code>) in a model relating these variables.
+The time intervals between consecutive payments are
+assumed to be equial. For internal computations, the effective interest rate per
+period is calculated as <code class="docutils literal notranslate"><span class="pre">nrate</span> <span class="pre">/</span> <span class="pre">pyr</span></code>.</p>
+<p>This function is used to simplify the call to the <code class="docutils literal notranslate"><span class="pre">tvmm</span></code> function.
+See the <code class="docutils literal notranslate"><span class="pre">tvmm</span></code> function for details.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.tvmm.pvpmt">
+<span class="sig-prename descclassname"><span class="pre">cashflows.tvmm.</span></span><span class="sig-name descname"><span class="pre">pvpmt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/tvmm.html#pvpmt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.tvmm.pvpmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the missing argument (set to <code class="docutils literal notranslate"><span class="pre">None</span></code>) in a model relating the
+present value, the periodic payment, the number of
+compounding periods and the nominal interest rate in a cashflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pmt</strong> (<em>float</em><em>, </em><em>list</em>) – Periodic payment.</p></li>
+<li><p><strong>pval</strong> (<em>float</em><em>, </em><em>list</em>) – Present value.</p></li>
+<li><p><strong>nrate</strong> (<em>float</em><em>, </em><em>list</em>) – Nominal interest rate per year.</p></li>
+<li><p><strong>nper</strong> (<em>int</em><em>, </em><em>list</em>) – Number of compounding periods.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em><em>, </em><em>list</em>) – number of periods per year.</p></li>
+<li><p><strong>noprint</strong> (<em>bool</em>) – prints enhanced output</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the parameter set to None in the function call.</p>
+</dd>
+</dl>
+<p><strong>Details</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pvpmt</span></code> function computes and returns the missing value (<code class="docutils literal notranslate"><span class="pre">pmt</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pval</span></code>, <code class="docutils literal notranslate"><span class="pre">nper</span></code>, <code class="docutils literal notranslate"><span class="pre">nrate</span></code>) in a model relating a finite sequence  of payments
+made at the beginning or at the end of each period, a present value,
+and a nominal interest rate. The time intervals between consecutive payments are
+assumed to be equial. For internal computations, the effective interest rate per
+period is calculated as <code class="docutils literal notranslate"><span class="pre">nrate</span> <span class="pre">/</span> <span class="pre">pyr</span></code>.</p>
+<p>This function is used to simplify the call to the <code class="docutils literal notranslate"><span class="pre">tvmm</span></code> function.
+See the <code class="docutils literal notranslate"><span class="pre">tvmm</span></code> function for details.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.tvmm.tvmm">
+<span class="sig-prename descclassname"><span class="pre">cashflows.tvmm.</span></span><span class="sig-name descname"><span class="pre">tvmm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">due</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/tvmm.html#tvmm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.tvmm.tvmm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the missing argument (set to <code class="docutils literal notranslate"><span class="pre">None</span></code>) in a model relating the
+present value, the future value, the periodic payment, the number of
+compounding periods and the nominal interest rate in a cashflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pval</strong> (<em>float</em><em>, </em><em>list</em>) – Present value.</p></li>
+<li><p><strong>fval</strong> (<em>float</em><em>, </em><em>list</em>) – Future value.</p></li>
+<li><p><strong>pmt</strong> (<em>float</em><em>, </em><em>list</em>) – Periodic payment.</p></li>
+<li><p><strong>nrate</strong> (<em>float</em><em>, </em><em>list</em>) – Nominal interest rate per year.</p></li>
+<li><p><strong>nper</strong> (<em>int</em><em>, </em><em>list</em>) – Number of compounding periods.</p></li>
+<li><p><strong>due</strong> (<em>int</em>) – When payments are due.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em><em>, </em><em>list</em>) – number of periods per year.</p></li>
+<li><p><strong>noprint</strong> (<em>bool</em>) – prints enhanced output</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Argument set to None in the function call.</p>
+</dd>
+</dl>
+<p><strong>Details</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tvmmm</span></code> function computes and returns the missing value (<code class="docutils literal notranslate"><span class="pre">pmt</span></code>, <code class="docutils literal notranslate"><span class="pre">fval</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pval</span></code>, <code class="docutils literal notranslate"><span class="pre">nper</span></code>, <code class="docutils literal notranslate"><span class="pre">nrate</span></code>) in a model relating a finite sequence  of payments
+made at the beginning or at the end of each period, a present value, a future value,
+and a nominal interest rate. The time intervals between consecutive payments are
+assumed to be equal. For internal computations, the effective interest rate per
+period is calculated as <code class="docutils literal notranslate"><span class="pre">nrate</span> <span class="pre">/</span> <span class="pre">pyr</span></code>.</p>
+<p><strong>Examples</strong></p>
+<p>This example shows how to find different values for a loan of 5000, with a
+monthly payment of 130 at the end of the month, a life of 48 periods, and a
+interest rate of 0.94 per month (equivalent to a nominal interest
+rate of 11.32%). For a loan, the future value is 0.</p>
+<ul class="simple">
+<li><p>Monthly payments: Note that the parameter <code class="docutils literal notranslate"><span class="pre">pmt</span></code> is set to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mf">11.32</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">-130.00...</span>
+</pre></div>
+</div>
+<p>When the parameter <code class="docutils literal notranslate"><span class="pre">noprint</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a user friendly table with
+the data computed by the function is print.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mf">11.32</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">Present Value: .......  5000.00</span>
+<span class="go">Future Value: ........     0.00</span>
+<span class="go">Payment: .............  -130.01</span>
+<span class="go">Due: .................      END</span>
+<span class="go">No. of Periods: ......    48.00</span>
+<span class="go">Compoundings per Year:    12</span>
+<span class="go">Nominal Rate: .......     11.32</span>
+<span class="go">Effective Rate: .....     11.93</span>
+<span class="go">Periodic Rate: ......      0.94</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Future value:</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mf">11.32</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">-0.0...</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Present value:</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="mf">11.32</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">fval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">pval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">5000...</span>
+</pre></div>
+</div>
+<p>All the arguments support lists as inputs. When a argument is a list and the
+<code class="docutils literal notranslate"><span class="pre">noprint</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, a table with the data is print.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">nrate</span><span class="o">=</span><span class="mf">11.32</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">noprint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">#   pval   fval    pmt   nper  nrate  erate  prate due</span>
+<span class="go">------------------------------------------------------</span>
+<span class="go">0   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END</span>
+<span class="go">1 500.00   0.00  -0.13  48.00  11.32  11.93   0.94 END</span>
+<span class="go">2   5.00   0.00  -0.13  48.00  11.32  11.93   0.94 END</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Interest rate:</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">nper</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">fval</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">11.32...</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Number of periods:</p></li>
+</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tvmm</span><span class="p">(</span><span class="n">pval</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="mf">11.32</span><span class="o">/</span><span class="mi">12</span><span class="p">,</span> <span class="n">pmt</span><span class="o">=</span><span class="n">pmt</span><span class="p">,</span> <span class="n">fval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> 
+<span class="go">48.0...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="timeseries.html" class="btn btn-neutral float-right" title="Representation of Cashflows and Interest Rates" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Cashflows: A Package for Investment Modeling and Advanced Engineering Economics using Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

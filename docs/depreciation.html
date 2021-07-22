@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Asset depreciation &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Loan analysis" href="loan.html" />
+    <link rel="prev" title="Bond Valuation" href="bond.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Asset depreciation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Asset depreciation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/depreciation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.depreciation"></span><div class="section" id="asset-depreciation">
+<h1>Asset depreciation<a class="headerlink" href="#asset-depreciation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>This module implements the following functions to compute the depreciation of an
+asset:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">depreciation_sl</span></code>: Computes the depreciation of an asset using straight line
+depreciation method.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">depreciation_soyd</span></code>: Computes the depreciation of an asset using the
+sum-of-year’s-digits method.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">depreciation_db</span></code>: Computes the depreciation of an asset using the declining
+balance method.</p></li>
+</ul>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.depreciation.depreciation_db">
+<span class="sig-prename descclassname"><span class="pre">cashflows.depreciation.</span></span><span class="sig-name descname"><span class="pre">depreciation_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">costs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">life</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_sl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/depreciation.html#depreciation_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.depreciation.depreciation_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the depreciation of an asset using the declining balance
+method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>costs</strong> (<em>pandas.Series</em>) – the cost per period of the assets.</p></li>
+<li><p><strong>life</strong> (<em>pandas.Series</em>) – number of depreciation periods for the asset.</p></li>
+<li><p><strong>salvalue</strong> (<em>pandas.Series</em>) – salvage value as a percentage of cost.</p></li>
+<li><p><strong>factor</strong> (<em>float</em>) – acelerating factor for depreciation.</p></li>
+<li><p><strong>convert_to_sl</strong> (<em>bool</em>) – converts to straight line method?</p></li>
+<li><p><strong>noprint</strong> (<em>bool</em>) – when True, the procedure prints a depreciation table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a pandas DataFrame with the computations.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">depreciation_db</span><span class="p">(</span><span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">convert_to_sl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">        Beg_Book    Depr  Accum_Depr  End_Book</span>
+<span class="go">2000Q1   1000.00  375.00      375.00    625.00</span>
+<span class="go">2000Q2    625.00  234.38      609.38    390.62</span>
+<span class="go">2000Q3    390.62  146.48      755.86    244.14</span>
+<span class="go">2000Q4    244.14   91.55      847.41    152.59</span>
+<span class="go">2001Q1    152.59    0.00      847.41    152.59</span>
+<span class="go">2001Q2    152.59    0.00      847.41    152.59</span>
+<span class="go">2001Q3    152.59    0.00      847.41    152.59</span>
+<span class="go">2001Q4    152.59    0.00      847.41    152.59</span>
+<span class="go">2002Q1    152.59    0.00      847.41    152.59</span>
+<span class="go">2002Q2    152.59    0.00      847.41    152.59</span>
+<span class="go">2002Q3    152.59    0.00      847.41    152.59</span>
+<span class="go">2002Q4    152.59    0.00      847.41    152.59</span>
+<span class="go">2003Q1    152.59    0.00      847.41    152.59</span>
+<span class="go">2003Q2    152.59    0.00      847.41    152.59</span>
+<span class="go">2003Q3    152.59    0.00      847.41    152.59</span>
+<span class="go">2003Q4    152.59    0.00      847.41    152.59</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">depreciation_db</span><span class="p">(</span><span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">convert_to_sl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+<span class="go">        Beg_Book    Depr  Accum_Depr  End_Book</span>
+<span class="go">2000Q1   1000.00  375.00      375.00    625.00</span>
+<span class="go">2000Q2    625.00  234.38      609.38    390.62</span>
+<span class="go">2000Q3    390.62  146.48      755.86    244.14</span>
+<span class="go">2000Q4    244.14   91.55      847.41    152.59</span>
+<span class="go">2001Q1    152.59    0.00      847.41    152.59</span>
+<span class="go">2001Q2    152.59    0.00      847.41    152.59</span>
+<span class="go">2001Q3    152.59    0.00      847.41    152.59</span>
+<span class="go">2001Q4    152.59    0.00      847.41    152.59</span>
+<span class="go">2002Q1   1152.59  375.00     1222.41    777.59</span>
+<span class="go">2002Q2    777.59  234.38     1456.79    543.21</span>
+<span class="go">2002Q3    543.21  146.48     1603.27    396.73</span>
+<span class="go">2002Q4    396.73   91.55     1694.82    305.18</span>
+<span class="go">2003Q1    305.18    0.00     1694.82    305.18</span>
+<span class="go">2003Q2    305.18    0.00     1694.82    305.18</span>
+<span class="go">2003Q3    305.18    0.00     1694.82    305.18</span>
+<span class="go">2003Q4    305.18    0.00     1694.82    305.18</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.depreciation.depreciation_sl">
+<span class="sig-prename descclassname"><span class="pre">cashflows.depreciation.</span></span><span class="sig-name descname"><span class="pre">depreciation_sl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">costs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">life</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/depreciation.html#depreciation_sl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.depreciation.depreciation_sl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the depreciation of an asset using straight line depreciation
+method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>costs</strong> (<em>pandas.Series</em>) – the cost per period of the assets.</p></li>
+<li><p><strong>life</strong> (<em>pandas.Series</em>) – number of depreciation periods for the asset.</p></li>
+<li><p><strong>salvalue</strong> (<em>pandas.Series</em>) – salvage value as a percentage of cost.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a pandas DataFrame with the computations.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">depreciation_sl</span><span class="p">(</span><span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">)</span> 
+<span class="go">           Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="go">   2000Q1    1000.0  250.0       250.0     750.0</span>
+<span class="go">   2000Q2     750.0  250.0       500.0     500.0</span>
+<span class="go">   2000Q3     500.0  250.0       750.0     250.0</span>
+<span class="go">   2000Q4     250.0  250.0      1000.0       0.0</span>
+<span class="go">   2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q4       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q4       0.0    0.0      1000.0       0.0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">depreciation_sl</span><span class="p">(</span><span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">)</span> 
+<span class="go">           Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="go">   2000Q1    1000.0  250.0       250.0     750.0</span>
+<span class="go">   2000Q2     750.0  250.0       500.0     500.0</span>
+<span class="go">   2000Q3     500.0  250.0       750.0     250.0</span>
+<span class="go">   2000Q4     250.0  250.0      1000.0       0.0</span>
+<span class="go">   2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q1    1000.0  250.0      1250.0     750.0</span>
+<span class="go">   2002Q2     750.0  250.0      1500.0     500.0</span>
+<span class="go">   2002Q3     500.0  250.0      1750.0     250.0</span>
+<span class="go">   2002Q4     250.0  250.0      2000.0       0.0</span>
+<span class="go">   2003Q1       0.0    0.0      2000.0       0.0</span>
+<span class="go">   2003Q2       0.0    0.0      2000.0       0.0</span>
+<span class="go">   2003Q3       0.0    0.0      2000.0       0.0</span>
+<span class="go">   2003Q4       0.0    0.0      2000.0       0.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.depreciation.depreciation_soyd">
+<span class="sig-prename descclassname"><span class="pre">cashflows.depreciation.</span></span><span class="sig-name descname"><span class="pre">depreciation_soyd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">costs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">life</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/depreciation.html#depreciation_soyd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.depreciation.depreciation_soyd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the depreciation of an asset using the sum-of-year’s-digits
+method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>costs</strong> (<em>pandas.Series</em>) – the cost per period of the assets.</p></li>
+<li><p><strong>life</strong> (<em>pandas.Series</em>) – number of depreciation periods for the asset.</p></li>
+<li><p><strong>salvalue</strong> (<em>pandas.Series</em>) – salvage value as a percentage of cost.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns a pandas DataFrame with the computations.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">depreciation_soyd</span><span class="p">(</span><span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">)</span> 
+<span class="go">           Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="go">   2000Q1    1000.0  400.0       400.0     600.0</span>
+<span class="go">   2000Q2     600.0  300.0       700.0     300.0</span>
+<span class="go">   2000Q3     300.0  200.0       900.0     100.0</span>
+<span class="go">   2000Q4     100.0  100.0      1000.0       0.0</span>
+<span class="go">   2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q4       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2003Q4       0.0    0.0      1000.0       0.0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">costs</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">life</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">depreciation_soyd</span><span class="p">(</span><span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">life</span><span class="o">=</span><span class="n">life</span><span class="p">)</span> 
+<span class="go">           Beg_Book   Depr  Accum_Depr  End_Book</span>
+<span class="go">   2000Q1    1000.0  400.0       400.0     600.0</span>
+<span class="go">   2000Q2     600.0  300.0       700.0     300.0</span>
+<span class="go">   2000Q3     300.0  200.0       900.0     100.0</span>
+<span class="go">   2000Q4     100.0  100.0      1000.0       0.0</span>
+<span class="go">   2001Q1       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q2       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q3       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2001Q4       0.0    0.0      1000.0       0.0</span>
+<span class="go">   2002Q1    1000.0  400.0      1400.0     600.0</span>
+<span class="go">   2002Q2     600.0  300.0      1700.0     300.0</span>
+<span class="go">   2002Q3     300.0  200.0      1900.0     100.0</span>
+<span class="go">   2002Q4     100.0  100.0      2000.0       0.0</span>
+<span class="go">   2003Q1       0.0    0.0      2000.0       0.0</span>
+<span class="go">   2003Q2       0.0    0.0      2000.0       0.0</span>
+<span class="go">   2003Q3       0.0    0.0      2000.0       0.0</span>
+<span class="go">   2003Q4       0.0    0.0      2000.0       0.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="loan.html" class="btn btn-neutral float-right" title="Loan analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="bond.html" class="btn btn-neutral float-left" title="Bond Valuation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

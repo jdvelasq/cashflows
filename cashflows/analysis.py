@@ -39,9 +39,8 @@ from cashflows.timeseries import *
 from cashflows.rate import *
 from cashflows.common import _vars2list
 from cashflows.tvmm import tvmm
+
 # from cashflows.utilityfun import exp_utility_fun, log_utility_fun, sqrt_utility_fun
-
-
 
 
 def irr(cflo):
@@ -66,16 +65,16 @@ def irr(cflo):
     dtype: float64
 
     """
-    
 
     if isinstance(cflo, pd.Series):
         cflo = [cflo]
     retval = pd.Series([0] * len(cflo), dtype=np.float64)
     for index, xcflo in enumerate(cflo):
-        retval[index] = (100 * np.irr(xcflo))
+        retval[index] = 100 * np.irr(xcflo)
     if len(retval) == 1:
         return retval[0]
     return retval
+
 
 ## modified internal rate of return
 def mirr(cflo, finance_rate=0, reinvest_rate=0):
@@ -104,18 +103,17 @@ def mirr(cflo, finance_rate=0, reinvest_rate=0):
 
     """
     # negativos: finance_rate
-    # positivos: reinvest_rate
+    # positivos: reinvest_rate
     if isinstance(cflo, pd.Series):
         cflo = [cflo]
     retval = pd.Series([0] * len(cflo), dtype=np.float64)
     for index, xcflo in enumerate(cflo):
-        retval[index] = (100 *  np.mirr(xcflo,
-                                        finance_rate,
-                                        reinvest_rate))
+        retval[index] = 100 * np.mirr(xcflo, finance_rate, reinvest_rate)
 
     if len(retval) == 1:
         return retval[0]
     return retval
+
 
 def timevalue(cflo, prate, base_date=0, utility=None):
     """
@@ -182,6 +180,7 @@ def timevalue(cflo, prate, base_date=0, utility=None):
         return retval[0]
     return retval
 
+
 def net_uniform_series(cflo, prate, nper=1):
     """Computes a net uniform series equivalent of a cashflow. This is,
     a fixed periodic payment during `nper` periods that is equivalent
@@ -225,12 +224,10 @@ def net_uniform_series(cflo, prate, nper=1):
     erate = equivalent_rate(prate=prate)
     for index, xcflo in enumerate(cflo):
         netval = timevalue(cflo=xcflo, prate=prate, base_date=0)
-        retval[index] = (-tvmm(nrate=erate, nper=nper, pval=netval, fval=0, pmt=None))
+        retval[index] = -tvmm(nrate=erate, nper=nper, pval=netval, fval=0, pmt=None)
     if len(retval) == 1:
         return retval[0]
     return retval
-
-
 
 
 def benefit_cost_ratio(cflo, prate, base_date=0):
@@ -282,13 +279,15 @@ def benefit_cost_ratio(cflo, prate, base_date=0):
                 den[time] = 0
             else:
                 num[time] = 0
-        retval[index] = -timevalue(num, prate, base_date) / timevalue(den, prate, base_date)
+        retval[index] = -timevalue(num, prate, base_date) / timevalue(
+            den, prate, base_date
+        )
     if len(retval) == 1:
         return retval[0]
     return retval
 
 
-
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

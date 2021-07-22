@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Analysis of cashflows &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bond Valuation" href="bond.html" />
+    <link rel="prev" title="Constant dollar transformations" href="inflation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis of cashflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Analysis of cashflows</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.analysis"></span><div class="section" id="analysis-of-cashflows">
+<h1>Analysis of cashflows<a class="headerlink" href="#analysis-of-cashflows" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>This module implements the following functions for financial analysis of
+cashflows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">timevalue</span></code>: computes the equivalent net value of a cashflow in a specified
+time moment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">net_uniform_series</span></code>: computes the periodic equivalent net value of a
+cashflow for a specified number of payments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">benefit_cost_ratio</span></code>: computes the benefit cost ratio of a cashflow using
+a periodic interest rate for discounting the cashflow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">irr</span></code>:  calculates the periodic internal rate of return of a cashflow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mirr</span></code>:  calculates the periodic modified internal rate of return of a
+cashflow.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list_as_table</span></code>: prints a list as a table. This function is useful for
+comparing financial indicators for different alternatives.</p></li>
+</ul>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.analysis.benefit_cost_ratio">
+<span class="sig-prename descclassname"><span class="pre">cashflows.analysis.</span></span><span class="sig-name descname"><span class="pre">benefit_cost_ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/analysis.html#benefit_cost_ratio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.analysis.benefit_cost_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a benefit cost ratio at time <cite>base_date</cite> of a discounted cashflow
+using the periodic interest rate <cite>prate</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Periodic interest rate.</p></li>
+<li><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>base_date</strong> (<em>int</em><em>, </em><em>list</em>) – Time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float or list of floats.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mf">717.01</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">benefit_cost_ratio</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">1.02...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">12</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">benefit_cost_ratio</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">1.518...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">benefit_cost_ratio</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">cflo</span><span class="p">],</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">0    1.518675</span>
+<span class="go">1    1.518675</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.analysis.irr">
+<span class="sig-prename descclassname"><span class="pre">cashflows.analysis.</span></span><span class="sig-name descname"><span class="pre">irr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/analysis.html#irr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.analysis.irr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the internal rate of return of a generic cashflow as a periodic
+interest rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float or list of floats.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">irr</span><span class="p">(</span><span class="n">cflo</span><span class="p">)</span> 
+<span class="go">34.90...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">irr</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">cflo</span><span class="p">])</span> 
+<span class="go">0    34.90...</span>
+<span class="go">1    34.90...</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.analysis.mirr">
+<span class="sig-prename descclassname"><span class="pre">cashflows.analysis.</span></span><span class="sig-name descname"><span class="pre">mirr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finance_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reinvest_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/analysis.html#mirr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.analysis.mirr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the modified internal rate of return of a generic cashflow
+as a periodic interest rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>finance_rate</strong> (<em>float</em>) – Periodic interest rate applied to negative values of the cashflow.</p></li>
+<li><p><strong>reinvest_rate</strong> (<em>float</em>) – Periodic interest rate applied to positive values of the cashflow.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float or list of floats.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mirr</span><span class="p">(</span><span class="n">cflo</span><span class="p">)</span> 
+<span class="go">18.92...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mirr</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">cflo</span><span class="p">])</span> 
+<span class="go">0    18.920712</span>
+<span class="go">1    18.920712</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.analysis.net_uniform_series">
+<span class="sig-prename descclassname"><span class="pre">cashflows.analysis.</span></span><span class="sig-name descname"><span class="pre">net_uniform_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/analysis.html#net_uniform_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.analysis.net_uniform_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a net uniform series equivalent of a cashflow. This is,
+a fixed periodic payment during <cite>nper</cite> periods that is equivalent
+to the cashflow <cite>cflo</cite> at the periodic interest rate <cite>prate</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>prate</strong> (<em>pandas.Series</em>) – Periodic interest rate.</p></li>
+<li><p><strong>nper</strong> (<em>int</em><em>, </em><em>list</em>) – Number of equivalent payment periods.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float or list of floats.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mf">732.54</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net_uniform_series</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">0.00...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">12</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net_uniform_series</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">116.18...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">net_uniform_series</span><span class="p">([</span><span class="n">cflo</span><span class="p">,</span> <span class="n">cflo</span><span class="p">],</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">0    116.183127</span>
+<span class="go">1    116.183127</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.analysis.timevalue">
+<span class="sig-prename descclassname"><span class="pre">cashflows.analysis.</span></span><span class="sig-name descname"><span class="pre">timevalue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/analysis.html#timevalue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.analysis.timevalue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the equivalent net value of a generic cashflow at time <cite>base_date</cite>
+using the periodic interest rate <cite>prate</cite>.  If <cite>base_date</cite> is 0, <cite>timevalue</cite>
+computes the net present value of the
+cashflow. If <cite>base_date</cite> is the index of the last element of <cite>cflo</cite>,
+this function computes the equivalent future value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cflo</strong> (<em>pandas.Series</em><em>, </em><em>list of pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>prate</strong> (<em>pandas.Series</em>) – Periodic interest rate.</p></li>
+<li><p><strong>base_date</strong> (<em>int</em><em>, </em><em>tuple</em>) – Time.</p></li>
+<li><p><strong>utility</strong> (<em>function</em>) – Utility function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Float or list of floats.</p>
+</dd>
+</dl>
+<p><strong>Examples.</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mf">732.54</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timevalue</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">0.00...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">12</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timevalue</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">103.73...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">timevalue</span><span class="p">(</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> 
+<span class="go">163.22...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">12</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">([</span><span class="o">-</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timevalue</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">)</span> 
+<span class="go">103.73...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">timevalue</span><span class="p">(</span><span class="n">cflo</span><span class="o">=</span><span class="p">[</span><span class="n">cflo</span><span class="p">,</span> <span class="n">cflo</span><span class="p">],</span> <span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">)</span> 
+<span class="go">0    103.734935</span>
+<span class="go">1    103.734935</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="bond.html" class="btn btn-neutral float-right" title="Bond Valuation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="inflation.html" class="btn btn-neutral float-left" title="Constant dollar transformations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

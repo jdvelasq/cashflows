@@ -6,7 +6,18 @@
 Cashflows: A Package for Investment Modeling and Advanced Engineering Economics using Python
 ============================================================================================
 
-**Date**: May 20, 2018  **Version**: 0.0.5
+**Authors**
+
+| Prof. Juan David Velásquez-Henao, MSc, PhD
+| Universidad Nacional de Colombia, Sede Medellín.
+| jdvelasq@unal.edu.co
+
+| Ing. Ibeth Karina Vergara
+| Universidad Nacional de Colombia, Sede Medellín.
+| ikvergarab@unal.edu.co
+
+
+**Date**: Jul 21, 2021  **Version**: 0.1.0
 
 **Binary Installers:** https://pypi.org/project/cashflows
 
@@ -45,15 +56,8 @@ of open source tools for data science.
 * Realize cashflow analysis.
 
 
-Table of Contents
-===============================================================================
-
-**cashflows** is organized in the following modules:
-
 .. toctree::
    :maxdepth: 4
-
-
 
    tvmm
    timeseries
@@ -70,17 +74,17 @@ Table of Contents
 
 
 
-Indices and Tables
-===============================================================================
+**Indices and Tables**
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 
-MIT license
-===============================================================================
 
-Copyright (c) 2018 Juan David Velásquez-Henao, Ibeth Karina Vergara-Baquero
+**MIT license**
+
+
+Copyright (c) 2021 Juan David Velásquez-Henao, Ibeth Karina Vergara-Baquero
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

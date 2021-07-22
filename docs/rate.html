@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Interest rate transformations &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="After tax cashflow calculation" href="taxing.html" />
+    <link rel="prev" title="Representation of Cashflows and Interest Rates" href="timeseries.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interest rate transformations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Interest rate transformations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/rate.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.rate"></span><div class="section" id="interest-rate-transformations">
+<h1>Interest rate transformations<a class="headerlink" href="#interest-rate-transformations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Transformations between nominal, effective and periodic interest rates
+can be realized using <strong>cashflows</strong>. This module implements the
+following functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">effrate</span></code>: computes the effective interest rate given the nominal interest
+rate or the periodic interest rate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nomrate</span></code>: computes the nominal interest rate given the effective interest
+rate or the periodic interest rate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">perrate</span></code>: computes the periodic interest rate given the effective interest
+rate or the nominal interest rate.</p></li>
+</ul>
+<p>In addition, it is possible to compute discount and compounidng factors.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">to_discount_factor</span></code>: Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">to_compound_factor</span></code>: Returns a list of compounding factors calculated as (1 + r)^(t - t0).</p></li>
+</ul>
+<p>Finally, also it is possible to compute a fixed equivalent rate given interest
+rate changing over time using <code class="docutils literal notranslate"><span class="pre">equivalent_rate</span></code>.</p>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.rate.effrate">
+<span class="sig-prename descclassname"><span class="pre">cashflows.rate.</span></span><span class="sig-name descname"><span class="pre">effrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/rate.html#effrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.rate.effrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the effective interest rate given the nominal interest rate or the periodic interest rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nrate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Nominal interest rate.</p></li>
+<li><p><strong>prate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Periodic interest rate.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em>) – Number of compounding periods per year.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Effective interest rate(float, pandas.Series).</p>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<p>In this example, the equivalent effective interest rate for a periodic
+monthly interest rate of 1% is computed.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">12.68...</span>
+</pre></div>
+</div>
+<p>This example shows hot to compute the effective interes rate equivalent to
+a nominal interest rate of 10% with montlhy compounding.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">10.4713...</span>
+</pre></div>
+</div>
+<p>Also it is possible to use list for some arguments of the functions as
+it is shown bellow.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0     3.030100</span>
+<span class="go">1     6.152015</span>
+<span class="go">2    12.682503</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    10.337037</span>
+<span class="go">1    10.426042</span>
+<span class="go">2    10.471307</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0    12.682503</span>
+<span class="go">1    26.824179</span>
+<span class="go">2    42.576089</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0    10.471307</span>
+<span class="go">1    12.682503</span>
+<span class="go">2    14.934203</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<p>When a rate and the number of compounding periods (<code class="docutils literal notranslate"><span class="pre">pyr</span></code>) are vectors, they
+must have the same length. Computations are executed using the first rate
+with the first compounding and so on.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    10.337037</span>
+<span class="go">1    12.616242</span>
+<span class="go">2    14.934203</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0     3.030100</span>
+<span class="go">1    12.616242</span>
+<span class="go">2    42.576089</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<p>Also it is possible to transform interest rate time series.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000-06&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;6M&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span> <span class="o">=</span> <span class="n">nrate</span><span class="p">)</span> 
+<span class="go">2000-06    12.36</span>
+<span class="go">2000-12    12.36</span>
+<span class="go">2001-06    12.36</span>
+<span class="go">2001-12    12.36</span>
+<span class="go">2002-06    12.36</span>
+<span class="go">2002-12    12.36</span>
+<span class="go">2003-06    12.36</span>
+<span class="go">2003-12    12.36</span>
+<span class="go">2004-06    12.36</span>
+<span class="go">2004-12    12.36</span>
+<span class="go">2005-06    12.36</span>
+<span class="go">2005-12    12.36</span>
+<span class="go">Freq: 6M, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effrate</span><span class="p">(</span><span class="n">prate</span> <span class="o">=</span> <span class="n">prate</span><span class="p">)</span> 
+<span class="go">2000-06    12.36</span>
+<span class="go">2000-12    12.36</span>
+<span class="go">2001-06    12.36</span>
+<span class="go">2001-12    12.36</span>
+<span class="go">2002-06    12.36</span>
+<span class="go">2002-12    12.36</span>
+<span class="go">2003-06    12.36</span>
+<span class="go">2003-12    12.36</span>
+<span class="go">2004-06    12.36</span>
+<span class="go">2004-12    12.36</span>
+<span class="go">2005-06    12.36</span>
+<span class="go">2005-12    12.36</span>
+<span class="go">Freq: 6M, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.rate.equivalent_rate">
+<span class="sig-prename descclassname"><span class="pre">cashflows.rate.</span></span><span class="sig-name descname"><span class="pre">equivalent_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/rate.html#equivalent_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.rate.equivalent_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the equivalent interest rate over a time period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nrate</strong> (<em>TimeSeries</em>) – Nominal interest rate per year.</p></li>
+<li><p><strong>erate</strong> (<em>TimeSeries</em>) – Effective interest rate per year.</p></li>
+<li><p><strong>prate</strong> (<em>TimeSeries</em>) – Periodic interest rate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>float value.</p>
+</dd>
+</dl>
+<p>Only one of the interest rate must be supplied for the computation.</p>
+<p><strong>Example</strong></p>
+<p>In this example, the equivalent rate for a periodic interest rate of 10% is
+computed.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">equivalent_rate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="n">interest_rate</span><span class="p">([</span><span class="mi">10</span><span class="p">]</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">))</span> 
+<span class="go">10.0...</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.rate.nomrate">
+<span class="sig-prename descclassname"><span class="pre">cashflows.rate.</span></span><span class="sig-name descname"><span class="pre">nomrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">erate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/rate.html#nomrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.rate.nomrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the nominal interest rate given the nominal interest rate or the periodic interest rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>erate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Effective interest rate.</p></li>
+<li><p><strong>prate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Periodic interest rate.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em>) – Number of compounding periods per year.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nominal interest rate(float, pandas.Series).</p>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">12.0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    9.684035</span>
+<span class="go">1    9.607121</span>
+<span class="go">2    9.568969</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">9.5689...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0     3.0</span>
+<span class="go">1     6.0</span>
+<span class="go">2    12.0</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0     9.568969</span>
+<span class="go">1    11.386552</span>
+<span class="go">2    13.174622</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0    12.0</span>
+<span class="go">1    24.0</span>
+<span class="go">2    36.0</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<p>When a rate and the number of compounding periods (<cite>pyr</cite>) are vectors, they
+must have the same length. Computations are executed using the first rate
+with the first compounding and so on.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0     9.684035</span>
+<span class="go">1    11.440574</span>
+<span class="go">2    13.174622</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0     3.0</span>
+<span class="go">1    12.0</span>
+<span class="go">2    36.0</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mf">6.00</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000-06&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;6M&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">erate</span> <span class="o">=</span> <span class="n">effrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="n">erate</span><span class="p">)</span>
+<span class="go">2000-06    12.0</span>
+<span class="go">2000-12    12.0</span>
+<span class="go">2001-06    12.0</span>
+<span class="go">2001-12    12.0</span>
+<span class="go">2002-06    12.0</span>
+<span class="go">2002-12    12.0</span>
+<span class="go">2003-06    12.0</span>
+<span class="go">2003-12    12.0</span>
+<span class="go">2004-06    12.0</span>
+<span class="go">2004-12    12.0</span>
+<span class="go">2005-06    12.0</span>
+<span class="go">2005-12    12.0</span>
+<span class="go">Freq: 6M, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nomrate</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">)</span>
+<span class="go">2000-06    12.0</span>
+<span class="go">2000-12    12.0</span>
+<span class="go">2001-06    12.0</span>
+<span class="go">2001-12    12.0</span>
+<span class="go">2002-06    12.0</span>
+<span class="go">2002-12    12.0</span>
+<span class="go">2003-06    12.0</span>
+<span class="go">2003-12    12.0</span>
+<span class="go">2004-06    12.0</span>
+<span class="go">2004-12    12.0</span>
+<span class="go">2005-06    12.0</span>
+<span class="go">2005-12    12.0</span>
+<span class="go">Freq: 6M, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.rate.perrate">
+<span class="sig-prename descclassname"><span class="pre">cashflows.rate.</span></span><span class="sig-name descname"><span class="pre">perrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pyr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/rate.html#perrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.rate.perrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the periodic interest rate given the nominal interest rate or the effective interest rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nrate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Nominal interest rate.</p></li>
+<li><p><strong>erate</strong> (<em>float</em><em>, </em><em>pandas.Series</em>) – Effective interest rate.</p></li>
+<li><p><strong>pyr</strong> (<em>int</em>) – Number of compounding periods per year.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Periodic interest rate(float, pandas.Series).</p>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0.8333...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0.7974...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    3.228012</span>
+<span class="go">1    1.601187</span>
+<span class="go">2    0.797414</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    3.333333</span>
+<span class="go">1    1.666667</span>
+<span class="go">2    0.833333</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0    0.797414</span>
+<span class="go">1    0.948879</span>
+<span class="go">2    1.097885</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span> 
+<span class="go">0    0.833333</span>
+<span class="go">1    1.000000</span>
+<span class="go">2    1.166667</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<p>When a rate and the number of compounding periods (<code class="docutils literal notranslate"><span class="pre">pyr</span></code>) are vectors, they
+must have the same length. Computations are executed using the first rate
+with the first compounding and so on.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    3.228012</span>
+<span class="go">1    1.906762</span>
+<span class="go">2    1.097885</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> <span class="n">pyr</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span> 
+<span class="go">0    3.333333</span>
+<span class="go">1    2.000000</span>
+<span class="go">2    1.166667</span>
+<span class="go">dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span>  <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000-06&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;6M&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">erate</span> <span class="o">=</span> <span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="n">erate</span><span class="p">)</span> 
+<span class="go">2000-06    6.0</span>
+<span class="go">2000-12    6.0</span>
+<span class="go">2001-06    6.0</span>
+<span class="go">2001-12    6.0</span>
+<span class="go">2002-06    6.0</span>
+<span class="go">2002-12    6.0</span>
+<span class="go">2003-06    6.0</span>
+<span class="go">2003-12    6.0</span>
+<span class="go">2004-06    6.0</span>
+<span class="go">2004-12    6.0</span>
+<span class="go">2005-06    6.0</span>
+<span class="go">2005-12    6.0</span>
+<span class="go">Freq: 6M, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span> 
+<span class="go">2000-06    6.0</span>
+<span class="go">2000-12    6.0</span>
+<span class="go">2001-06    6.0</span>
+<span class="go">2001-12    6.0</span>
+<span class="go">2002-06    6.0</span>
+<span class="go">2002-12    6.0</span>
+<span class="go">2003-06    6.0</span>
+<span class="go">2003-12    6.0</span>
+<span class="go">2004-06    6.0</span>
+<span class="go">2004-12    6.0</span>
+<span class="go">2005-06    6.0</span>
+<span class="go">2005-12    6.0</span>
+<span class="go">Freq: 6M, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.rate.to_compound_factor">
+<span class="sig-prename descclassname"><span class="pre">cashflows.rate.</span></span><span class="sig-name descname"><span class="pre">to_compound_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/rate.html#to_compound_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.rate.to_compound_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of compounding factors calculated as (1 + r)^(t - t0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nrate</strong> (<em>TimeSeries</em>) – Nominal interest rate per year.</p></li>
+<li><p><strong>nrate</strong> – Effective interest rate per year.</p></li>
+<li><p><strong>prate</strong> (<em>TimeSeries</em>) – Periodic interest rate.</p></li>
+<li><p><strong>base_date</strong> (<em>int</em><em>, </em><em>tuple</em>) – basis time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Compound factor (list)</p>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<p>In this example, a compound factor is computed for a interest rate
+expressed as nominal, periodic or effective interest rate.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">erate</span> <span class="o">=</span> <span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_compound_factor</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> 
+<span class="go">[0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">to_compound_factor</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> 
+<span class="go">[0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">to_compound_factor</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="n">erate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> 
+<span class="go">[0.980..., 0.990..., 1.0, 1.01, 1.0201, 1.030..., 1.040..., 1.051..., 1.061..., 1.072...]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.rate.to_discount_factor">
+<span class="sig-prename descclassname"><span class="pre">cashflows.rate.</span></span><span class="sig-name descname"><span class="pre">to_discount_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/rate.html#to_discount_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.rate.to_discount_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of discount factors calculated as 1 / (1 + r)^(t - t0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nrate</strong> (<em>pandas.Series</em>) – Nominal interest rate per year.</p></li>
+<li><p><strong>nrate</strong> – Effective interest rate per year.</p></li>
+<li><p><strong>prate</strong> (<em>pandas.Series</em>) – Periodic interest rate.</p></li>
+<li><p><strong>base_date</strong> (<em>string</em>) – basis time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>pandas.Series</cite> of float values.</p>
+</dd>
+</dl>
+<p>Only one of the interest rates must be supplied for the computation.</p>
+<p><strong>Example</strong></p>
+<p>In this example, a discount factor is computed for a interest rate
+expressed as nominal, periodic or effective interest rate.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2016Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">erate</span> <span class="o">=</span> <span class="n">effrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prate</span> <span class="o">=</span> <span class="n">perrate</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_discount_factor</span><span class="p">(</span><span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="s1">&#39;2016Q3&#39;</span><span class="p">)</span> 
+<span class="go">[1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">to_discount_factor</span><span class="p">(</span><span class="n">erate</span><span class="o">=</span><span class="n">erate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="s1">&#39;2016Q3&#39;</span><span class="p">)</span> 
+<span class="go">[1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">to_discount_factor</span><span class="p">(</span><span class="n">prate</span><span class="o">=</span><span class="n">prate</span><span class="p">,</span> <span class="n">base_date</span><span class="o">=</span><span class="s1">&#39;2016Q3&#39;</span><span class="p">)</span> 
+<span class="go">[1.0201, 1.01, 1.0, 0.990..., 0.980..., 0.970..., 0.960..., 0.951..., 0.942..., 0.932...]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="taxing.html" class="btn btn-neutral float-right" title="After tax cashflow calculation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="timeseries.html" class="btn btn-neutral float-left" title="Representation of Cashflows and Interest Rates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

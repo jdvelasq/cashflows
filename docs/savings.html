@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Savings &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Loan analysis" href="loan.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Savings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Savings</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/savings.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.savings"></span><div class="section" id="savings">
+<h1>Savings<a class="headerlink" href="#savings" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The function <code class="docutils literal notranslate"><span class="pre">savings</span></code> computes the final balance for a savings account
+with arbitrary deposits and withdrawls and variable interset rate.</p>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.savings.savings">
+<span class="sig-prename descclassname"><span class="pre">cashflows.savings.</span></span><span class="sig-name descname"><span class="pre">savings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deposits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initbal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/savings.html#savings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.savings.savings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the final balance for a savings account with arbitrary deposits and
+withdrawls and variable interset rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p></li>
+<li><p><strong>deposits</strong> (<em>pandas.Series</em>) – deposits to the account.</p></li>
+<li><p><strong>nrate</strong> (<em>pandas.Series</em>) – nominal interest rate paid by the account.</p></li>
+<li><p><strong>initbal</strong> (<em>float</em>) – initial balance of the account.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas.DataFrame.</p>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">*</span><span class="mi">12</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">10</span><span class="p">]</span><span class="o">*</span><span class="mi">12</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">savings</span><span class="p">(</span><span class="n">deposits</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">initbal</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+<span class="go">        Beginning_Balance  Deposits  Earned_Interest  Ending_Balance  \</span>
+<span class="go">2000Q1           0.000000     100.0         0.000000      100.000000</span>
+<span class="go">2000Q2         100.000000     100.0         2.500000      202.500000</span>
+<span class="go">2000Q3         202.500000     100.0         5.062500      307.562500</span>
+<span class="go">2000Q4         307.562500     100.0         7.689063      415.251562</span>
+<span class="go">2001Q1         415.251562     100.0        10.381289      525.632852</span>
+<span class="go">2001Q2         525.632852     100.0        13.140821      638.773673</span>
+<span class="go">2001Q3         638.773673     100.0        15.969342      754.743015</span>
+<span class="go">2001Q4         754.743015     100.0        18.868575      873.611590</span>
+<span class="go">2002Q1         873.611590     100.0        21.840290      995.451880</span>
+<span class="go">2002Q2         995.451880     100.0        24.886297     1120.338177</span>
+<span class="go">2002Q3        1120.338177     100.0        28.008454     1248.346631</span>
+<span class="go">2002Q4        1248.346631     100.0        31.208666     1379.555297</span>
+
+<span class="go">        Nominal_Rate</span>
+<span class="go">2000Q1          10.0</span>
+<span class="go">2000Q2          10.0</span>
+<span class="go">2000Q3          10.0</span>
+<span class="go">2000Q4          10.0</span>
+<span class="go">2001Q1          10.0</span>
+<span class="go">2001Q2          10.0</span>
+<span class="go">2001Q3          10.0</span>
+<span class="go">2001Q4          10.0</span>
+<span class="go">2002Q1          10.0</span>
+<span class="go">2002Q2          10.0</span>
+<span class="go">2002Q3          10.0</span>
+<span class="go">2002Q4          10.0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nrate</span> <span class="o">=</span> <span class="n">interest_rate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">savings</span><span class="p">(</span><span class="n">deposits</span><span class="o">=</span><span class="n">cflo</span><span class="p">,</span> <span class="n">nrate</span><span class="o">=</span><span class="n">nrate</span><span class="p">,</span> <span class="n">initbal</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> 
+<span class="go">      Beginning_Balance  Deposits  Earned_Interest  Ending_Balance  \</span>
+<span class="go">2000           1000.000       0.0          0.00000      1000.00000</span>
+<span class="go">2001           1000.000     100.0         10.00000      1110.00000</span>
+<span class="go">2002           1110.000       0.0         22.20000      1132.20000</span>
+<span class="go">2003           1132.200     100.0         33.96600      1266.16600</span>
+<span class="go">2004           1266.166     100.0         50.64664      1416.81264</span>
+
+<span class="go">      Nominal_Rate</span>
+<span class="go">2000           0.0</span>
+<span class="go">2001           1.0</span>
+<span class="go">2002           2.0</span>
+<span class="go">2003           3.0</span>
+<span class="go">2004           4.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="loan.html" class="btn btn-neutral float-left" title="Loan analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,572 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Representation of Cashflows and Interest Rates &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Interest rate transformations" href="rate.html" />
+    <link rel="prev" title="Time value of money models" href="tvmm.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Representation of Cashflows and Interest Rates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-in-this-module">Functions in this module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Representation of Cashflows and Interest Rates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/timeseries.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<span class="target" id="module-cashflows.timeseries"></span><div class="section" id="representation-of-cashflows-and-interest-rates">
+<h1>Representation of Cashflows and Interest Rates<a class="headerlink" href="#representation-of-cashflows-and-interest-rates" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The functions in this module allow the user to create generic cashflows and
+interest rates as <cite>pandas.Series</cite> objects under the following restrictions:</p>
+<ul class="simple">
+<li><p>Frequency of time series is restricted to the following values:
+<code class="docutils literal notranslate"><span class="pre">'A'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BA'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Q'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BQ'</span></code>, <code class="docutils literal notranslate"><span class="pre">'M'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'CBM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'SM'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'6M'</span></code>, <code class="docutils literal notranslate"><span class="pre">'6BM'</span></code> and <code class="docutils literal notranslate"><span class="pre">'6CMB'</span></code>.</p></li>
+<li><p>Interest rates are represented as percentages (not as a fraction).</p></li>
+<li><p>Appropriate values must be supplied for the arguments used to create the
+timestamps of the time series.</p></li>
+</ul>
+<p>Due to generic cashflows and interest rates are <cite>pandas.Series</cite> objects, all
+available functions for manipulating and transforming pandas time series can be
+used with this package.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cashflow</span></code> function returns a <cite>pandas.Series</cite> object that represents a
+generic cashflow. The user must supply two of the following arguments <code class="docutils literal notranslate"><span class="pre">start</span></code>,
+<code class="docutils literal notranslate"><span class="pre">end</span></code> and <code class="docutils literal notranslate"><span class="pre">periods</span></code> in order to create the corresponding timestamps for the
+time series. The generic cashflow is set to the value specified by the argument
+<code class="docutils literal notranslate"><span class="pre">const_value</span></code>. In addition, when the value of the argument <code class="docutils literal notranslate"><span class="pre">const_value</span></code> is
+a list, only is necessary to specify the <code class="docutils literal notranslate"><span class="pre">start</span></code> or the <code class="docutils literal notranslate"><span class="pre">end</span></code> dates.</p>
+<p>For convenience of the user, point values of the time series can be changed
+using the argument <code class="docutils literal notranslate"><span class="pre">chgpts</span></code>.  In this case, the value passed to this argument
+is a dictionary where the keys are valid dates and the values are the new values
+specified for the generic cashflow in these dates.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">interest_rate</span></code> function returns a <cite>pandas.Series</cite> object in the same way
+as the <code class="docutils literal notranslate"><span class="pre">cashflow</span></code> function. The only difference is that the dictionary passed
+to the argument <code class="docutils literal notranslate"><span class="pre">chgpts</span></code> specifies change points in the time series, where
+the value of the interest rate changes for all points ahead.</p>
+</div>
+<div class="section" id="functions-in-this-module">
+<h2>Functions in this module<a class="headerlink" href="#functions-in-this-module" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.timeseries.cashflow">
+<span class="sig-prename descclassname"><span class="pre">cashflows.timeseries.</span></span><span class="sig-name descname"><span class="pre">cashflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">const_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chgpts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/timeseries.html#cashflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.timeseries.cashflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generic cashflow as a pandas.Series object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>const_value</strong> (<em>number</em>) – constant value for all time series.</p></li>
+<li><p><strong>start</strong> (<em>string</em>) – Date as string using pandas convetion for dates.</p></li>
+<li><p><strong>end</strong> (<em>string</em>) – Date as string using pandas convetion for dates.</p></li>
+<li><p><strong>peridos</strong> (<em>integer</em>) – Length of the time seriesself.</p></li>
+<li><p><strong>freq</strong> (<em>string</em>) – String indicating the period of time series. Valid values
+are <code class="docutils literal notranslate"><span class="pre">'A'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BA'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Q'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BQ'</span></code>, <code class="docutils literal notranslate"><span class="pre">'M'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'BM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'CBM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'SM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'6M'</span></code>, <code class="docutils literal notranslate"><span class="pre">'6BM'</span></code> and
+<code class="docutils literal notranslate"><span class="pre">'6CMB'</span></code>. See
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases">https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases</a></p></li>
+<li><p><strong>chgpts</strong> (<em>dict</em>) – Dictionary indicating point changes in the values of the time series.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas time series object.</p>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<p>A quarterly cashflow with a constant value 1.0 beginning in 2000Q1 can be
+expressed as:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span> 
+<span class="go">2000Q1    1.0</span>
+<span class="go">2000Q2    1.0</span>
+<span class="go">2000Q3    1.0</span>
+<span class="go">2000Q4    1.0</span>
+<span class="go">2001Q1    1.0</span>
+<span class="go">2001Q2    1.0</span>
+<span class="go">2001Q3    1.0</span>
+<span class="go">2001Q4    1.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<p>In the following example, the cashflow function returns a time series object
+using a list for the <code class="docutils literal notranslate"><span class="pre">const_value</span></code> and a timestamp for the parameter <code class="docutils literal notranslate"><span class="pre">start</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span> 
+<span class="go">2000Q1    10.0</span>
+<span class="go">2000Q2    10.0</span>
+<span class="go">2000Q3    10.0</span>
+<span class="go">2000Q4    10.0</span>
+<span class="go">2001Q1    10.0</span>
+<span class="go">2001Q2    10.0</span>
+<span class="go">2001Q3    10.0</span>
+<span class="go">2001Q4    10.0</span>
+<span class="go">2002Q1    10.0</span>
+<span class="go">2002Q2    10.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<p>The following example uses the operator <code class="docutils literal notranslate"><span class="pre">[]</span></code> to modify the value with
+index equal to 3.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>  
+<span class="go">2000Q1     0.0</span>
+<span class="go">2000Q2     1.0</span>
+<span class="go">2000Q3     2.0</span>
+<span class="go">2000Q4    10.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>  
+<span class="go">10.0</span>
+</pre></div>
+</div>
+<p>Indexes in the time series also can be specified using a valid timestamp.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;2000Q4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> 
+<span class="go">2000Q1    0.0</span>
+<span class="go">2000Q2    1.0</span>
+<span class="go">2000Q3    2.0</span>
+<span class="go">2000Q4    0.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;2000Q3&#39;</span><span class="p">]</span>  
+<span class="go">2.0</span>
+</pre></div>
+</div>
+<p>The following example uses the member function <code class="docutils literal notranslate"><span class="pre">cumsum()</span></code> for computing
+the cumulative sum of the original time series.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> 
+<span class="go">2000Q1     0.0</span>
+<span class="go">2000Q2     1.0</span>
+<span class="go">2000Q3     3.0</span>
+<span class="go">2000Q4     6.0</span>
+<span class="go">2001Q1    10.0</span>
+<span class="go">2001Q2    15.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<p>In the next examples, a change points are specified using a dictionary. The key
+can be a integer or a valid timestamp.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="p">{</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">})</span> 
+<span class="go">2000Q1     0.0</span>
+<span class="go">2000Q2     0.0</span>
+<span class="go">2000Q3    10.0</span>
+<span class="go">2000Q4     0.0</span>
+<span class="go">2001Q1     0.0</span>
+<span class="go">2001Q2     0.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;2000Q3&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">})</span> 
+<span class="go">2000Q1     0.0</span>
+<span class="go">2000Q2     0.0</span>
+<span class="go">2000Q3    10.0</span>
+<span class="go">2000Q4     0.0</span>
+<span class="go">2001Q1     0.0</span>
+<span class="go">2001Q2     0.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.timeseries.interest_rate">
+<span class="sig-prename descclassname"><span class="pre">cashflows.timeseries.</span></span><span class="sig-name descname"><span class="pre">interest_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">const_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'A'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chgpts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/timeseries.html#interest_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.timeseries.interest_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a time series object specified as a interest rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>const_value</strong> (<em>number</em>) – constant value for all time series.</p></li>
+<li><p><strong>start</strong> (<em>string</em>) – Date as string using pandas convetion for dates.</p></li>
+<li><p><strong>end</strong> (<em>string</em>) – Date as string using pandas convetion for dates.</p></li>
+<li><p><strong>peridos</strong> (<em>integer</em>) – Length of the time seriesself.</p></li>
+<li><p><strong>freq</strong> (<em>string</em>) – String indicating the period of time series. Valid values
+are <code class="docutils literal notranslate"><span class="pre">'A'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BA'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Q'</span></code>, <code class="docutils literal notranslate"><span class="pre">'BQ'</span></code>, <code class="docutils literal notranslate"><span class="pre">'M'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'BM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'CBM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'SM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'6M'</span></code>, <code class="docutils literal notranslate"><span class="pre">'6BM'</span></code> and
+<code class="docutils literal notranslate"><span class="pre">'6CMB'</span></code>. See
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases">https://pandas.pydata.org/pandas-docs/stable/timeseries.html#timeseries-offset-aliases</a></p></li>
+<li><p><strong>chgpts</strong> (<em>dict</em>) – Dictionary indicating point changes in the values of the time series.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A <cite>pandas.Series</cite> object.</p>
+</dd>
+</dl>
+<p><strong>Examples</strong></p>
+<p>In the following examples, the argument <code class="docutils literal notranslate"><span class="pre">chgpts</span></code> is used to specify chnages
+in the value of the interest rate. The keys in the dictionary can be integers
+or valid timestamps.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chgpts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;2000Q4&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="n">chgpts</span><span class="p">)</span> 
+<span class="go">2000Q1     1.0</span>
+<span class="go">2000Q2     1.0</span>
+<span class="go">2000Q3     1.0</span>
+<span class="go">2000Q4    10.0</span>
+<span class="go">2001Q1    10.0</span>
+<span class="go">2001Q2    10.0</span>
+<span class="go">2001Q3    10.0</span>
+<span class="go">2001Q4    10.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chgpts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;2000Q4&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;2001Q2&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="n">chgpts</span><span class="p">)</span> 
+<span class="go">2000Q1     1.0</span>
+<span class="go">2000Q2     1.0</span>
+<span class="go">2000Q3     1.0</span>
+<span class="go">2000Q4    10.0</span>
+<span class="go">2001Q1    10.0</span>
+<span class="go">2001Q2    20.0</span>
+<span class="go">2001Q3    20.0</span>
+<span class="go">2001Q4    20.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chgpts</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">:</span><span class="mi">10</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="n">chgpts</span><span class="p">)</span> 
+<span class="go">2000Q1     1.0</span>
+<span class="go">2000Q2     1.0</span>
+<span class="go">2000Q3     1.0</span>
+<span class="go">2000Q4    10.0</span>
+<span class="go">2001Q1    10.0</span>
+<span class="go">2001Q2    10.0</span>
+<span class="go">2001Q3    10.0</span>
+<span class="go">2001Q4    10.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chgpts</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">20</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">chgpts</span><span class="o">=</span><span class="n">chgpts</span><span class="p">)</span> 
+<span class="go">2000Q1     1.0</span>
+<span class="go">2000Q2     1.0</span>
+<span class="go">2000Q3     1.0</span>
+<span class="go">2000Q4    10.0</span>
+<span class="go">2001Q1    10.0</span>
+<span class="go">2001Q2    10.0</span>
+<span class="go">2001Q3    20.0</span>
+<span class="go">2001Q4    20.0</span>
+<span class="go">Freq: Q-DEC, dtype: float64</span>
+</pre></div>
+</div>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">const_value</span></code> can be a list of numbers. In this case, only
+is necessary to specify the <code class="docutils literal notranslate"><span class="pre">start</span></code> or <code class="docutils literal notranslate"><span class="pre">end</span></code> arguments.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">interest_rate</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">*</span><span class="mi">12</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000-1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>  
+<span class="go">2000-01    10.0</span>
+<span class="go">2000-02    10.0</span>
+<span class="go">2000-03    10.0</span>
+<span class="go">2000-04    10.0</span>
+<span class="go">2000-05    10.0</span>
+<span class="go">2000-06    10.0</span>
+<span class="go">2000-07    10.0</span>
+<span class="go">2000-08    10.0</span>
+<span class="go">2000-09    10.0</span>
+<span class="go">2000-10    10.0</span>
+<span class="go">2000-11    10.0</span>
+<span class="go">2000-12    10.0</span>
+<span class="go">Freq: M, dtype: float64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.timeseries.period2pos">
+<span class="sig-prename descclassname"><span class="pre">cashflows.timeseries.</span></span><span class="sig-name descname"><span class="pre">period2pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/timeseries.html#period2pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.timeseries.period2pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the position (index) of a timestamp vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>list</em>) – timestamp vector.</p></li>
+<li><p><strong>date</strong> (<em>string</em>) – date to search.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>position of date in index.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>position (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.timeseries.textplot">
+<span class="sig-prename descclassname"><span class="pre">cashflows.timeseries.</span></span><span class="sig-name descname"><span class="pre">textplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cflo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/timeseries.html#textplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.timeseries.textplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Text plot of a generic cashflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cflo</strong> (<em>pandas.Series</em>) – Generic cashflow.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+<p><strong>Example</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cflo</span> <span class="o">=</span> <span class="n">cashflow</span><span class="p">(</span><span class="n">const_value</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2000Q1&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">textplot</span><span class="p">(</span><span class="n">cflo</span><span class="p">)</span>
+<span class="go">time      value +------------------+------------------+</span>
+<span class="go">2000Q1   -10.00           **********</span>
+<span class="go">2000Q2     5.00                    *****</span>
+<span class="go">2000Q3     0.00                    *</span>
+<span class="go">2000Q4    20.00                    ********************</span>
+<span class="go">2001Q1   -10.00           **********</span>
+<span class="go">2001Q2     5.00                    *****</span>
+<span class="go">2001Q3     0.00                    *</span>
+<span class="go">2001Q4    20.00                    ********************</span>
+<span class="go">2002Q1   -10.00           **********</span>
+<span class="go">2002Q2     5.00                    *****</span>
+<span class="go">2002Q3     0.00                    *</span>
+<span class="go">2002Q4    20.00                    ********************</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cashflows.timeseries.verify_period_range">
+<span class="sig-prename descclassname"><span class="pre">cashflows.timeseries.</span></span><span class="sig-name descname"><span class="pre">verify_period_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cashflows/timeseries.html#verify_period_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cashflows.timeseries.verify_period_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify if all time series in a list have the same timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – list of <cite>pandas.Series</cite>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="rate.html" class="btn btn-neutral float-right" title="Interest rate transformations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tvmm.html" class="btn btn-neutral float-left" title="Time value of money models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,678 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cashflows.bond &mdash; Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python 0.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tvmm.html">Time value of money models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timeseries.html">Representation of Cashflows and Interest Rates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rate.html">Interest rate transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../taxing.html">After tax cashflow calculation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../currency.html">Currency conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../inflation.html">Constant dollar transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../analysis.html">Analysis of cashflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bond.html">Bond Valuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../depreciation.html">Asset depreciation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../loan.html">Loan analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../savings.html">Savings</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Cashflows - A Package for Investment Modeling and Advanced Engineering Economics using Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cashflows.bond</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cashflows.bond</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Bond Valuation</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">Overview</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+<span class="sd">This module computes the present value or the yield-to-maturity of of the</span>
+<span class="sd">expected cashflow of a bond. Also,it is possible to make a sensibility analysis</span>
+<span class="sd">for different values for the yield-to-maturity and one present value of</span>
+<span class="sd">the bond.</span>
+
+
+<span class="sd">Functions in this module</span>
+<span class="sd">-------------------------------------------------------------------------------</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># cashflows.</span>
+<span class="kn">from</span> <span class="nn">cashflows.tvmm</span> <span class="kn">import</span> <span class="n">tvmm</span>
+
+<div class="viewcode-block" id="bond"><a class="viewcode-back" href="../../bond.html#cashflows.bond.bond">[docs]</a><span class="k">def</span> <span class="nf">bond</span><span class="p">(</span><span class="n">maturity_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">face_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">coupon_rate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coupon_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_coupons</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ytm</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        face_value (float, list): bond’s value at maturity.</span>
+<span class="sd">        coupon_value (float):  amount of money you receive periodically as the bond matures.</span>
+<span class="sd">        num_coupons (int, list): number of coupons before maturity.</span>
+<span class="sd">        ytm (float): yield to maturity.</span>
+<span class="sd">        coupon_rate (float, list): rate of the face value that defines the coupon value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Float or list of floats.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_value=56, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS</span>
+<span class="sd">    1000.0...</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=1000) # doctest: +ELLIPSIS</span>
+<span class="sd">    5.6...</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=[1000, 1200, 1400], coupon_value=56, num_coupons=10, value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value      YTM</span>
+<span class="sd">    0     5.600000            56        1000           10   1000  5.60000</span>
+<span class="sd">    1     4.666667            56        1200           10   1000  7.04451</span>
+<span class="sd">    2     4.000000            56        1400           10   1000  8.31956</span>
+
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_value=[56., 57, 58], num_coupons=10, value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM</span>
+<span class="sd">    0          5.6          56.0        1000           10   1000  5.6</span>
+<span class="sd">    1          5.7          57.0        1000           10   1000  5.7</span>
+<span class="sd">    2          5.8          58.0        1000           10   1000  5.8</span>
+
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_rate=[5.6, 5.7, 5.8], num_coupons=10, value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM</span>
+<span class="sd">    0          5.6          56.0        1000           10   1000  5.6</span>
+<span class="sd">    1          5.7          57.0        1000           10   1000  5.7</span>
+<span class="sd">    2          5.8          58.0        1000           10   1000  5.8</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=[10, 20, 30], value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value  YTM</span>
+<span class="sd">    0          5.6          56.0        1000           10   1000  5.6</span>
+<span class="sd">    1          5.6          56.0        1000           20   1000  5.6</span>
+<span class="sd">    2          5.6          56.0        1000           30   1000  5.6</span>
+
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=[800, 900, 1000]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value       YTM</span>
+<span class="sd">    0          5.6          56.0        1000           10    800  8.671484</span>
+<span class="sd">    1          5.6          56.0        1000           10    900  7.025450</span>
+<span class="sd">    2          5.6          56.0        1000           10   1000  5.600000</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=[1000, 1100, 1200], coupon_rate=5.6, num_coupons=10, value=[800, 900, 1000]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value        YTM</span>
+<span class="sd">    0     5.600000          56.0        1000           10    800   8.671484</span>
+<span class="sd">    1     5.600000          56.0        1000           10    900   7.025450</span>
+<span class="sd">    2     5.600000          56.0        1000           10   1000   5.600000</span>
+<span class="sd">    3     5.090909          56.0        1100           10    800   9.419301</span>
+<span class="sd">    4     5.090909          56.0        1100           10    900   7.772838</span>
+<span class="sd">    5     5.090909          56.0        1100           10   1000   6.346424</span>
+<span class="sd">    6     4.666667          56.0        1200           10    800  10.119360</span>
+<span class="sd">    7     4.666667          56.0        1200           10    900   8.472129</span>
+<span class="sd">    8     4.666667          56.0        1200           10   1000   7.044510</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=[1000, 1100, 1200], coupon_rate=[5.6, 5.7, 5.8], num_coupons=10, value=[800, 900, 1000]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">        Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  Value        YTM</span>
+<span class="sd">    0      5.600000          56.0        1000           10    800   8.671484</span>
+<span class="sd">    1      5.600000          56.0        1000           10    900   7.025450</span>
+<span class="sd">    2      5.600000          56.0        1000           10   1000   5.600000</span>
+<span class="sd">    3      5.700000          57.0        1000           10    800   8.787284</span>
+<span class="sd">    4      5.700000          57.0        1000           10    900   7.132508</span>
+<span class="sd">    5      5.700000          57.0        1000           10   1000   5.700000</span>
+<span class="sd">    6      5.800000          58.0        1000           10    800   8.903126</span>
+<span class="sd">    7      5.800000          58.0        1000           10    900   7.239584</span>
+<span class="sd">    8      5.800000          58.0        1000           10   1000   5.800000</span>
+<span class="sd">    9      5.090909          56.0        1100           10    800   9.419301</span>
+<span class="sd">    10     5.090909          56.0        1100           10    900   7.772838</span>
+<span class="sd">    11     5.090909          56.0        1100           10   1000   6.346424</span>
+<span class="sd">    12     5.181818          57.0        1100           10    800   9.531367</span>
+<span class="sd">    13     5.181818          57.0        1100           10    900   7.876353</span>
+<span class="sd">    14     5.181818          57.0        1100           10   1000   6.443037</span>
+<span class="sd">    15     5.272727          58.0        1100           10    800   9.643488</span>
+<span class="sd">    16     5.272727          58.0        1100           10    900   7.979898</span>
+<span class="sd">    17     5.272727          58.0        1100           10   1000   6.539664</span>
+<span class="sd">    18     4.666667          56.0        1200           10    800  10.119360</span>
+<span class="sd">    19     4.666667          56.0        1200           10    900   8.472129</span>
+<span class="sd">    20     4.666667          56.0        1200           10   1000   7.044510</span>
+<span class="sd">    21     4.750000          57.0        1200           10    800  10.228122</span>
+<span class="sd">    22     4.750000          57.0        1200           10    900   8.572512</span>
+<span class="sd">    23     4.750000          57.0        1200           10   1000   7.138133</span>
+<span class="sd">    24     4.833333          58.0        1200           10    800  10.336951</span>
+<span class="sd">    25     4.833333          58.0        1200           10    900   8.672936</span>
+<span class="sd">    26     4.833333          58.0        1200           10   1000   7.231779</span>
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=1000, ytm=[5.1, 5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Basis_Value        Change  Coupon_Rate  Coupon_Value  Face_Value  \\</span>
+<span class="sd">    0         1000  3.842187e+00          5.6          56.0        1000</span>
+<span class="sd">    1         1000  1.136868e-14          5.6          56.0        1000</span>
+<span class="sd">    2         1000 -3.662671e+00          5.6          56.0        1000</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">       Num_Coupons        Value  YTM</span>
+<span class="sd">    0           10  1038.421866  5.1</span>
+<span class="sd">    1           10  1000.000000  5.6</span>
+<span class="sd">    2           10   963.373290  6.1</span>
+
+
+<span class="sd">    &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=[1000, 1100], ytm=[5.1, 5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">       Basis_Value        Change  Coupon_Rate  Coupon_Value  Face_Value  \\</span>
+<span class="sd">    0         1000  3.842187e+00          5.6          56.0        1000</span>
+<span class="sd">    1         1000  1.136868e-14          5.6          56.0        1000</span>
+<span class="sd">    2         1000 -3.662671e+00          5.6          56.0        1000</span>
+<span class="sd">    3         1100 -5.598012e+00          5.6          56.0        1000</span>
+<span class="sd">    4         1100 -9.090909e+00          5.6          56.0        1000</span>
+<span class="sd">    5         1100 -1.242061e+01          5.6          56.0        1000</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">       Num_Coupons        Value  YTM</span>
+<span class="sd">    0           10  1038.421866  5.1</span>
+<span class="sd">    1           10  1000.000000  5.6</span>
+<span class="sd">    2           10   963.373290  6.1</span>
+<span class="sd">    3           10  1038.421866  5.1</span>
+<span class="sd">    4           10  1000.000000  5.6</span>
+<span class="sd">    5           10   963.373290  6.1</span>
+
+
+
+<span class="sd">    # &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=[20], value=[1000, 1100], ytm=[5.6, 6.1]) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="sd">    #       Basis_Value     Change  Coupon_Rate  Coupon_Value  Face_Value  Num_Coupons  \\</span>
+<span class="sd">    #    0         1000   0.000000          5.6          56.0        1000           20</span>
+<span class="sd">    #    1         1000  -5.688693          5.6          56.0        1000           20</span>
+<span class="sd">    #    2         1100  -9.090909          5.6          56.0        1000           20</span>
+<span class="sd">    #    3         1100 -14.262448          5.6          56.0        1000           20</span>
+<span class="sd">    #    &lt;BLANKLINE&gt;</span>
+<span class="sd">    #             Value  YTM</span>
+<span class="sd">    #    0  1000.000000  5.6</span>
+<span class="sd">    #    1   943.113073  6.1</span>
+<span class="sd">    #    2  1000.000000  5.6</span>
+<span class="sd">    #    3   943.113073  6.1</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">coupon_rate</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;coupon_rate or coupon_value must be specified&#39;</span><span class="p">)</span>
+
+    <span class="c1">## converts params to lists</span>
+
+    <span class="k">if</span> <span class="n">coupon_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coupon_rate</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">coupon_rate</span> <span class="o">=</span> <span class="p">[</span><span class="n">coupon_rate</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coupon_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">coupon_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">coupon_value</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_coupons</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">num_coupons</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_coupons</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">face_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">face_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">face_value</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_coupons</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">num_coupons</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_coupons</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ytm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ytm</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">ytm</span> <span class="o">=</span> <span class="p">[</span><span class="n">ytm</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1">## value is unknown</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">xface_value</span> <span class="ow">in</span> <span class="n">face_value</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">coupon_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">xrate</span> <span class="o">*</span> <span class="n">xface_value</span> <span class="o">/</span> <span class="mi">100</span> <span class="k">for</span> <span class="n">xrate</span> <span class="ow">in</span> <span class="n">coupon_rate</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">xcoupon_value</span> <span class="ow">in</span> <span class="n">coupon_value</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">xnum_coupons</span> <span class="ow">in</span> <span class="n">num_coupons</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">xytm</span> <span class="ow">in</span> <span class="n">ytm</span><span class="p">:</span>
+
+                        <span class="n">xvalue</span> <span class="o">=</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="n">xcoupon_value</span><span class="p">,</span>
+                                      <span class="n">fval</span><span class="o">=</span><span class="n">xface_value</span><span class="p">,</span>
+                                      <span class="n">nper</span><span class="o">=</span><span class="n">xnum_coupons</span><span class="p">,</span>
+                                      <span class="n">nrate</span><span class="o">=</span><span class="n">xytm</span><span class="p">,</span>
+                                      <span class="n">due</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                        <span class="n">xcoupon_rate</span> <span class="o">=</span> <span class="n">xcoupon_value</span> <span class="o">/</span> <span class="n">xface_value</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+                        <span class="n">aux</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Face_Value&#39;</span><span class="p">:</span> <span class="n">xface_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;Coupon_Value&#39;</span><span class="p">:</span> <span class="n">xcoupon_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;Coupon_Rate&#39;</span><span class="p">:</span> <span class="n">xcoupon_rate</span><span class="p">,</span>
+                                            <span class="s1">&#39;Num_Coupons&#39;</span><span class="p">:</span><span class="n">xnum_coupons</span><span class="p">,</span>
+                                            <span class="s1">&#39;YTM&#39;</span><span class="p">:</span><span class="n">xytm</span><span class="p">,</span>
+                                            <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">xvalue</span><span class="p">},</span>
+                                            <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">counter</span><span class="p">])</span>
+                        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">aux</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asscalar</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1">## ytm is unknown</span>
+    <span class="k">if</span> <span class="n">ytm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">xface_value</span> <span class="ow">in</span> <span class="n">face_value</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">coupon_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">xrate</span> <span class="o">*</span> <span class="n">xface_value</span> <span class="o">/</span> <span class="mi">100</span> <span class="k">for</span> <span class="n">xrate</span> <span class="ow">in</span> <span class="n">coupon_rate</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">xcoupon_value</span> <span class="ow">in</span> <span class="n">coupon_value</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">xnum_coupons</span> <span class="ow">in</span> <span class="n">num_coupons</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">xvalue</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+
+                        <span class="n">xytm</span> <span class="o">=</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="n">xcoupon_value</span><span class="p">,</span>
+                                     <span class="n">fval</span><span class="o">=</span><span class="n">xface_value</span><span class="p">,</span>
+                                     <span class="n">nper</span><span class="o">=</span><span class="n">xnum_coupons</span><span class="p">,</span>
+                                     <span class="n">pval</span><span class="o">=-</span><span class="n">xvalue</span><span class="p">,</span>
+                                     <span class="n">due</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                        <span class="n">xcoupon_rate</span> <span class="o">=</span> <span class="n">xcoupon_value</span> <span class="o">/</span> <span class="n">xface_value</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+                        <span class="n">aux</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Face_Value&#39;</span><span class="p">:</span> <span class="n">xface_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;Coupon_Value&#39;</span><span class="p">:</span> <span class="n">xcoupon_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;Coupon_Rate&#39;</span><span class="p">:</span> <span class="n">xcoupon_rate</span><span class="p">,</span>
+                                            <span class="s1">&#39;Num_Coupons&#39;</span><span class="p">:</span><span class="n">xnum_coupons</span><span class="p">,</span>
+                                            <span class="s1">&#39;YTM&#39;</span><span class="p">:</span><span class="n">xytm</span><span class="p">,</span>
+                                            <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">xvalue</span><span class="p">},</span>
+                                            <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">counter</span><span class="p">])</span>
+
+                        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">aux</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asscalar</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;YTM&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+
+    <span class="c1">#</span>
+    <span class="c1"># value and ytm are not None</span>
+    <span class="c1"># sensibility analysis</span>
+    <span class="c1">#</span>
+
+    <span class="k">for</span> <span class="n">basis_value</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">xface_value</span> <span class="ow">in</span> <span class="n">face_value</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">coupon_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">coupon_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">coupon_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">xrate</span> <span class="o">*</span> <span class="n">xface_value</span> <span class="o">/</span> <span class="mi">100</span> <span class="k">for</span> <span class="n">xrate</span> <span class="ow">in</span> <span class="n">coupon_rate</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">xcoupon_value</span> <span class="ow">in</span> <span class="n">coupon_value</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">xnum_coupons</span> <span class="ow">in</span> <span class="n">num_coupons</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">xytm</span> <span class="ow">in</span> <span class="n">ytm</span><span class="p">:</span>
+
+                        <span class="n">xvalue</span> <span class="o">=</span> <span class="n">tvmm</span><span class="p">(</span><span class="n">pmt</span><span class="o">=</span><span class="n">xcoupon_value</span><span class="p">,</span>
+                                      <span class="n">fval</span><span class="o">=</span><span class="n">xface_value</span><span class="p">,</span>
+                                      <span class="n">nper</span><span class="o">=</span><span class="n">xnum_coupons</span><span class="p">,</span>
+                                      <span class="n">nrate</span><span class="o">=</span><span class="n">xytm</span><span class="p">,</span>
+                                      <span class="n">due</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pyr</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                        <span class="n">xcoupon_rate</span> <span class="o">=</span> <span class="n">xcoupon_value</span> <span class="o">/</span> <span class="n">xface_value</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+                        <span class="n">aux</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Coupon_Value&#39;</span><span class="p">:</span> <span class="n">xcoupon_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;Coupon_Rate&#39;</span><span class="p">:</span> <span class="n">xcoupon_rate</span><span class="p">,</span>
+                                            <span class="s1">&#39;Face_Value&#39;</span><span class="p">:</span> <span class="n">xface_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;Num_Coupons&#39;</span><span class="p">:</span><span class="n">xnum_coupons</span><span class="p">,</span>
+                                            <span class="s1">&#39;Basis_Value&#39;</span><span class="p">:</span> <span class="n">basis_value</span><span class="p">,</span>
+                                            <span class="s1">&#39;YTM&#39;</span><span class="p">:</span><span class="n">xytm</span><span class="p">,</span>
+                                            <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">xvalue</span><span class="p">,</span>
+                                            <span class="s1">&#39;Change&#39;</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">xvalue</span><span class="o">-</span><span class="n">basis_value</span><span class="p">)</span><span class="o">/</span><span class="n">basis_value</span><span class="p">},</span>
+                                            <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">counter</span><span class="p">])</span>
+
+                        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">aux</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+
+
+
+
+
+
+
+<span class="c1"># def bond(face_value=None, coupon_rate=None, coupon_value=None, num_coupons=None,</span>
+<span class="c1">#          value=None, ytm=None):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#     Evaluation of bond investments.</span>
+<span class="c1">#</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#        face_value (float): the bond&#39;s value-at-maturity.</span>
+<span class="c1">#        coupon_rate (float): rate for calculate the coupon payment.</span>
+<span class="c1">#        coupon_value (float): periodic payment.</span>
+<span class="c1">#        num_coupons (int): number of couont payments before maturity.</span>
+<span class="c1">#        value (float, list): present value of the bond</span>
+<span class="c1">#        ytm (float, list): yield-to-maturity.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     Returns:</span>
+<span class="c1">#         None, a float value, or a list of float values:</span>
+<span class="c1">#         * `value`: when `ytm` is specified.</span>
+<span class="c1">#         * `ytm`:  when `value` is specified.</span>
+<span class="c1">#         * `None`: when `ytm` and `value` are specified. Prints a sensibility table.</span>
+<span class="c1">#</span>
+<span class="c1">#     When `coupon_rate` is defined, `coupon_value` is calculated automaticly.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     Examples:</span>
+<span class="c1">#</span>
+<span class="c1">#     &gt;&gt;&gt; bond(face_value=1000, coupon_value=56, num_coupons=10, ytm=5.6) # doctest: +ELLIPSIS</span>
+<span class="c1">#     1000.0...</span>
+<span class="c1">#</span>
+<span class="c1">#     &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10, value=1000) # doctest: +ELLIPSIS</span>
+<span class="c1">#     5.6...</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     Also, it is possible to make sensibility analysis for bond&#39;s data. In the</span>
+<span class="c1">#     following case, the present value of the bond is calculated for various</span>
+<span class="c1">#     values of the yield-to-maturity.</span>
+<span class="c1">#</span>
+<span class="c1">#     &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10,</span>
+<span class="c1">#     ... ytm=[4.0, 5.0, 5.6, 6.0, 7.0]) # doctest: +ELLIPSIS</span>
+<span class="c1">#     [1129.77..., 1046.33..., 1000.0..., 970.55..., 901.66...]</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     And for different values:</span>
+<span class="c1">#</span>
+<span class="c1">#     &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10,</span>
+<span class="c1">#     ... value=[900, 1000, 1100]) # doctest: +ELLIPSIS</span>
+<span class="c1">#     [7.0..., 5.6..., 4.3...]</span>
+<span class="c1">#</span>
+<span class="c1">#     When values for the yield-to-maturity and one value for present value of</span>
+<span class="c1">#     the bond are supplied, the function prints a report.</span>
+<span class="c1">#</span>
+<span class="c1">#     &gt;&gt;&gt; bond(face_value=1000, coupon_rate=5.6, num_coupons=10,</span>
+<span class="c1">#     ... ytm=[4.0, 5.0, 5.6, 6.0, 7.0], value=1000) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE</span>
+<span class="c1">#     Bond valuation analysis</span>
+<span class="c1">#     Reference price: 1000</span>
+<span class="c1">#     Analysis:</span>
+<span class="c1">#               Yield     Value Change</span>
+<span class="c1">#                 (%)       ($)    (%)</span>
+<span class="c1">#              ------------------------</span>
+<span class="c1">#                4.00   1129.77  12.98</span>
+<span class="c1">#                5.00   1046.33   4.63</span>
+<span class="c1">#                5.60   1000.00   0.00</span>
+<span class="c1">#                6.00    970.56  -2.94</span>
+<span class="c1">#                7.00    901.67  -9.83</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     if coupon_rate is None and coupon_value is None:</span>
+<span class="c1">#         raise ValueError(&#39;coupon_rate or coupon_value must be specified&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#     if coupon_rate is None:</span>
+<span class="c1">#         coupon_rate = coupon_value / face_value</span>
+<span class="c1">#</span>
+<span class="c1">#     if coupon_value is None:</span>
+<span class="c1">#         coupon_value = coupon_rate * face_value / 100</span>
+<span class="c1">#</span>
+<span class="c1">#     if value is None:</span>
+<span class="c1">#         value = tvmm(pmt=coupon_value, fval=face_value,</span>
+<span class="c1">#                      nper=num_coupons, nrate=ytm, due=0, pyr=1)</span>
+<span class="c1">#         if isinstance(value, list):</span>
+<span class="c1">#             value = [-x for x in value]</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             value = -value</span>
+<span class="c1">#         return value</span>
+<span class="c1">#</span>
+<span class="c1">#     if ytm is None:</span>
+<span class="c1">#         if isinstance(value, list):</span>
+<span class="c1">#             value = [-x for x in value]</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             value = -value</span>
+<span class="c1">#         return tvmm(pmt=coupon_value, fval=face_value, pval=value, nper=num_coupons, pyr=1)</span>
+<span class="c1">#</span>
+<span class="c1">#     #</span>
+<span class="c1">#     # value and ytm are not None</span>
+<span class="c1">#     # sensibility analysis</span>
+<span class="c1">#     #</span>
+<span class="c1">#</span>
+<span class="c1">#     values = tvmm(pmt=coupon_value, fval=face_value,</span>
+<span class="c1">#                   nper=num_coupons, nrate=ytm, due=0, pyr=1)</span>
+<span class="c1">#     if isinstance(values, list):</span>
+<span class="c1">#         values = [-x for x in values]</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         values = -values</span>
+<span class="c1">#</span>
+<span class="c1">#     txt = [&#39;Bond valuation analysis&#39;]</span>
+<span class="c1">#     txt += [&#39;Reference price: &#39; + value.__str__()]</span>
+<span class="c1">#     txt += [&#39;Analysis:&#39;]</span>
+<span class="c1">#     txt += [&#39;           Yield     Value Change&#39;]</span>
+<span class="c1">#     txt += [&#39;             (%)       ($)    (%)&#39;]</span>
+<span class="c1">#     txt += [&#39;          ------------------------&#39;]</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     if not isinstance(ytm, list):</span>
+<span class="c1">#         ytm = [ytm]</span>
+<span class="c1">#         values = [values]</span>
+<span class="c1">#     for iytm, ivalue in zip(ytm, values):</span>
+<span class="c1">#         fmt = &#39;          {:6.2f} {:9.2f} {:6.2f}&#39;</span>
+<span class="c1">#         txt += [fmt.format(iytm, ivalue, 100 * (ivalue-value)/value)]</span>
+<span class="c1">#</span>
+<span class="c1">#     print(&#39;\n&#39;.join(txt))</span>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Juan D. Velasquez &amp; Ibeth K. Vergara.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

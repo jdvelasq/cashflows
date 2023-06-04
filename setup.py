@@ -23,6 +23,10 @@ setup(
     author_email="jdvelasq@unal.edu.co",
     license="MIT",
     packages=["cashflows"],
+    install_requires=[
+        'numpy',
+        'numpy-financial'
+    ],
     test_suite="nose.collector",
     tests_require=["nose"],
     include_package_data=True,

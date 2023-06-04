@@ -59,7 +59,8 @@ Functions in this module
 
 """
 
-import numpy
+import numpy as np
+import numpy_financial as npf
 from cashflows.common import _vars2list
 
 
@@ -173,21 +174,21 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
     if pmt == 0.0:
         pmt = 0.0000001
 
-    nrate = numpy.array(nrate)
+    nrate = np.array(nrate)
 
     if pval is None:
-        result = numpy.pv(rate=nrate/100/pyr, nper=nper, fv=fval, pmt=pmt, when=due)
+        result = npf.pv(rate=nrate/100/pyr, nper=nper, fv=fval, pmt=pmt, when=due)
     elif fval is None:
-        result = numpy.fv(rate=nrate/100/pyr, nper=nper, pv=pval, pmt=pmt, when=due)
+        result = npf.fv(rate=nrate/100/pyr, nper=nper, pv=pval, pmt=pmt, when=due)
     elif nper is None:
-        result = numpy.nper(rate=nrate/100/pyr, pv=pval, fv=fval, pmt=pmt, when=due)
+        result = npf.nper(rate=nrate/100/pyr, pv=pval, fv=fval, pmt=pmt, when=due)
     elif pmt is None:
-        result = numpy.pmt(rate=nrate/100/pyr, nper=nper, pv=pval, fv=fval, when=due)
+        result = npf.pmt(rate=nrate/100/pyr, nper=nper, pv=pval, fv=fval, when=due)
     else:
-        result = numpy.rate(pv=pval, nper=nper, fv=fval, pmt=pmt, when=due) * 100 * pyr
+        result = npf.rate(pv=pval, nper=nper, fv=fval, pmt=pmt, when=due) * 100 * pyr
 
     if noprint is True:
-        if isinstance(result, numpy.ndarray):
+        if isinstance(result, np.ndarray):
             return result.tolist()
         return result
 
@@ -214,7 +215,12 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
 
     # raise ValueError(nrate.__repr__())
 
-    erate, prate = iconv(nrate=nrate, pyr=pyr)
+    # Fixed by Emanuele on 3/6/2023
+    #erate, prate = iconv(nrate=nrate, pyr=pyr)
+    erate = (np.power(1 + np.array(nrate)/100 / pyr, pyr) - 1) * 100
+    prate = (np.power(1 + np.array(nrate)/100 / erate,  erate / pyr) - 1) * 100
+    erate = erate.tolist()
+    prate = prate.tolist()
 
     if len(pval) == 1:
         if pval is not None:
@@ -228,8 +234,8 @@ def tvmm(pval=None, fval=None, pmt=None, nrate=None, nper=None, due=0, pyr=1, no
         print('No. of Periods: ...... {:8.2f}'.format(nper[0]))
         print('Compoundings per Year: {:>5d}'.format(pyr))
         print('Nominal Rate: .......  {:8.2f}'.format(nrate[0]))
-        print('Effective Rate: .....  {:8.2f}'.format(erate))
-        print('Periodic Rate: ......  {:8.2f}'.format(prate))
+        print('Effective Rate: .....  {:8.2f}'.format(erate[0]))
+        print('Periodic Rate: ......  {:8.2f}'.format(prate[0]))
 
     else:
         if due == 0:
